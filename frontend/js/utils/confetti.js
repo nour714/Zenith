@@ -10,7 +10,7 @@ export function triggerConfetti() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const colors = ['#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#ffffff'];
+  const colors = ['#a855f7', '#d946ef', '#ec4899', '#c084fc', '#38bdf8', '#10b981', '#ffffff'];
   const particleCount = 70;
   const particles = [];
 

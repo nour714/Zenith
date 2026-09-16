@@ -13,7 +13,7 @@
   top: 0;
   z-index: 50;
   height: var(--header-height);
-  background: rgba(7, 8, 12, 0.88);
+  background: rgba(9, 6, 19, 0.88);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--glass-border);
@@ -38,13 +38,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 18px var(--accent-primary-glow);
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .brand-icon:hover {
   transform: rotate(-5deg) scale(1.04);
-  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.6);
+  box-shadow: 0 6px 24px var(--accent-fuchsia-glow);
 }
 
 .brand-icon svg {

@@ -161,9 +161,9 @@
 }
 
 .badge-indigo {
-  background: rgba(99, 102, 241, 0.18);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(168, 85, 247, 0.18);
+  color: #d8b4fe;
+  border: 1px solid rgba(168, 85, 247, 0.4);
 }
 
 .badge-cyan {
@@ -505,11 +505,11 @@
 .btn-primary {
   background: var(--gradient-brand);
   color: white;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 16px var(--accent-primary-glow);
 }
 
 .btn-primary:hover:not(:disabled) {
-  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.55);
+  box-shadow: 0 6px 24px var(--accent-fuchsia-glow);
   transform: translateY(-1px);
 }
 
@@ -574,7 +574,7 @@
   right: calc(var(--drawer-width) * -1);
   width: var(--drawer-width);
   max-width: 92vw;
-  background: #090b12;
+  background: var(--bg-secondary);
   border-left: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lg);
   z-index: 101;
@@ -609,12 +609,12 @@
 }
 
 #notebook-notes-list::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.35);
+  background: rgba(168, 85, 247, 0.35);
   border-radius: var(--radius-full);
 }
 
 #notebook-notes-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.6);
+  background: rgba(217, 70, 239, 0.6);
 }
 
 /* Modals */
@@ -642,10 +642,10 @@
 .modal-card {
   width: 100%;
   max-width: 540px;
-  background: #0b0e17;
+  background: var(--bg-secondary);
   border: 1px solid var(--glass-border-hover);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg), 0 0 35px rgba(99, 102, 241, 0.15);
+  box-shadow: var(--shadow-lg), 0 0 35px var(--accent-primary-glow);
   overflow: hidden;
   transform: scale(0.96);
   transition: transform var(--transition-smooth);

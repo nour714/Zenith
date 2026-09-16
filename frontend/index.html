@@ -90,6 +90,19 @@
         </div>
       </div>
 
+      <!-- Header Page Navigation (Dashboard vs Dedicated Notebook) -->
+      <nav class="header-nav-pages" aria-label="Main Navigation">
+        <button id="nav-btn-dashboard" class="nav-page-btn active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span data-i18n="nav_dashboard">لوحة المتابعة</span>
+        </button>
+        <button id="nav-btn-notebook" class="nav-page-btn" data-view="notebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+          <span data-i18n="nav_notebook_page">دفتر الملاحظات</span>
+          <span id="header-notes-count" class="page-badge">0</span>
+        </button>
+      </nav>
+
       <div class="header-actions">
         <button id="btn-open-search" class="btn btn-primary" data-i18n-title="btn_add_playlist">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -99,11 +112,6 @@
         <button id="btn-open-task-modal" class="btn btn-secondary" data-i18n-title="btn_add_task">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
           <span data-i18n="btn_add_task">مهمة سريعة</span>
-        </button>
-
-        <button id="btn-open-notebook" class="btn btn-secondary" title="دفتر الملاحظات">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
-          <span data-i18n="btn_notebook">النوت بوك</span>
         </button>
 
         <button id="btn-toggle-lang" class="btn-icon" title="تبديل اللغة (Toggle Language)" aria-label="Toggle Language">
@@ -118,8 +126,10 @@
 
     <!-- Main Content -->
     <main class="app-main">
-      <!-- Stats Overview Banner -->
-      <section class="stats-banner" aria-label="Statistics Overview">
+      <!-- View: Dashboard (Courses & Tasks) -->
+      <section id="view-dashboard" class="page-view active" aria-label="Dashboard">
+        <!-- Stats Overview Banner -->
+        <section class="stats-banner" aria-label="Statistics Overview">
         <div class="glass-card stat-card">
           <div class="stat-icon-wrapper" style="background: rgba(6, 182, 212, 0.16); color: var(--accent-cyan);">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
@@ -231,66 +241,132 @@
 
         <!-- Global Empty State container -->
         <div id="dashboard-empty-state" style="display: none;"></div>
-      </div>
-    </main>
-  </div>
+      </section>
 
-  <!-- Slide Drawer: Smart Notebook -->
-  <div id="notebook-drawer-backdrop" class="drawer-backdrop"></div>
-  <aside id="notebook-drawer" class="notebook-drawer" aria-label="Smart Notebook">
-    <div class="drawer-header">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="color: var(--accent-purple); display: flex; align-items: center;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+      <!-- View: Dedicated Notebook Page -->
+      <section id="view-notebook" class="page-view" aria-label="Smart Notebook">
+        <div class="notebook-page">
+          <!-- Top Bar -->
+          <div class="notebook-topbar">
+            <div class="notebook-topbar-title-area">
+              <div class="notebook-icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+              </div>
+              <div>
+                <h2 class="notebook-page-title" data-i18n="nav_notebook_page">دفتر الملاحظات</h2>
+                <div style="font-size: 0.78rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                  <span data-i18n="notebook_total_count">إجمالي الملاحظات</span>:
+                  <span id="notebook-page-total-count" style="font-weight: 700; color: var(--accent-fuchsia);">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="notebook-topbar-actions">
+              <button id="btn-notebook-back-dashboard" class="btn btn-secondary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                <span data-i18n="btn_back_to_dashboard">العودة للرئيسية</span>
+              </button>
+              <button id="btn-notebook-export" class="btn btn-secondary" title="تصدير الملاحظة بتنسيق Markdown" aria-label="Export Markdown">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span data-i18n="btn_export">تصدير</span>
+              </button>
+              <button id="btn-notebook-new-note" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span data-i18n="btn_new_note">ملاحظة جديدة</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Master-Detail Workspace -->
+          <div class="notebook-workspace">
+            <!-- Sidebar: Notes Directory -->
+            <aside class="notebook-sidebar">
+              <div class="notes-search-wrap">
+                <div class="notes-search-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
+                <input id="notebook-search-input" class="notes-search-input" type="text" placeholder="بحث في الملاحظات..." data-i18n-placeholder="search_notes_placeholder">
+              </div>
+
+              <!-- Filter Pills -->
+              <div class="notes-filter-pills">
+                <button class="note-filter-pill active" data-filter="all" data-i18n="filter_all_notes">الكل</button>
+                <button class="note-filter-pill" data-filter="linked" data-i18n="filter_linked_notes">مرتبطة بفيديوهات</button>
+                <button class="note-filter-pill" data-filter="general" data-i18n="filter_general_notes">عامة</button>
+              </div>
+
+              <!-- Items List -->
+              <div id="notebook-items-list" class="notebook-items-list">
+                <!-- Rendered by JS -->
+              </div>
+            </aside>
+
+            <!-- Editor / Preview Panel -->
+            <section class="notebook-editor-panel">
+              <!-- Linked YouTube Video Banner (Dynamic) -->
+              <div id="notebook-linked-banner" class="note-linked-banner" style="display: none;">
+                <div class="note-linked-info">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                  <span>🔗 <span data-i18n="note_linked_to">مرتبط بـ: </span> <strong id="notebook-linked-text"></strong></span>
+                </div>
+                <a id="notebook-linked-url" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.78rem; text-decoration: none;">
+                  <span>مشاهدة الفيديو على يوتيوب ↗</span>
+                </a>
+              </div>
+
+              <!-- Big Title Input -->
+              <input id="notebook-title-input" class="note-title-big-input" type="text" placeholder="عنوان الملاحظة..." data-i18n-placeholder="ph_note_title">
+
+              <!-- Toolbar -->
+              <div class="note-editor-toolbar">
+                <div class="toolbar-group">
+                  <button id="nb-tool-bold" class="toolbar-btn" style="font-weight: 800;" title="خط عريض (Bold)">B</button>
+                  <button id="nb-tool-italic" class="toolbar-btn" style="font-style: italic;" title="خط مائل (Italic)">I</button>
+                  <button id="nb-tool-h1" class="toolbar-btn" style="font-weight: 800;" title="عنوان رئيسي (H1)">H1</button>
+                  <button id="nb-tool-h2" class="toolbar-btn" style="font-weight: 700;" title="عنوان فرعي (H2)">H2</button>
+                  <button id="nb-tool-code" class="toolbar-btn" style="font-family: monospace;" title="كود مضمن (Code)">`code`</button>
+                  <button id="nb-tool-codeblock" class="toolbar-btn" style="font-family: monospace;" title="كتلة برمجية (Code Block)">&lt;/&gt;</button>
+                  <button id="nb-tool-list" class="toolbar-btn" title="قائمة نقطية (List)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                  </button>
+                  <button id="nb-tool-quote" class="toolbar-btn" title="اقتباس (Quote)">”</button>
+                </div>
+
+                <div class="toolbar-group">
+                  <button id="btn-notebook-ai-enhance" class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.8rem;" title="تحسين وتلخيص الصياغة عبر Gemini">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l2.4 6.8 6.8 2.4-6.8 2.4L12 20.4l-2.4-6.8L2.8 11.2l6.8-2.4z"/></svg>
+                    <span data-i18n="btn_ai_enhance">تحسين بالـ AI</span>
+                  </button>
+
+                  <div class="toolbar-mode-switch">
+                    <button class="toolbar-mode-btn active" data-mode="edit" data-i18n="tab_edit">تحرير</button>
+                    <button class="toolbar-mode-btn" data-mode="split" data-i18n="tab_split">انقسام</button>
+                    <button class="toolbar-mode-btn" data-mode="preview" data-i18n="tab_preview">معاينة</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Workspace Area: Editor & Preview Split -->
+              <div id="notebook-content-workspace" class="note-content-workspace mode-edit">
+                <textarea id="notebook-content-input" class="note-content-textarea" placeholder="اكتب ملاحظاتك، شروحاتك، وأكوادك هنا بتنسيق Markdown..." data-i18n-placeholder="ph_note_content"></textarea>
+                <div id="notebook-markdown-preview" class="note-markdown-preview"></div>
+              </div>
+
+              <!-- Footer -->
+              <div class="notebook-editor-footer">
+                <div id="notebook-save-status" class="note-save-status saved">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>تم الحفظ</span>
+                </div>
+                <button id="btn-notebook-save-note" class="btn btn-primary" style="padding: 8px 22px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  <span data-i18n="btn_save">حفظ الملاحظة</span>
+                </button>
+              </div>
+            </section>
+          </div>
         </div>
-        <h3 style="font-size: 1.15rem; font-weight: 700;" data-i18n="drawer_notebook_title">دفتر الملاحظات الذكي</h3>
-      </div>
-      <button id="btn-close-notebook" class="btn-icon" aria-label="Close Notebook">✕</button>
-    </div>
-
-    <div class="drawer-body">
-      <div style="display: flex; gap: 8px;">
-        <button id="btn-new-note" class="btn btn-primary" style="flex: 1; padding: 8px;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span data-i18n="btn_new_note">ملاحظة جديدة</span>
-        </button>
-        <button id="btn-export-note" class="btn btn-secondary" style="padding: 8px 14px;" title="تصدير الملاحظات كملف Markdown" aria-label="Export Note">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span data-i18n="btn_export">تصدير</span>
-        </button>
-      </div>
-
-      <!-- Notes history list -->
-      <div id="notebook-notes-list" style="max-height: 150px; overflow-y: auto; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 6px;"></div>
-
-      <!-- Active note editor -->
-      <div style="display: flex; flex-direction: column; gap: 10px; flex: 1;">
-        <div id="note-context-badge" class="badge badge-purple" style="display: none; align-self: flex-start;"></div>
-        <input id="note-title-input" type="text" placeholder="عنوان الملاحظة..." data-i18n-placeholder="ph_note_title">
-        
-        <!-- Markdown Toolbar with Vector Icons -->
-        <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.04); padding: 5px; border-radius: var(--radius-sm); align-items: center;">
-          <button id="tool-bold" class="btn-icon" style="width: 32px; height: 32px; font-weight: 800;" title="خط عريض (Bold)">B</button>
-          <button id="tool-h2" class="btn-icon" style="width: 32px; height: 32px; font-weight: 700;" title="عنوان فرعي (H2)">H</button>
-          <button id="tool-code" class="btn-icon" style="width: 32px; height: 32px; font-family: monospace;" title="كود برمجي (Code)">&lt;/&gt;</button>
-          <button id="tool-list" class="btn-icon" style="width: 32px; height: 32px;" title="قائمة نقطية (Bullet List)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          </button>
-          <button id="btn-ai-enhance-note" class="btn btn-secondary" style="padding: 3px 10px; font-size: 0.8rem; margin-right: auto;" title="تحسين وتلخيص الصياغة عبر Gemini">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l2.4 6.8 6.8 2.4-6.8 2.4L12 20.4l-2.4-6.8L2.8 11.2l6.8-2.4z"/></svg>
-            <span data-i18n="btn_ai_enhance">تحسين بالـ AI</span>
-          </button>
-        </div>
-
-        <textarea id="note-content-input" style="flex: 1; min-height: 220px; resize: vertical; line-height: 1.6;" placeholder="اكتب ملاحظاتك وأكوادك هنا بتنسيق Markdown..." data-i18n-placeholder="ph_note_content"></textarea>
-
-        <button id="btn-save-note" class="btn btn-primary" style="margin-top: auto;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-          <span data-i18n="btn_save">حفظ الملاحظة</span>
-        </button>
-      </div>
-    </div>
-  </aside>
+      </section>
 
   <!-- Modal: Search & Add YouTube Playlist -->
   <div id="modal-search-playlist" class="modal-backdrop" role="dialog" aria-modal="true">

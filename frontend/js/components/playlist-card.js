@@ -224,13 +224,14 @@ async function loadVideosList(playlistId, card) {
         }
       });
 
-      // Note button
+      // Note button - opens the dedicated Notebook page for this video
       item.querySelector('.btn-take-note').addEventListener('click', () => {
-        bus.emit('drawer:notebook:open', {
+        bus.emit('notebook:open', {
           playlistId: playlistId,
           playlistTitle: playlistDetail.title,
           videoId: v.id,
-          videoTitle: v.title
+          videoTitle: v.title,
+          videoUrl: v.webpage_url
         });
       });
 

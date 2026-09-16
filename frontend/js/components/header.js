@@ -23,10 +23,29 @@ export class HeaderComponent {
       });
     }
 
-    // Modal & Drawer openers
+    // Brand click returns to dashboard
+    $('.header-brand')?.addEventListener('click', () => bus.emit('view:switch', 'dashboard'));
+
+    // Navigation Pages (Dashboard vs Dedicated Notebook Page)
+    $('#nav-btn-dashboard')?.addEventListener('click', () => bus.emit('view:switch', 'dashboard'));
+    $('#nav-btn-notebook')?.addEventListener('click', () => bus.emit('view:switch', 'notebook'));
+
+    bus.on('view:switched', (viewName) => {
+      const btnDashboard = $('#nav-btn-dashboard');
+      const btnNotebook = $('#nav-btn-notebook');
+
+      if (viewName === 'notebook') {
+        btnDashboard?.classList.remove('active');
+        btnNotebook?.classList.add('active');
+      } else {
+        btnNotebook?.classList.remove('active');
+        btnDashboard?.classList.add('active');
+      }
+    });
+
+    // Modal openers
     $('#btn-open-search')?.addEventListener('click', () => bus.emit('modal:search:open'));
     $('#btn-open-task-modal')?.addEventListener('click', () => bus.emit('modal:task:open'));
-    $('#btn-open-notebook')?.addEventListener('click', () => bus.emit('drawer:notebook:open'));
     $('#btn-open-settings')?.addEventListener('click', () => bus.emit('modal:settings:open'));
 
     // Listen for state changes

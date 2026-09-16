@@ -8,7 +8,7 @@ import { bus } from './core/event-bus.js';
 import { HeaderComponent } from './components/header.js';
 import { renderPlaylistCard } from './components/playlist-card.js';
 import { TaskBoardComponent } from './components/task-board.js';
-import { NotebookDrawerComponent } from './components/notebook-drawer.js';
+import { NotebookPageComponent } from './components/notebook-page.js';
 import { SearchModalComponent } from './components/search-modal.js';
 import { SettingsModalComponent } from './components/settings-modal.js';
 import { AIPlanModalComponent } from './components/ai-plan-modal.js';
@@ -26,10 +26,13 @@ class App {
     // Initialize Components
     new HeaderComponent();
     new TaskBoardComponent();
-    new NotebookDrawerComponent();
+    new NotebookPageComponent();
     new SearchModalComponent();
     new SettingsModalComponent();
     new AIPlanModalComponent();
+
+    // Setup Page Navigation Routing
+    this.setupViewRouting();
 
     // Setup Tabs
     this.setupTabs();
@@ -46,6 +49,46 @@ class App {
 
     // Initial Load
     await store.loadAll();
+  }
+
+  setupViewRouting() {
+    const views = {
+      dashboard: $('#view-dashboard'),
+      notebook: $('#view-notebook')
+    };
+
+    const switchView = (targetView) => {
+      const viewKey = views[targetView] ? targetView : 'dashboard';
+      Object.entries(views).forEach(([name, el]) => {
+        if (el) {
+          if (name === viewKey) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        }
+      });
+      bus.emit('view:switched', viewKey);
+      if (window.location.hash !== `#${viewKey}`) {
+        window.history.replaceState(null, '', `#${viewKey}`);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    bus.on('view:switch', (viewName) => switchView(viewName));
+
+    // Handle hash on load and popstate
+    const handleHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'notebook') {
+        switchView('notebook');
+      } else {
+        switchView('dashboard');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHash);
+    handleHash();
   }
 
   setupTabs() {

@@ -46,7 +46,7 @@ export class AIPlanModalComponent {
         });
         closeModal();
         toast.success(i18n.lang === 'ar' ? 'تم حفظ خطة المذاكرة في النوت بوك بنجاح' : 'Study plan saved to notebook');
-        bus.emit('drawer:notebook:open', {
+        bus.emit('notebook:open', {
           playlistId: this.currentPlaylist.id,
           playlistTitle: this.currentPlaylist.title
         });

@@ -26,9 +26,63 @@
     <!-- Main Top Navigation -->
     <header class="app-header">
       <div class="header-brand">
-        <div class="brand-icon">
-          <!-- Geometric Zenith Summit Icon -->
-          <svg viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2L1.5 20.5h21L12 2zm0 4.8l6.2 11H5.8L12 6.8z"/></svg>
+        <div class="brand-icon" title="Zenith">
+          <!-- Bespoke Zenith Summit & Video Learning Emblem -->
+          <svg class="brand-logo-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="zn-facet-left" x1="7" y1="30" x2="18" y2="6" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#9333ea"/>
+                <stop offset="100%" stop-color="#c084fc"/>
+              </linearGradient>
+              <linearGradient id="zn-facet-right" x1="18" y1="6" x2="29" y2="30" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ec4899"/>
+                <stop offset="100%" stop-color="#d946ef"/>
+              </linearGradient>
+              <linearGradient id="zn-ring-grad" x1="4" y1="18" x2="32" y2="18" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.85"/>
+                <stop offset="50%" stop-color="#c084fc"/>
+                <stop offset="100%" stop-color="#ec4899" stop-opacity="0.9"/>
+              </linearGradient>
+              <filter id="zn-glow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#ec4899" flood-opacity="0.65"/>
+              </filter>
+              <filter id="zn-star-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Orbital Halo (Smart Tracking) -->
+            <ellipse cx="18" cy="19" rx="14" ry="5.5" transform="rotate(-20 18 19)" 
+                     stroke="url(#zn-ring-grad)" stroke-width="1.8" stroke-dasharray="32 12" stroke-linecap="round" opacity="0.85"/>
+
+            <!-- Mountain Peak Base Shadow -->
+            <path d="M 8 30 L 18 26.5 L 28 30 Z" fill="#090613" opacity="0.5"/>
+
+            <!-- Left Facet (Peak Ascent) -->
+            <path d="M 18 6.5 L 7.5 29 C 7.2 29.8 7.8 30.5 8.6 30.5 L 18 26.5 Z" 
+                  fill="url(#zn-facet-left)"/>
+
+            <!-- Right Facet (Peak Descent) -->
+            <path d="M 18 6.5 L 18 26.5 L 27.4 30.5 C 28.2 30.5 28.8 29.8 28.5 29 Z" 
+                  fill="url(#zn-facet-right)"/>
+
+            <!-- Center Ridge Highlight Line -->
+            <line x1="18" y1="6.5" x2="18" y2="26.5" stroke="#ffffff" stroke-width="0.9" stroke-linecap="round" opacity="0.75"/>
+
+            <!-- Play Symbol (Video Learning Core) -->
+            <path d="M 15.5 15.2 C 15.5 14.5 16.3 14 17 14.4 L 22.8 17.8 C 23.5 18.2 23.5 19.2 22.8 19.6 L 17 23 C 16.3 23.4 15.5 22.9 15.5 22.2 Z" 
+                  fill="#ffffff" filter="url(#zn-glow)"/>
+
+            <!-- Zenith Apex Star (Pinnacle of Mastery) -->
+            <g filter="url(#zn-star-glow)">
+              <circle cx="18" cy="6" r="1.8" fill="#ffffff"/>
+              <path d="M 18 2.5 L 18.7 5.2 L 21.5 6 L 18.7 6.8 L 18 9.5 L 17.3 6.8 L 14.5 6 L 17.3 5.2 Z" fill="#ffffff"/>
+            </g>
+          </svg>
         </div>
         <div class="brand-title-wrap">
           <span class="brand-title" data-i18n="brand_title">Zenith</span>

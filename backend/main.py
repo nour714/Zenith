@@ -1,0 +1,100 @@
+"""
+Main FastAPI Application entry point with clean lifecycle management,
+custom exception handling, and static file serving.
+"""
+from contextlib import asynccontextmanager
+from pathlib import Path
+from fastapi import FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+
+from app.core.config import settings
+from app.core.logging import setup_logging, get_logger
+from app.core.exceptions import AppBaseException
+from app.db.init_db import init_db
+from app.api.v1.api import api_router
+
+# Initialize logging
+setup_logging()
+logger = get_logger("zenith.main")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifecycle event handling: initialize database schema on startup."""
+    logger.info("Initializing FocusFlow Application...")
+    init_db()
+    logger.info("Database schema verified.")
+    yield
+    logger.info("FocusFlow Application shutting down gracefully.")
+
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION,
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# Global Exception Handler for AppBaseException and custom domain errors
+@app.exception_handler(AppBaseException)
+async def app_exception_handler(request: Request, exc: AppBaseException) -> JSONResponse:
+    logger.warning(f"Handled application exception on {request.url.path}: {exc.message}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "success": False,
+            "message": exc.message,
+            "error": exc.__class__.__name__,
+            "details": exc.details
+        }
+    )
+
+
+# Unhandled Exception Handler
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    logger.exception(f"Unhandled exception on {request.url.path}: {exc}")
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "success": False,
+            "message": "حدث خطأ غير متوقع في الخادم.",
+            "error": "InternalServerError"
+        }
+    )
+
+
+# Include API Routers
+app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix="/api")
+
+# Serve Frontend static assets
+frontend_path = settings.FRONTEND_DIR
+if frontend_path.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="frontend")
+    logger.info(f"Mounted frontend static files from: {frontend_path}")
+else:
+    logger.warning(f"Frontend directory '{frontend_path}' does not exist yet.")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=True
+    )

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith - Peak Learning & Smart YouTube Tracker</title>
+  
+  <!-- Fonts: Cairo (Arabic) & Inter (English) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/rtl.css">
+</head>
+<body>
+  <!-- Canvas Confetti Layer -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Main Top Navigation -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <!-- Geometric Zenith Summit Icon -->
+          <svg viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2L1.5 20.5h21L12 2zm0 4.8l6.2 11H5.8L12 6.8z"/></svg>
+        </div>
+        <div class="brand-title-wrap">
+          <span class="brand-title" data-i18n="brand_title">Zenith</span>
+          <span class="brand-tagline" data-i18n="brand_tagline">ذروة التعلم ومسارات يوتيوب الذكية</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-open-search" class="btn btn-primary" data-i18n-title="btn_add_playlist">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span data-i18n="btn_add_playlist">إضافة مسار يوتيوب</span>
+        </button>
+
+        <button id="btn-open-task-modal" class="btn btn-secondary" data-i18n-title="btn_add_task">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span data-i18n="btn_add_task">مهمة سريعة</span>
+        </button>
+
+        <button id="btn-open-notebook" class="btn btn-secondary" title="دفتر الملاحظات">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+          <span data-i18n="btn_notebook">النوت بوك</span>
+        </button>
+
+        <button id="btn-toggle-lang" class="btn-icon" title="تبديل اللغة (Toggle Language)" aria-label="Toggle Language">
+          EN
+        </button>
+
+        <button id="btn-open-settings" class="btn-icon" title="الإعدادات" aria-label="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Stats Overview Banner -->
+      <section class="stats-banner" aria-label="Statistics Overview">
+        <div class="glass-card stat-card">
+          <div class="stat-icon-wrapper" style="background: rgba(6, 182, 212, 0.16); color: var(--accent-cyan);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          </div>
+          <div>
+            <div id="stat-val-total-videos" class="stat-val">0</div>
+            <div class="stat-label" data-i18n="stat_total_videos">فيديوهات مسجلة</div>
+          </div>
+        </div>
+
+        <div class="glass-card stat-card">
+          <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.16); color: var(--accent-emerald);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <div id="stat-val-completed-videos" class="stat-val">0</div>
+            <div class="stat-label" data-i18n="stat_completed_videos">فيديوهات مكتملة</div>
+          </div>
+        </div>
+
+        <div class="glass-card stat-card">
+          <div class="stat-icon-wrapper" style="background: rgba(139, 92, 246, 0.16); color: var(--accent-purple);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div>
+            <div id="stat-val-total-tasks" class="stat-val">0/0</div>
+            <div class="stat-label" data-i18n="stat_total_tasks">المهام العامة</div>
+          </div>
+        </div>
+
+        <div class="glass-card stat-card">
+          <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.16); color: var(--accent-amber);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div id="stat-val-overall-progress" class="stat-val">0%</div>
+            <div class="stat-label" data-i18n="stat_overall_progress">نسبة الإنجاز الكلية</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Filter Navigation -->
+      <nav class="nav-tabs-bar" aria-label="Dashboard Filters">
+        <div class="tabs-group" role="tablist">
+          <button class="tab-btn active" data-tab="all" role="tab" aria-selected="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span data-i18n="nav_all">الكل</span>
+            <span id="badge-all" class="tab-badge">0</span>
+          </button>
+          <button class="tab-btn" data-tab="playlists" role="tab" aria-selected="false">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            <span data-i18n="nav_playlists">مسارات يوتيوب</span>
+            <span id="badge-playlists" class="tab-badge">0</span>
+          </button>
+          <button class="tab-btn" data-tab="tasks" role="tab" aria-selected="false">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span data-i18n="nav_tasks">المهام اليومية</span>
+            <span id="badge-tasks" class="tab-badge">0</span>
+          </button>
+          <button class="tab-btn" data-tab="completed" role="tab" aria-selected="false">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span data-i18n="nav_completed">المكتملة</span>
+            <span id="badge-completed" class="tab-badge">0</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Dashboard View: Structured Sections -->
+      <div id="dashboard-content">
+        <!-- Playlists Section -->
+        <section id="playlists-section" class="dashboard-section" aria-label="YouTube Playlists">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <div class="section-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+              </div>
+              <h2 class="section-title" data-i18n="nav_playlists">مسارات يوتيوب</h2>
+              <span id="section-badge-playlists" class="badge badge-cyan">0</span>
+            </div>
+            <button class="btn btn-secondary" id="btn-section-add-playlist" style="padding: 6px 14px; font-size: 0.84rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span data-i18n="btn_add_playlist">إضافة مسار</span>
+            </button>
+          </div>
+          <div id="playlists-grid" class="playlists-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- Tasks Section -->
+        <section id="tasks-section" class="dashboard-section" aria-label="Daily Tasks">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <div class="section-icon" style="color: var(--accent-purple);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+              <h2 class="section-title" data-i18n="nav_tasks">المهام اليومية</h2>
+              <span id="section-badge-tasks" class="badge badge-purple">0</span>
+            </div>
+            <button class="btn btn-secondary" id="btn-section-add-task" style="padding: 6px 14px; font-size: 0.84rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span data-i18n="btn_add_task">مهمة سريعة</span>
+            </button>
+          </div>
+          <div id="tasks-grid" class="tasks-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- Global Empty State container -->
+        <div id="dashboard-empty-state" style="display: none;"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Slide Drawer: Smart Notebook -->
+  <div id="notebook-drawer-backdrop" class="drawer-backdrop"></div>
+  <aside id="notebook-drawer" class="notebook-drawer" aria-label="Smart Notebook">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="color: var(--accent-purple); display: flex; align-items: center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </div>
+        <h3 style="font-size: 1.15rem; font-weight: 700;" data-i18n="drawer_notebook_title">دفتر الملاحظات الذكي</h3>
+      </div>
+      <button id="btn-close-notebook" class="btn-icon" aria-label="Close Notebook">✕</button>
+    </div>
+
+    <div class="drawer-body">
+      <div style="display: flex; gap: 8px;">
+        <button id="btn-new-note" class="btn btn-primary" style="flex: 1; padding: 8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span data-i18n="btn_new_note">ملاحظة جديدة</span>
+        </button>
+        <button id="btn-export-note" class="btn btn-secondary" style="padding: 8px 14px;" title="تصدير الملاحظات كملف Markdown" aria-label="Export Note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-i18n="btn_export">تصدير</span>
+        </button>
+      </div>
+
+      <!-- Notes history list -->
+      <div id="notebook-notes-list" style="max-height: 150px; overflow-y: auto; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 6px;"></div>
+
+      <!-- Active note editor -->
+      <div style="display: flex; flex-direction: column; gap: 10px; flex: 1;">
+        <div id="note-context-badge" class="badge badge-purple" style="display: none; align-self: flex-start;"></div>
+        <input id="note-title-input" type="text" placeholder="عنوان الملاحظة..." data-i18n-placeholder="ph_note_title">
+        
+        <!-- Markdown Toolbar with Vector Icons -->
+        <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.04); padding: 5px; border-radius: var(--radius-sm); align-items: center;">
+          <button id="tool-bold" class="btn-icon" style="width: 32px; height: 32px; font-weight: 800;" title="خط عريض (Bold)">B</button>
+          <button id="tool-h2" class="btn-icon" style="width: 32px; height: 32px; font-weight: 700;" title="عنوان فرعي (H2)">H</button>
+          <button id="tool-code" class="btn-icon" style="width: 32px; height: 32px; font-family: monospace;" title="كود برمجي (Code)">&lt;/&gt;</button>
+          <button id="tool-list" class="btn-icon" style="width: 32px; height: 32px;" title="قائمة نقطية (Bullet List)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+          <button id="btn-ai-enhance-note" class="btn btn-secondary" style="padding: 3px 10px; font-size: 0.8rem; margin-right: auto;" title="تحسين وتلخيص الصياغة عبر Gemini">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l2.4 6.8 6.8 2.4-6.8 2.4L12 20.4l-2.4-6.8L2.8 11.2l6.8-2.4z"/></svg>
+            <span data-i18n="btn_ai_enhance">تحسين بالـ AI</span>
+          </button>
+        </div>
+
+        <textarea id="note-content-input" style="flex: 1; min-height: 220px; resize: vertical; line-height: 1.6;" placeholder="اكتب ملاحظاتك وأكوادك هنا بتنسيق Markdown..." data-i18n-placeholder="ph_note_content"></textarea>
+
+        <button id="btn-save-note" class="btn btn-primary" style="margin-top: auto;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span data-i18n="btn_save">حفظ الملاحظة</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Modal: Search & Add YouTube Playlist -->
+  <div id="modal-search-playlist" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="color: #ef4444; display: flex; align-items: center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+          </div>
+          <h3 style="font-size: 1.18rem; font-weight: 700;" data-i18n="modal_search_title">إضافة مسار يوتيوب</h3>
+        </div>
+        <button id="btn-close-search-modal" class="btn-icon" aria-label="Close">✕</button>
+      </div>
+      <form id="form-search-playlist">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px;">
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;" data-i18n="modal_search_hint">
+            اكتب اسم الكورس واسم القناة وسيقوم النظام بالبحث الفوري عنها وعرض فيديوهاتها:
+          </p>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_playlist_name">اسم قائمة التشغيل / الكورس</label>
+            <input id="input-playlist-name" type="text" style="width: 100%;" placeholder="مثال: كورس بايثون للمبتدئين" data-i18n-placeholder="ph_playlist_name">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_channel_name">اسم القناة (اختياري)</label>
+            <input id="input-channel-name" type="text" style="width: 100%;" placeholder="مثال: محمد الدسوقي أو Codezilla" data-i18n-placeholder="ph_channel_name">
+          </div>
+          <div style="text-align: center; color: var(--text-dim); font-size: 0.82rem;">— <span data-i18n="lbl_or_direct_url">أو الصق رابط القائمة المباشر</span> —</div>
+          <div>
+            <input id="input-direct-url" type="url" style="width: 100%;" placeholder="https://www.youtube.com/playlist?list=..." data-i18n-placeholder="ph_direct_url">
+          </div>
+          <div id="search-status-box" style="display: none; padding: 12px; border-radius: var(--radius-sm); font-size: 0.88rem; text-align: center;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-cancel-search-modal" class="btn btn-secondary" data-i18n="btn_cancel">إلغاء</button>
+          <button type="submit" id="btn-submit-search" class="btn btn-primary" data-i18n="btn_search">بحث واستخراج</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Custom Task -->
+  <div id="modal-task" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="font-size: 1.18rem; font-weight: 700;" data-i18n="modal_task_title">إضافة مهمة سريعة</h3>
+        <button id="btn-close-task-modal" class="btn-icon" aria-label="Close">✕</button>
+      </div>
+      <form id="form-create-task">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_title">عنوان المهمة</label>
+            <input id="input-task-title" type="text" style="width: 100%;" required placeholder="مثال: مراجعة الكود وحل التمارين" data-i18n-placeholder="ph_task_title">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_desc">التفاصيل (اختياري)</label>
+            <textarea id="input-task-desc" style="width: 100%; height: 75px; resize: none;"></textarea>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_priority">الأولوية</label>
+              <select id="select-task-priority" style="width: 100%;">
+                <option value="medium">متوسطة (Medium)</option>
+                <option value="high">عالية (High)</option>
+                <option value="low">منخفضة (Low)</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_category">التصنيف</label>
+              <select id="select-task-category" style="width: 100%;">
+                <option value="general">عام (General)</option>
+                <option value="study">مذاكرة (Study)</option>
+                <option value="work">عمل (Work)</option>
+                <option value="personal">شخصي (Personal)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">تاريخ الاستحقاق (اختياري)</label>
+            <input id="input-task-duedate" type="date" style="width: 100%;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-cancel-task-modal" class="btn btn-secondary" data-i18n="btn_cancel">إلغاء</button>
+          <button type="submit" class="btn btn-primary" data-i18n="btn_save">حفظ المهمة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: AI Study Plan -->
+  <div id="modal-ai-plan" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="color: var(--accent-purple); display: flex;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l2.4 6.8 6.8 2.4-6.8 2.4L12 20.4l-2.4-6.8L2.8 11.2l6.8-2.4z"/></svg>
+          </div>
+          <h3 style="font-size: 1.18rem; font-weight: 700;">خطة المذاكرة بالذكاء الاصطناعي</h3>
+        </div>
+        <button id="btn-close-ai-modal" class="btn-icon" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+        <div id="ai-plan-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-ai-modal" class="btn btn-secondary" data-i18n="btn_close">إغلاق</button>
+        <button type="button" id="btn-save-plan-to-notebook" class="btn btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>حفظ في النوت بوك</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Settings -->
+  <div id="modal-settings" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <h3 style="font-size: 1.18rem; font-weight: 700;" data-i18n="modal_settings_title">الإعدادات والذكاء الاصطناعي</h3>
+        </div>
+        <button id="btn-close-settings-modal" class="btn-icon" aria-label="Close">✕</button>
+      </div>
+      <form id="form-settings">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_gemini_key">مفتاح Google Gemini API (اختياري)</label>
+            <input id="input-gemini-key" type="password" style="width: 100%;" placeholder="AIzaSy...">
+            <p style="font-size: 0.78rem; color: var(--text-dim); margin-top: 6px; line-height: 1.4;" data-i18n="gemini_hint">
+              للحصول على خطط مذاكرة آلية وتحسين ذكي للملاحظات. التطبيق يعمل بكامل طاقته للبحث والتتبع بدون المفتاح أيضاً.
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-cancel-settings-modal" class="btn btn-secondary" data-i18n="btn_cancel">إلغاء</button>
+          <button type="submit" class="btn btn-primary" data-i18n="btn_save">حفظ الإعدادات</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Entry Script (ES Modules) -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

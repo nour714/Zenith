@@ -1,0 +1,29 @@
+/* Arabic RTL Adjustments */
+html[dir="rtl"] {
+  font-family: var(--font-arabic);
+}
+
+html[dir="rtl"] .notebook-drawer {
+  right: auto;
+  left: calc(var(--drawer-width) * -1);
+  border-left: none;
+  border-right: 1px solid var(--glass-border);
+  transition: left var(--transition-smooth);
+}
+
+html[dir="rtl"] .notebook-drawer.open {
+  left: 0;
+  right: auto;
+}
+
+html[dir="rtl"] .video-checkbox {
+  margin-left: 4px;
+}
+
+html[dir="rtl"] .modal-footer {
+  justify-content: flex-start;
+}
+
+html[dir="rtl"] .stat-card {
+  text-align: right;
+}

@@ -517,12 +517,18 @@ html[dir="rtl"] .toast-container {
 
 @media (max-width: 680px) {
   .app-header {
-    height: 60px;
+    height: 108px;
     padding: 0 0.85rem;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 56px 40px;
     align-items: center;
     gap: 8px;
+  }
+  .header-brand {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
   }
   .brand-icon {
     width: 34px;
@@ -540,7 +546,12 @@ html[dir="rtl"] .toast-container {
   .header-action-pills {
     padding: 3px;
     gap: 2px;
-    margin: 0 auto;
+    margin: 0;
+  }
+  .header-nav-pages {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
   }
   .nav-page-btn span:not(.page-badge),
   .action-pill-btn span {
@@ -559,6 +570,9 @@ html[dir="rtl"] .toast-container {
     font-size: 0.78rem;
   }
   .header-actions {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
     gap: 5px;
   }
   .header-round-btn {
@@ -566,7 +580,7 @@ html[dir="rtl"] .toast-container {
     height: 34px;
   }
   .app-main {
-    padding: 5rem 0.75rem 3rem;
+    padding: 7.5rem 0.75rem 3rem;
   }
   .section-header {
     align-items: flex-start;

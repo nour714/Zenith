@@ -10,7 +10,7 @@ import { renderPlaylistCard } from './components/playlist-card.js';
 import { TaskBoardComponent } from './components/task-board.js';
 import { NotebookPageComponent } from './components/notebook-page.js?v=2';
 import { SearchModalComponent } from './components/search-modal.js';
-import { SettingsModalComponent } from './components/settings-modal.js';
+import { SettingsModalComponent } from './components/settings-modal.js?v=2';
 import { AIPlanModalComponent } from './components/ai-plan-modal.js?v=2';
 import { $ } from './utils/dom.js';
 

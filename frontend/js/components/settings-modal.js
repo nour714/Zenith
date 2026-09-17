@@ -22,6 +22,8 @@ export class SettingsModalComponent {
 
     bus.on('modal:settings:open', async () => {
       this.modal?.classList.add('open');
+      const languageSelect = $('#select-app-language');
+      if (languageSelect) languageSelect.value = i18n.lang;
       await this.loadCurrentSettings();
     });
 
@@ -34,8 +36,10 @@ export class SettingsModalComponent {
     this.form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const apiKey = $('#input-gemini-key').value.trim();
+      const language = $('#select-app-language')?.value;
       try {
         await api.saveSettings({ gemini_api_key: apiKey });
+        if (language) i18n.setLanguage(language);
         closeModal();
         toast.success(i18n.lang === 'ar' ? 'تم حفظ الإعدادات ومفتاح الذكاء الاصطناعي بنجاح' : 'Settings saved successfully');
       } catch (err) {

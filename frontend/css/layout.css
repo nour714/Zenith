@@ -565,20 +565,7 @@ html[dir="rtl"] .toast-container {
     font-size: 0.78rem;
   }
   .header-actions {
-    position: absolute;
-    left: 10px;
-    display: flex;
-    gap: 4px;
-  }
-
-  .header-actions .header-action-pills {
     display: none;
-  }
-
-  .header-actions .header-round-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 0.72rem;
   }
   .header-round-btn {
     width: 34px;
@@ -627,7 +614,7 @@ html[dir="rtl"] .toast-container {
     bottom: 0;
     z-index: 60;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 4px;
     padding: 7px 8px max(7px, env(safe-area-inset-bottom));
     background: rgba(8, 5, 17, 0.94);
@@ -649,7 +636,7 @@ html[dir="rtl"] .toast-container {
     align-items: center;
     justify-content: center;
     gap: 3px;
-    font-size: 0.72rem;
+    font-size: 0.64rem;
     font-weight: 600;
     position: relative;
   }

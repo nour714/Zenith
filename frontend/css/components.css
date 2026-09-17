@@ -836,7 +836,26 @@
   }
 
   .note-editor-toolbar > .toolbar-group:last-child {
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  #btn-notebook-ai-enhance {
+    width: 100%;
+    min-height: 38px;
+    padding: 8px 12px !important;
+    white-space: nowrap;
+  }
+
+  .note-editor-toolbar .toolbar-mode-switch {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .note-editor-toolbar .toolbar-mode-btn {
+    flex: 1;
+    text-align: center;
   }
 
   .note-editor-toolbar > .toolbar-group:first-child::-webkit-scrollbar {

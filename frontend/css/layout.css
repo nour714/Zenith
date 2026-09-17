@@ -695,6 +695,7 @@ html[dir="rtl"] .toast-container {
     justify-content: space-between;
     overflow: hidden;
     gap: 4px;
+    border-radius: var(--radius-xl);
   }
 
   .tab-btn {

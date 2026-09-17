@@ -206,12 +206,28 @@
   overflow: hidden;
 }
 
+.playlist-info > div:first-child {
+  min-height: 76px;
+}
+
+.playlist-info > div:first-child > div:first-child {
+  display: flex;
+  flex-direction: column;
+  min-height: 76px;
+}
+
 .playlist-channel {
   font-size: 0.85rem;
   color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 7px;
+  min-height: 20px;
+  margin-top: auto;
+}
+
+.playlist-info > div:nth-child(2) {
+  min-height: 48px;
 }
 
 .playlist-channel svg {

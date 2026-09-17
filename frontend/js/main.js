@@ -2,7 +2,7 @@
  * Main Application Bootstrapper (ES Modules).
  * Polished with UI/UX Pro Max standards, distinct sections, and zero layout stretching.
  */
-import { i18n } from './i18n/translator.js';
+import { i18n } from './i18n/translator.js?v=2';
 import { store } from './core/store.js';
 import { bus } from './core/event-bus.js';
 import { HeaderComponent } from './components/header.js?v=2';

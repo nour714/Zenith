@@ -1,8 +1,8 @@
 /**
  * Internationalization (I18n) Engine with reactive RTL/LTR switching.
  */
-import ar from './ar.js';
-import en from './en.js';
+import ar from './ar.js?v=2';
+import en from './en.js?v=2';
 
 const dictionaries = { ar, en };
 

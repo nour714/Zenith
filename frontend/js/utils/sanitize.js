@@ -34,6 +34,9 @@ export function renderBasicMarkdown(text) {
   // Bullet lists
   safe = safe.replace(/^\s*-\s+(.*$)/gim, '<li style="margin-right: 1.2rem; margin-bottom: 4px;">$1</li>');
 
+  // Horizontal rules
+  safe = safe.replace(/^\s*---+\s*$/gim, '<hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 1rem 0;">');
+
   // Newlines to <br>
   safe = safe.replace(/\n/g, '<br>');
 

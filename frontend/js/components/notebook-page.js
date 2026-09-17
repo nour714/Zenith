@@ -422,6 +422,7 @@ export class NotebookPageComponent {
       const enhanced = await api.enhanceNote(title, content);
       $('#notebook-content-input').value = enhanced;
       this.updateMarkdownPreview();
+      document.querySelector('.toolbar-mode-btn[data-mode="preview"]')?.click();
       await this.saveCurrentNote();
       toast.success(i18n.lang === 'ar' ? 'تم تحسين وتنسيق الملاحظة بالذكاء الاصطناعي ✨' : 'Note polished with AI ✨');
     } catch (err) {

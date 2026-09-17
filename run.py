@@ -15,6 +15,14 @@ BACKEND_DIR = CURRENT_DIR / "backend"
 # Ensure backend directory is in sys.path
 sys.path.insert(0, str(BACKEND_DIR))
 
+# Ensure UTF-8 output in Windows terminal
+if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 HOST = "127.0.0.1"
 PORT = 8000
 URL = f"http://{HOST}:{PORT}"
@@ -22,8 +30,8 @@ URL = f"http://{HOST}:{PORT}"
 
 def main():
     print("=" * 60)
-    print(" 🚀 Zenith - Peak Learning & Smart YouTube Tracker")
-    print(f" 🌐 Running on: {URL}")
+    print(" [*] Zenith - Peak Learning & Smart YouTube Tracker")
+    print(f" [*] Running on: {URL}")
     print("=" * 60)
 
     # Open web browser after a short delay

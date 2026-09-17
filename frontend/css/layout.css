@@ -336,6 +336,10 @@
   scrollbar-width: none;
 }
 
+.tabs-group {
+  border-radius: var(--radius-xl);
+}
+
 .tab-btn {
   padding: 8px 18px;
   border-radius: var(--radius-sm);

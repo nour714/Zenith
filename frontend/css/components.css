@@ -1493,3 +1493,18 @@ html[dir="rtl"] .note-markdown-preview blockquote {
     font-size: 0.82rem;
   }
 }
+
+/* Shared surface rounding for the site's main cards. */
+.glass-card,
+.task-item-card,
+.empty-state,
+.notebook-topbar,
+.notebook-sidebar,
+.notebook-editor-panel,
+.modal-card {
+  border-radius: var(--radius-xl);
+}
+
+.note-card-item {
+  border-radius: var(--radius-lg);
+}

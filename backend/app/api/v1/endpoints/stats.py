@@ -1,7 +1,6 @@
 """
 API endpoints for system overview metrics and statistics.
 """
-import sqlite3
 from fastapi import APIRouter, Depends
 from app.api.deps import get_db
 from app.models.common import APIResponse, OverviewStats
@@ -10,24 +9,24 @@ router = APIRouter()
 
 
 @router.get("", response_model=APIResponse[OverviewStats])
-def get_stats(db: sqlite3.Connection = Depends(get_db)) -> APIResponse[OverviewStats]:
+def get_stats(db = Depends(get_db)) -> APIResponse[OverviewStats]:
     cursor = db.cursor()
 
     # Playlists & Videos
-    cursor.execute("SELECT COUNT(*) as count, COALESCE(SUM(completed_videos), 0) as completed, COALESCE(SUM(total_videos), 0) as total FROM playlists")
+    cursor.execute("SELECT COUNT(*) as count, COALESCE(SUM(completed_videos), 0) as completed, COALESCE(SUM(total_videos), 0) as total FROM zenith_playlists")
     p_row = cursor.fetchone()
     total_playlists = p_row["count"] or 0
     total_videos = p_row["total"] or 0
     completed_videos = p_row["completed"] or 0
 
     # Custom Tasks
-    cursor.execute("SELECT COUNT(*) as count, SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END) as completed FROM custom_tasks")
+    cursor.execute("SELECT COUNT(*) as count, SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END) as completed FROM zenith_custom_tasks")
     t_row = cursor.fetchone()
     total_tasks = t_row["count"] or 0
     completed_tasks = t_row["completed"] or 0
 
     # Notes
-    cursor.execute("SELECT COUNT(*) as count FROM notes")
+    cursor.execute("SELECT COUNT(*) as count FROM zenith_notes")
     total_notes = cursor.fetchone()["count"] or 0
 
     # Overall progress

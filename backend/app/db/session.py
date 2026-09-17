@@ -1,33 +1,36 @@
 """
-Database connection and session lifecycle management using SQLite3.
+Database connection and session lifecycle management using PostgreSQL (Supabase).
 """
-import sqlite3
+import psycopg2
+import psycopg2.extras
 from typing import Generator
 from app.core.config import settings
 from app.core.logging import get_logger
+from app.core.exceptions import AppBaseException
 
 logger = get_logger(__name__)
 
 
-def get_db_connection() -> sqlite3.Connection:
+def get_db_connection() -> "psycopg2.extensions.connection":
     """
-    Creates and returns a new SQLite connection configured with:
-    - Row factory enabled for dict-like access
-    - Foreign key constraints enabled
-    - WAL journal mode for high-concurrency read/write performance
+    Creates and returns a new PostgreSQL connection.
+    Uses RealDictCursor by default so rows behave like sqlite3.Row
+    (dict-like access via row["column"] and dict(row)).
     """
-    conn = sqlite3.connect(
-        database=str(settings.DATABASE_PATH),
-        check_same_thread=False,
-        timeout=15.0
+    if not settings.DATABASE_URL:
+        raise AppBaseException(
+            message="DATABASE_URL غير مضبوط. يرجى ضبط متغير البيئة DATABASE_URL برابط اتصال Postgres.",
+            status_code=500
+        )
+    conn = psycopg2.connect(
+        dsn=settings.DATABASE_URL,
+        cursor_factory=psycopg2.extras.RealDictCursor,
+        connect_timeout=10,
     )
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys = ON;")
-    conn.execute("PRAGMA journal_mode = WAL;")
     return conn
 
 
-def get_db() -> Generator[sqlite3.Connection, None, None]:
+def get_db() -> Generator:
     """
     FastAPI dependency yielding a managed database connection.
     Ensures rollback on uncaught exceptions and automatic closure.

@@ -1,7 +1,6 @@
 """
 FastAPI Dependency Injections for clean architecture.
 """
-import sqlite3
 from typing import Generator
 from fastapi import Depends
 from app.db.session import get_db
@@ -15,19 +14,19 @@ from app.services.task_service import TaskService
 from app.services.ai_service import AIService
 
 
-def get_playlist_repo(db: sqlite3.Connection = Depends(get_db)) -> PlaylistRepository:
+def get_playlist_repo(db = Depends(get_db)) -> PlaylistRepository:
     return PlaylistRepository(db)
 
 
-def get_task_repo(db: sqlite3.Connection = Depends(get_db)) -> TaskRepository:
+def get_task_repo(db = Depends(get_db)) -> TaskRepository:
     return TaskRepository(db)
 
 
-def get_note_repo(db: sqlite3.Connection = Depends(get_db)) -> NoteRepository:
+def get_note_repo(db = Depends(get_db)) -> NoteRepository:
     return NoteRepository(db)
 
 
-def get_settings_repo(db: sqlite3.Connection = Depends(get_db)) -> SettingsRepository:
+def get_settings_repo(db = Depends(get_db)) -> SettingsRepository:
     return SettingsRepository(db)
 
 

@@ -1,14 +1,13 @@
 """
-Repository pattern for Playlists and Videos SQL operations.
+Repository pattern for Playlists and Videos SQL operations (PostgreSQL).
 """
-import sqlite3
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from app.core.exceptions import ResourceNotFoundException
 
 
 class PlaylistRepository:
-    def __init__(self, conn: sqlite3.Connection) -> None:
+    def __init__(self, conn) -> None:
         self.conn = conn
 
     def create_playlist(
@@ -24,10 +23,10 @@ class PlaylistRepository:
         cursor = self.conn.cursor()
         cursor.execute(
             """
-            INSERT INTO playlists (
+            INSERT INTO zenith_playlists (
                 playlist_id, title, channel_title, description,
                 thumbnail_url, webpage_url, total_videos, completed_videos
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, 0)
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, 0)
             ON CONFLICT(playlist_id) DO UPDATE SET
                 title = excluded.title,
                 channel_title = excluded.channel_title,
@@ -41,16 +40,16 @@ class PlaylistRepository:
             (playlist_id, title, channel_title, description, thumbnail_url, webpage_url, total_videos)
         )
         row = cursor.fetchone()
-        return row["id"] if row else cursor.lastrowid
+        return row["id"]
 
     def add_videos_batch(self, playlist_db_id: int, videos: List[Dict[str, Any]]) -> None:
         cursor = self.conn.cursor()
         # Fetch existing completed video_ids to preserve completion status if re-importing
-        cursor.execute("SELECT video_id, is_completed, completed_at FROM videos WHERE playlist_id = ?", (playlist_db_id,))
+        cursor.execute("SELECT video_id, is_completed, completed_at FROM zenith_videos WHERE playlist_id = %s", (playlist_db_id,))
         existing_status = {row["video_id"]: (row["is_completed"], row["completed_at"]) for row in cursor.fetchall()}
 
-        cursor.execute("DELETE FROM videos WHERE playlist_id = ?", (playlist_db_id,))
-        
+        cursor.execute("DELETE FROM zenith_videos WHERE playlist_id = %s", (playlist_db_id,))
+
         insert_data = []
         completed_count = 0
         for pos, v in enumerate(videos, start=1):
@@ -70,63 +69,53 @@ class PlaylistRepository:
                 comp_at
             ))
 
-        cursor.executemany(
-            """
-            INSERT INTO videos (
-                playlist_id, video_id, title, duration,
-                thumbnail_url, webpage_url, position, is_completed, completed_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            insert_data
-        )
+        if insert_data:
+            cursor.executemany(
+                """
+                INSERT INTO zenith_videos (
+                    playlist_id, video_id, title, duration,
+                    thumbnail_url, webpage_url, position, is_completed, completed_at
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                insert_data
+            )
         # Update playlist counts
         cursor.execute(
             """
-            UPDATE playlists
-            SET total_videos = ?, completed_videos = ?, updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
+            UPDATE zenith_playlists
+            SET total_videos = %s, completed_videos = %s, updated_at = CURRENT_TIMESTAMP
+            WHERE id = %s
             """,
             (len(videos), completed_count, playlist_db_id)
         )
 
+    def _with_progress(self, rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        result = []
+        for row in rows:
+            row = dict(row)
+            total = row.get("total_videos") or 0
+            completed = row.get("completed_videos") or 0
+            row["progress_percentage"] = round((completed / total) * 100, 1) if total > 0 else 0.0
+            result.append(row)
+        return result
+
     def get_all_playlists(self) -> List[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            SELECT 
-                p.*,
-                CASE 
-                    WHEN p.total_videos > 0 THEN ROUND((CAST(p.completed_videos AS REAL) / p.total_videos) * 100, 1)
-                    ELSE 0.0
-                END as progress_percentage
-            FROM playlists p
-            ORDER BY p.updated_at DESC
-            """
-        )
+        cursor.execute("SELECT * FROM zenith_playlists ORDER BY updated_at DESC")
         rows = cursor.fetchall()
-        return [dict(row) for row in rows]
+        return self._with_progress(rows)
 
     def get_playlist_by_id(self, playlist_id: int) -> Optional[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        cursor.execute(
-            """
-            SELECT 
-                p.*,
-                CASE 
-                    WHEN p.total_videos > 0 THEN ROUND((CAST(p.completed_videos AS REAL) / p.total_videos) * 100, 1)
-                    ELSE 0.0
-                END as progress_percentage
-            FROM playlists p
-            WHERE p.id = ?
-            """,
-            (playlist_id,)
-        )
+        cursor.execute("SELECT * FROM zenith_playlists WHERE id = %s", (playlist_id,))
         row = cursor.fetchone()
-        return dict(row) if row else None
+        if not row:
+            return None
+        return self._with_progress([row])[0]
 
     def get_playlist_by_yt_id(self, yt_id: str) -> Optional[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM playlists WHERE playlist_id = ?", (yt_id,))
+        cursor.execute("SELECT * FROM zenith_playlists WHERE playlist_id = %s", (yt_id,))
         row = cursor.fetchone()
         return dict(row) if row else None
 
@@ -134,8 +123,8 @@ class PlaylistRepository:
         cursor = self.conn.cursor()
         cursor.execute(
             """
-            SELECT * FROM videos
-            WHERE playlist_id = ?
+            SELECT * FROM zenith_videos
+            WHERE playlist_id = %s
             ORDER BY position ASC
             """,
             (playlist_id,)
@@ -145,7 +134,7 @@ class PlaylistRepository:
 
     def toggle_video_status(self, video_id: int, is_completed: bool) -> Dict[str, Any]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT playlist_id FROM videos WHERE id = ?", (video_id,))
+        cursor.execute("SELECT playlist_id FROM zenith_videos WHERE id = %s", (video_id,))
         row = cursor.fetchone()
         if not row:
             raise ResourceNotFoundException("Video", video_id)
@@ -154,25 +143,25 @@ class PlaylistRepository:
         now_str = datetime.utcnow().isoformat() if is_completed else None
         cursor.execute(
             """
-            UPDATE videos
-            SET is_completed = ?, completed_at = ?
-            WHERE id = ?
+            UPDATE zenith_videos
+            SET is_completed = %s, completed_at = %s
+            WHERE id = %s
             """,
             (1 if is_completed else 0, now_str, video_id)
         )
 
         # Recalculate playlist completed count
         cursor.execute(
-            "SELECT COUNT(*) as count FROM videos WHERE playlist_id = ? AND is_completed = 1",
+            "SELECT COUNT(*) as count FROM zenith_videos WHERE playlist_id = %s AND is_completed = 1",
             (playlist_db_id,)
         )
         completed_count = cursor.fetchone()["count"]
 
         cursor.execute(
             """
-            UPDATE playlists
-            SET completed_videos = ?, updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
+            UPDATE zenith_playlists
+            SET completed_videos = %s, updated_at = CURRENT_TIMESTAMP
+            WHERE id = %s
             """,
             (completed_count, playlist_db_id)
         )
@@ -187,5 +176,5 @@ class PlaylistRepository:
 
     def delete_playlist(self, playlist_id: int) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM playlists WHERE id = ?", (playlist_id,))
+        cursor.execute("DELETE FROM zenith_playlists WHERE id = %s", (playlist_id,))
         return cursor.rowcount > 0

@@ -132,6 +132,26 @@
       </div>
     </header>
 
+    <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+      <button id="mobile-nav-dashboard" class="mobile-bottom-nav-btn active" data-mobile-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span data-i18n="nav_dashboard">لوحة المتابعة</span>
+      </button>
+      <button id="mobile-nav-notebook" class="mobile-bottom-nav-btn" data-mobile-view="notebook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span data-i18n="nav_notebook_page">دفتر الملاحظات</span>
+        <span id="mobile-notes-count" class="mobile-bottom-nav-badge">0</span>
+      </button>
+      <button id="mobile-nav-playlist" class="mobile-bottom-nav-btn" aria-label="Add playlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span data-i18n="btn_add_playlist">مسار جديد</span>
+      </button>
+      <button id="mobile-nav-task" class="mobile-bottom-nav-btn" aria-label="Add task">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span data-i18n="btn_add_task">مهمة جديدة</span>
+      </button>
+    </nav>
+
     <!-- Main Content -->
     <main class="app-main">
       <!-- View: Dashboard (Courses & Tasks) -->
@@ -518,6 +538,6 @@
   </div>
 
   <!-- Entry Script (ES Modules) -->
-  <script type="module" src="js/main.js?v=2"></script>
+  <script type="module" src="js/main.js?v=4"></script>
 </body>
 </html>

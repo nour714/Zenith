@@ -29,6 +29,10 @@ export class HeaderComponent {
     // Navigation Pages (Dashboard vs Dedicated Notebook Page)
     $('#nav-btn-dashboard')?.addEventListener('click', () => bus.emit('view:switch', 'dashboard'));
     $('#nav-btn-notebook')?.addEventListener('click', () => bus.emit('view:switch', 'notebook'));
+    $('#mobile-nav-dashboard')?.addEventListener('click', () => bus.emit('view:switch', 'dashboard'));
+    $('#mobile-nav-notebook')?.addEventListener('click', () => bus.emit('view:switch', 'notebook'));
+    $('#mobile-nav-playlist')?.addEventListener('click', () => bus.emit('modal:search:open'));
+    $('#mobile-nav-task')?.addEventListener('click', () => bus.emit('modal:task:open'));
 
     bus.on('view:switched', (viewName) => {
       const btnDashboard = $('#nav-btn-dashboard');
@@ -41,6 +45,11 @@ export class HeaderComponent {
         btnNotebook?.classList.remove('active');
         btnDashboard?.classList.add('active');
       }
+
+      const mobileDashboard = $('#mobile-nav-dashboard');
+      const mobileNotebook = $('#mobile-nav-notebook');
+      mobileDashboard?.classList.toggle('active', viewName !== 'notebook');
+      mobileNotebook?.classList.toggle('active', viewName === 'notebook');
     });
 
     // Modal openers
@@ -60,10 +69,12 @@ export class HeaderComponent {
     const elCompVideos = $('#stat-val-completed-videos');
     const elTotalTasks = $('#stat-val-total-tasks');
     const elOverallProgress = $('#stat-val-overall-progress');
+    const mobileNotesCount = $('#mobile-notes-count');
 
     if (elTotalVideos) elTotalVideos.textContent = stats.total_videos || 0;
     if (elCompVideos) elCompVideos.textContent = stats.completed_videos || 0;
     if (elTotalTasks) elTotalTasks.textContent = `${stats.completed_tasks || 0}/${stats.total_tasks || 0}`;
     if (elOverallProgress) elOverallProgress.textContent = `${stats.overall_progress_percentage || 0}%`;
+    if (mobileNotesCount) mobileNotesCount.textContent = stats.total_notes || 0;
   }
 }

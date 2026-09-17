@@ -5,7 +5,7 @@
 import { i18n } from './i18n/translator.js';
 import { store } from './core/store.js';
 import { bus } from './core/event-bus.js';
-import { HeaderComponent } from './components/header.js';
+import { HeaderComponent } from './components/header.js?v=2';
 import { renderPlaylistCard } from './components/playlist-card.js';
 import { TaskBoardComponent } from './components/task-board.js';
 import { NotebookPageComponent } from './components/notebook-page.js';

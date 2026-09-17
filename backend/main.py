@@ -78,7 +78,8 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
         content={
             "success": False,
             "message": "حدث خطأ غير متوقع في الخادم.",
-            "error": "InternalServerError"
+            "error": exc.__class__.__name__,
+            "details": str(exc)
         }
     )
 
@@ -91,11 +92,20 @@ app.include_router(api_router, prefix="/api")
 @app.get("/health", tags=["Health"])
 @app.get("/api/health", tags=["Health"])
 async def health_check():
+    db_ok = False
+    db_error = None
+    try:
+        init_db()
+        db_ok = True
+    except Exception as exc:
+        db_error = str(exc)
     return {
         "status": "healthy",
         "app": settings.PROJECT_NAME,
         "version": settings.VERSION,
-        "database_configured": bool(settings.DATABASE_URL)
+        "database_configured": bool(settings.DATABASE_URL),
+        "database_connected": db_ok,
+        "database_error": db_error
     }
 
 

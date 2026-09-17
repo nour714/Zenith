@@ -541,7 +541,8 @@ html[dir="rtl"] .toast-container {
     height: 22px;
   }
   .brand-title {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
+    letter-spacing: 0;
   }
   .header-nav-pages,
   .header-action-pills {
@@ -581,7 +582,8 @@ html[dir="rtl"] .toast-container {
     min-width: 0;
   }
   .section-title {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
+    letter-spacing: 0;
   }
   .section-header > .btn {
     flex-shrink: 0;
@@ -634,7 +636,7 @@ html[dir="rtl"] .toast-container {
     align-items: center;
     justify-content: center;
     gap: 3px;
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     font-weight: 600;
     position: relative;
   }

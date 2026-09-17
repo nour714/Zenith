@@ -15,7 +15,15 @@ class Settings(BaseSettings):
     # Base directories
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
     ROOT_DIR: Path = BASE_DIR.parent
-    FRONTEND_DIR: Path = ROOT_DIR / "frontend"
+    FRONTEND_DIR: Path = (
+        (BASE_DIR.parent / "frontend")
+        if (BASE_DIR.parent / "frontend").exists()
+        else (
+            (BASE_DIR / "frontend")
+            if (BASE_DIR / "frontend").exists()
+            else Path.cwd() / "frontend"
+        )
+    )
 
     # Database (PostgreSQL / Supabase). Set via the DATABASE_URL env var.
     DATABASE_URL: Optional[str] = None

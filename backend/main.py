@@ -1,9 +1,12 @@
-"""
-Main FastAPI Application entry point with clean lifecycle management,
-custom exception handling, and static file serving.
-"""
+import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
+
+# Ensure backend directory is in sys.path for serverless and root execution
+BACKEND_DIR = Path(__file__).resolve().parent
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
+
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -23,11 +26,14 @@ logger = get_logger("zenith.main")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifecycle event handling: initialize database schema on startup."""
-    logger.info("Initializing FocusFlow Application...")
-    init_db()
-    logger.info("Database schema verified.")
+    logger.info("Initializing Zenith Application...")
+    try:
+        init_db()
+        logger.info("Database schema verified.")
+    except Exception as exc:
+        logger.warning(f"Database connection check warning on startup: {exc}")
     yield
-    logger.info("FocusFlow Application shutting down gracefully.")
+    logger.info("Zenith Application shutting down gracefully.")
 
 
 app = FastAPI(
@@ -80,6 +86,18 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
 # Include API Routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(api_router, prefix="/api")
+
+
+@app.get("/health", tags=["Health"])
+@app.get("/api/health", tags=["Health"])
+async def health_check():
+    return {
+        "status": "healthy",
+        "app": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "database_configured": bool(settings.DATABASE_URL)
+    }
+
 
 # Serve Frontend static assets
 frontend_path = settings.FRONTEND_DIR

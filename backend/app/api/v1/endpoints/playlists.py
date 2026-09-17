@@ -3,7 +3,7 @@ API endpoints for Playlists and Video completion tracking.
 """
 from typing import Any, Dict, List
 from fastapi import APIRouter, Depends, status
-from app.api.deps import get_playlist_service
+from app.api.deps import get_playlist_service, verify_auth
 from app.services.playlist_service import PlaylistService
 from app.models.playlist import PlaylistSearchRequest, VideoToggleRequest
 from app.models.common import APIResponse
@@ -11,14 +11,14 @@ from app.models.common import APIResponse
 router = APIRouter()
 
 
-@router.post("/import", response_model=APIResponse[Dict[str, Any]], status_code=status.HTTP_201_CREATED)
+@router.post("/import", response_model=APIResponse[Dict[str, Any]], status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_auth)])
 def import_playlist(
     request: PlaylistSearchRequest,
     service: PlaylistService = Depends(get_playlist_service)
 ) -> APIResponse[Dict[str, Any]]:
     """
     Searches for a YouTube playlist using name/channel or direct link,
-    extracts its video list, and stores it in SQLite.
+    extracts its video list, and stores it in database.
     """
     playlist = service.search_and_import(request)
     return APIResponse(
@@ -47,7 +47,7 @@ def get_playlist(
     return APIResponse(data=playlist)
 
 
-@router.patch("/videos/{video_id}/toggle", response_model=APIResponse[Dict[str, Any]])
+@router.patch("/videos/{video_id}/toggle", response_model=APIResponse[Dict[str, Any]], dependencies=[Depends(verify_auth)])
 def toggle_video(
     video_id: int,
     request: VideoToggleRequest,
@@ -62,7 +62,7 @@ def toggle_video(
     )
 
 
-@router.delete("/{playlist_id}", response_model=APIResponse[bool])
+@router.delete("/{playlist_id}", response_model=APIResponse[bool], dependencies=[Depends(verify_auth)])
 def delete_playlist(
     playlist_id: int,
     service: PlaylistService = Depends(get_playlist_service)

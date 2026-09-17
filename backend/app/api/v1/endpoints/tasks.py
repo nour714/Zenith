@@ -3,7 +3,7 @@ API endpoints for Custom Tasks management.
 """
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, Query, status
-from app.api.deps import get_task_service
+from app.api.deps import get_task_service, verify_auth
 from app.services.task_service import TaskService
 from app.models.task import TaskCreate, TaskUpdate
 from app.models.common import APIResponse
@@ -11,7 +11,7 @@ from app.models.common import APIResponse
 router = APIRouter()
 
 
-@router.post("", response_model=APIResponse[Dict[str, Any]], status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=APIResponse[Dict[str, Any]], status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_auth)])
 def create_task(
     task: TaskCreate,
     service: TaskService = Depends(get_task_service)
@@ -42,7 +42,7 @@ def get_task(
     return APIResponse(data=task)
 
 
-@router.put("/{task_id}", response_model=APIResponse[Dict[str, Any]])
+@router.put("/{task_id}", response_model=APIResponse[Dict[str, Any]], dependencies=[Depends(verify_auth)])
 def update_task(
     task_id: int,
     task: TaskUpdate,
@@ -52,7 +52,7 @@ def update_task(
     return APIResponse(message="تم تحديث المهمة بنجاح", data=updated)
 
 
-@router.patch("/{task_id}/toggle", response_model=APIResponse[Dict[str, Any]])
+@router.patch("/{task_id}/toggle", response_model=APIResponse[Dict[str, Any]], dependencies=[Depends(verify_auth)])
 def toggle_task(
     task_id: int,
     service: TaskService = Depends(get_task_service)
@@ -61,7 +61,7 @@ def toggle_task(
     return APIResponse(message="تم تحديث حالة المهمة", data=result)
 
 
-@router.delete("/{task_id}", response_model=APIResponse[bool])
+@router.delete("/{task_id}", response_model=APIResponse[bool], dependencies=[Depends(verify_auth)])
 def delete_task(
     task_id: int,
     service: TaskService = Depends(get_task_service)

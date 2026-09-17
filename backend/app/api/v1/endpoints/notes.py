@@ -3,7 +3,7 @@ API endpoints for Notebook management.
 """
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, Query, status
-from app.api.deps import get_note_repo
+from app.api.deps import get_note_repo, verify_auth
 from app.db.repositories.note_repo import NoteRepository
 from app.models.note import NoteCreate, NoteUpdate
 from app.models.common import APIResponse
@@ -11,7 +11,7 @@ from app.models.common import APIResponse
 router = APIRouter()
 
 
-@router.post("", response_model=APIResponse[Dict[str, Any]], status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=APIResponse[Dict[str, Any]], status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_auth)])
 def create_note(
     note: NoteCreate,
     repo: NoteRepository = Depends(get_note_repo)
@@ -43,7 +43,7 @@ def get_note(
     return APIResponse(data=note)
 
 
-@router.put("/{note_id}", response_model=APIResponse[Dict[str, Any]])
+@router.put("/{note_id}", response_model=APIResponse[Dict[str, Any]], dependencies=[Depends(verify_auth)])
 def update_note(
     note_id: int,
     note: NoteUpdate,
@@ -53,7 +53,7 @@ def update_note(
     return APIResponse(message="تم تحديث الملاحظة بنجاح", data=updated)
 
 
-@router.delete("/{note_id}", response_model=APIResponse[bool])
+@router.delete("/{note_id}", response_model=APIResponse[bool], dependencies=[Depends(verify_auth)])
 def delete_note(
     note_id: int,
     repo: NoteRepository = Depends(get_note_repo)

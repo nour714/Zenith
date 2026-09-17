@@ -4,7 +4,7 @@ API endpoints for AI-driven study plans and note enhancements.
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends
-from app.api.deps import get_ai_service, get_playlist_service
+from app.api.deps import get_ai_service, get_playlist_service, verify_auth
 from app.services.ai_service import AIService
 from app.services.playlist_service import PlaylistService
 from app.models.common import APIResponse
@@ -22,7 +22,7 @@ class NoteEnhanceRequest(BaseModel):
     content: str
 
 
-@router.post("/study-plan", response_model=APIResponse[str])
+@router.post("/study-plan", response_model=APIResponse[str], dependencies=[Depends(verify_auth)])
 def generate_study_plan(
     req: StudyPlanRequest,
     ai: AIService = Depends(get_ai_service),
@@ -39,7 +39,7 @@ def generate_study_plan(
     return APIResponse(message="تم توليد خطة المذاكرة بنجاح", data=plan)
 
 
-@router.post("/enhance-note", response_model=APIResponse[str])
+@router.post("/enhance-note", response_model=APIResponse[str], dependencies=[Depends(verify_auth)])
 def enhance_note(
     req: NoteEnhanceRequest,
     ai: AIService = Depends(get_ai_service)

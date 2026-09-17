@@ -1,5 +1,5 @@
 """
-FocusFlow Launcher Script.
+Zenith Launcher Script.
 Starts the FastAPI application server and automatically opens the browser.
 """
 import os

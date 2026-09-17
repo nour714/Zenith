@@ -38,10 +38,12 @@ export class SettingsModalComponent {
       const apiKey = $('#input-gemini-key').value.trim();
       const language = $('#select-app-language')?.value;
       try {
-        await api.saveSettings({ gemini_api_key: apiKey });
+        if (apiKey) {
+          await api.saveSettings({ gemini_api_key: apiKey });
+        }
         if (language) i18n.setLanguage(language);
         closeModal();
-        toast.success(i18n.lang === 'ar' ? 'تم حفظ الإعدادات ومفتاح الذكاء الاصطناعي بنجاح' : 'Settings saved successfully');
+        toast.success(i18n.lang === 'ar' ? 'تم حفظ الإعدادات بنجاح' : 'Settings saved successfully');
       } catch (err) {
         toast.error(err.message);
       }
@@ -51,8 +53,14 @@ export class SettingsModalComponent {
   async loadCurrentSettings() {
     try {
       const data = await api.getSettings();
-      if (data && data.gemini_api_key) {
-        $('#input-gemini-key').value = data.gemini_api_key;
+      const input = $('#input-gemini-key');
+      if (input) {
+        if (data && data.gemini_api_key_masked) {
+          input.value = '';
+          input.placeholder = data.gemini_api_key_masked;
+        } else if (data && data.gemini_api_key) {
+          input.value = data.gemini_api_key;
+        }
       }
     } catch (err) {
       console.error('Failed to load settings:', err);

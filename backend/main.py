@@ -45,10 +45,20 @@ app = FastAPI(
 )
 
 # CORS configuration
+# allow_origins=["*"] combined with allow_credentials=True is invalid per CORS specifications.
+# Explicitly support origins from ALLOWED_ORIGINS setting, and disable credentials when using wildcard.
+raw_origins = getattr(settings, "ALLOWED_ORIGINS", "*")
+if isinstance(raw_origins, str):
+    cors_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
+else:
+    cors_origins = list(raw_origins)
+
+cors_allow_credentials = False if "*" in cors_origins else True
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=cors_origins,
+    allow_credentials=cors_allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )

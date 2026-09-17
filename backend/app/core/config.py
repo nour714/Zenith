@@ -32,6 +32,12 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: Optional[str] = None
     GEMINI_MODEL: str = "gemini-3.6-flash"
 
+    # Auth config
+    ZENITH_ADMIN_KEY: Optional[str] = None
+
+    # CORS config
+    ALLOWED_ORIGINS: str = "*"
+
     # Server config
     HOST: str = "0.0.0.0"
     PORT: int = 8000

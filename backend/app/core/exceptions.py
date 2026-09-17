@@ -30,3 +30,10 @@ class AIServiceError(AppBaseException):
     """Raised when Gemini AI service fails."""
     def __init__(self, message: str, details: Optional[Any] = None) -> None:
         super().__init__(message=message, status_code=502, details=details)
+
+
+class UnauthorizedException(AppBaseException):
+    """Raised when authentication fails or is missing on protected routes."""
+    def __init__(self, message: str = "مفتاح المصادقة غير صالح أو مفقود.", details: Optional[Any] = None) -> None:
+        super().__init__(message=message, status_code=401, details=details)
+

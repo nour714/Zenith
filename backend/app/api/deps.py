@@ -1,8 +1,9 @@
-"""
-FastAPI Dependency Injections for clean architecture.
-"""
-from typing import Generator
-from fastapi import Depends
+import os
+from typing import Generator, Optional
+from fastapi import Depends, Header
+from app.core.config import settings
+from app.core.logging import get_logger
+from app.core.exceptions import UnauthorizedException
 from app.db.session import get_db
 from app.db.repositories.playlist_repo import PlaylistRepository
 from app.db.repositories.task_repo import TaskRepository
@@ -12,6 +13,25 @@ from app.services.youtube_service import YouTubeService
 from app.services.playlist_service import PlaylistService
 from app.services.task_service import TaskService
 from app.services.ai_service import AIService
+
+auth_logger = get_logger("zenith.auth")
+
+
+def verify_auth(
+    x_zenith_key: Optional[str] = Header(None, alias="X-Zenith-Key")
+) -> None:
+    """
+    Minimal auth guard validating X-Zenith-Key against ZENITH_ADMIN_KEY.
+    If ZENITH_ADMIN_KEY is unset, logs a warning and permits open access for local dev.
+    """
+    expected_key = os.getenv("ZENITH_ADMIN_KEY") or settings.ZENITH_ADMIN_KEY
+    if not expected_key:
+        auth_logger.warning("ZENITH_ADMIN_KEY is not set; mutating endpoints are open without authentication.")
+        return
+
+    if not x_zenith_key or x_zenith_key != expected_key:
+        raise UnauthorizedException("مفتاح المصادقة غير صالح أو مفقود (X-Zenith-Key).")
+
 
 
 def get_playlist_repo(db = Depends(get_db)) -> PlaylistRepository:

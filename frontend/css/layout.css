@@ -565,7 +565,20 @@ html[dir="rtl"] .toast-container {
     font-size: 0.78rem;
   }
   .header-actions {
+    position: absolute;
+    left: 10px;
+    display: flex;
+    gap: 4px;
+  }
+
+  .header-actions .header-action-pills {
     display: none;
+  }
+
+  .header-actions .header-round-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.72rem;
   }
   .header-round-btn {
     width: 34px;

@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
 }
 
 .stat-icon-wrapper {

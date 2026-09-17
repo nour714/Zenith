@@ -1,6 +1,5 @@
-/**
- * Centralized API Client connecting to FastAPI backend endpoints.
- */
+import { authService } from './auth-service.js';
+import { bus } from '../core/event-bus.js';
 
 const API_BASE = '/api/v1';
 
@@ -12,11 +11,22 @@ class APIClient {
       ...options.headers,
     };
 
+    const token = authService.getToken();
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     try {
       const response = await fetch(url, {
         ...options,
         headers,
       });
+
+      if (response.status === 401) {
+        authService.clearSession();
+        bus.emit('auth:unauthorized');
+        throw new Error('جلسة الدخول منتهية أو غير صالحة. يرجى تسجيل الدخول.');
+      }
 
       const json = await response.json();
 

@@ -2,11 +2,13 @@
  * Central Reactive Store (Single Source of Truth).
  */
 import { api } from '../services/api-client.js';
+import { authService } from '../services/auth-service.js';
 import { bus } from './event-bus.js';
 
 class Store {
   constructor() {
     this.state = {
+      currentUser: authService.getUser(),
       playlists: [],
       tasks: [],
       notes: [],
@@ -24,6 +26,31 @@ class Store {
       selectedPlaylistDetail: null,
       isLoading: false,
     };
+
+    bus.on('auth:state-changed', ({ isAuthenticated, user }) => {
+      this.state.currentUser = user;
+      if (isAuthenticated) {
+        this.loadAll();
+      } else {
+        this.clear();
+      }
+    });
+  }
+
+  clear() {
+    this.state.playlists = [];
+    this.state.tasks = [];
+    this.state.notes = [];
+    this.state.stats = {
+      total_playlists: 0,
+      total_videos: 0,
+      completed_videos: 0,
+      total_tasks: 0,
+      completed_tasks: 0,
+      total_notes: 0,
+      overall_progress_percentage: 0,
+    };
+    bus.emit('state:changed', this.state);
   }
 
   getState() {
@@ -37,6 +64,10 @@ class Store {
   }
 
   async loadAll() {
+    if (!authService.isAuthenticated()) {
+      return;
+    }
+
     this.state.isLoading = true;
     bus.emit('loading:start');
     try {
@@ -62,6 +93,7 @@ class Store {
   }
 
   async refreshStats() {
+    if (!authService.isAuthenticated()) return;
     try {
       const stats = await api.getStats();
       this.state.stats = stats;
@@ -72,6 +104,7 @@ class Store {
   }
 
   async refreshPlaylists() {
+    if (!authService.isAuthenticated()) return;
     try {
       const playlists = await api.getPlaylists();
       this.state.playlists = playlists;
@@ -84,6 +117,7 @@ class Store {
   }
 
   async refreshTasks() {
+    if (!authService.isAuthenticated()) return;
     try {
       const tasks = await api.getTasks();
       this.state.tasks = tasks;
@@ -96,10 +130,13 @@ class Store {
   }
 
   async refreshNotes() {
+    if (!authService.isAuthenticated()) return;
     try {
       const notes = await api.getNotes();
       this.state.notes = notes;
+      await this.refreshStats();
       bus.emit('notes:updated', notes);
+      bus.emit('state:changed', this.state);
     } catch (err) {
       console.error('Failed to refresh notes:', err);
     }

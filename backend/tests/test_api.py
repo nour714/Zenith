@@ -2,7 +2,6 @@
 End-to-End API Integration and Security Verification Test Suite.
 Run with: python backend/tests/test_api.py
 """
-import os
 import sys
 from pathlib import Path
 
@@ -168,9 +167,9 @@ def test_system():
             cors_mw = middleware
             break
     assert cors_mw is not None, "CORSMiddleware not found in app"
-    origins = cors_mw.kwargs.get("allow_origins", [])
+    origins = cors_mw.kwargs.get("allow_origins")
     credentials = cors_mw.kwargs.get("allow_credentials", False)
-    if "*" in origins:
+    if isinstance(origins, (list, tuple)) and "*" in origins:
         assert credentials is False, "allow_credentials must be False when allow_origins has '*'"
 
     # Test actual CORS preflight request

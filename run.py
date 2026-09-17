@@ -16,12 +16,19 @@ BACKEND_DIR = CURRENT_DIR / "backend"
 sys.path.insert(0, str(BACKEND_DIR))
 
 # Ensure UTF-8 output in Windows terminal
-if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
-    try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
-    except Exception:
-        pass
+if sys.platform == "win32":
+    reconfig_out = getattr(sys.stdout, "reconfigure", None)
+    if callable(reconfig_out):
+        try:
+            reconfig_out(encoding="utf-8")
+        except Exception:
+            pass
+    reconfig_err = getattr(sys.stderr, "reconfigure", None)
+    if callable(reconfig_err):
+        try:
+            reconfig_err(encoding="utf-8")
+        except Exception:
+            pass
 
 IS_DEPLOYMENT = bool(os.getenv("PORT"))
 HOST = os.getenv("HOST", "127.0.0.1" if not IS_DEPLOYMENT else "0.0.0.0")

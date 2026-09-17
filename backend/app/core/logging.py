@@ -7,12 +7,19 @@ import sys
 
 def setup_logging(level: int = logging.INFO) -> None:
     """Configures root logger with formatted stream handler."""
-    if hasattr(sys.stdout, "reconfigure"):
-        try:
-            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
-        except Exception:
-            pass
+    if sys.platform == "win32":
+        reconfig_out = getattr(sys.stdout, "reconfigure", None)
+        if callable(reconfig_out):
+            try:
+                reconfig_out(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+        reconfig_err = getattr(sys.stderr, "reconfigure", None)
+        if callable(reconfig_err):
+            try:
+                reconfig_err(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
 
     log_format = "[%(asctime)s] [%(levelname)s] [%(name)s]: %(message)s"
     date_format = "%Y-%m-%d %H:%M:%S"

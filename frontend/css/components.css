@@ -1394,6 +1394,12 @@ html[dir="rtl"] .note-markdown-preview blockquote {
     justify-content: space-between;
   }
 
+  .stat-card > div:last-child {
+    flex: 1;
+    min-width: 0;
+    text-align: right;
+  }
+
   .stat-icon-wrapper {
     width: 46px;
     height: 46px;
@@ -1410,6 +1416,7 @@ html[dir="rtl"] .note-markdown-preview blockquote {
   }
 
   .stat-label {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
+    line-height: 1.35;
   }
 }

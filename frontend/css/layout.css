@@ -607,16 +607,17 @@ html[dir="rtl"] .toast-container {
 
   .mobile-bottom-nav {
     position: fixed;
-    left: 0;
-    right: 0;
+    left: 12px;
+    right: max(5px, calc(12px - 7px));
     bottom: 0;
     z-index: 60;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 4px;
-    padding: 8px 10px max(8px, env(safe-area-inset-bottom));
+    padding: 7px 8px max(7px, env(safe-area-inset-bottom));
     background: rgba(8, 5, 17, 0.94);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-xl);
     box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);

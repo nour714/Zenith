@@ -2,6 +2,7 @@
 Gemini AI Service integration using google-genai SDK.
 Handles study plans, playlist summaries, and notebook assistant.
 """
+import time
 from typing import List, Optional
 from google import genai
 from google.genai import types
@@ -25,6 +26,24 @@ class AIService:
     @property
     def is_configured(self) -> bool:
         return bool(self._client)
+
+    def _generate_content(self, prompt: str):
+        last_error = None
+        for attempt in range(2):
+            try:
+                return self._client.models.generate_content(
+                    model=settings.GEMINI_MODEL,
+                    contents=prompt
+                )
+            except Exception as exc:
+                last_error = exc
+                error_text = str(exc)
+                is_transient = "503" in error_text or "429" in error_text or "UNAVAILABLE" in error_text
+                if not is_transient or attempt == 1:
+                    raise
+                time.sleep(1.5)
+
+        raise last_error
 
     def generate_study_plan(
         self,
@@ -54,13 +73,12 @@ class AIService:
 اكتب الرد بتنسيق Markdown أنيق وواضح مع العناوين والنقاط والرموز التعبيرية المناسبة، باللغة العربية.
 """
         try:
-            response = self._client.models.generate_content(
-                model=settings.GEMINI_MODEL,
-                contents=prompt
-            )
+            response = self._generate_content(prompt)
             return response.text or "تعذر الحصول على رد من الذكاء الاصطناعي."
         except Exception as exc:
             logger.error(f"Gemini API error during study plan generation: {exc}")
+            if "503" in str(exc) or "UNAVAILABLE" in str(exc):
+                raise AIServiceError("خدمة Gemini مشغولة حاليًا. حاول مرة أخرى بعد قليل.")
             raise AIServiceError(f"حدث خطأ أثناء التواصل مع Gemini AI: {str(exc)}")
 
     def enhance_note(self, note_title: str, note_content: str) -> str:
@@ -84,11 +102,10 @@ class AIService:
 اكتب الملاحظات المنقحة باللغة العربية بأسلوب راقٍ وسهل المراجعة.
 """
         try:
-            response = self._client.models.generate_content(
-                model=settings.GEMINI_MODEL,
-                contents=prompt
-            )
+            response = self._generate_content(prompt)
             return response.text or note_content
         except Exception as exc:
             logger.error(f"Gemini API error during note enhancement: {exc}")
+            if "503" in str(exc) or "UNAVAILABLE" in str(exc):
+                raise AIServiceError("خدمة Gemini مشغولة حاليًا. حاول مرة أخرى بعد قليل.")
             raise AIServiceError(f"حدث خطأ أثناء تحسين الملاحظات: {str(exc)}")

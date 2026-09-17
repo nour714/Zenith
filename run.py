@@ -23,9 +23,10 @@ if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
-HOST = "127.0.0.1"
-PORT = 8000
-URL = f"http://{HOST}:{PORT}"
+IS_DEPLOYMENT = bool(os.getenv("PORT"))
+HOST = os.getenv("HOST", "127.0.0.1" if not IS_DEPLOYMENT else "0.0.0.0")
+PORT = int(os.getenv("PORT", "8000"))
+URL = f"http://127.0.0.1:{PORT}"
 
 
 def main():
@@ -43,8 +44,9 @@ def main():
             print(f"Could not open browser automatically: {e}")
 
     import threading
-    browser_thread = threading.Thread(target=open_browser, daemon=True)
-    browser_thread.start()
+    if not IS_DEPLOYMENT:
+        browser_thread = threading.Thread(target=open_browser, daemon=True)
+        browser_thread.start()
 
     # Start Uvicorn server
     uvicorn.run(

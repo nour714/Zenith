@@ -532,6 +532,16 @@ html[dir="rtl"] .toast-container {
     gap: 2px;
     margin: 0 auto;
   }
+  .nav-page-btn span:not(.page-badge),
+  .action-pill-btn span {
+    display: none;
+  }
+  .nav-page-btn,
+  .action-pill-btn {
+    padding: 0;
+    width: 32px;
+    justify-content: center;
+  }
   .nav-page-btn,
   .action-pill-btn {
     height: 32px;
@@ -548,16 +558,6 @@ html[dir="rtl"] .toast-container {
 }
 
 @media (max-width: 500px) {
-  .nav-page-btn span:not(.page-badge),
-  .action-pill-btn span {
-    display: none;
-  }
-  .nav-page-btn,
-  .action-pill-btn {
-    padding: 0;
-    width: 32px;
-    justify-content: center;
-  }
   .stats-banner {
     grid-template-columns: 1fr;
   }

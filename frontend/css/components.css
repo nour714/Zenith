@@ -775,11 +775,12 @@
   gap: 1.25rem;
   align-items: stretch;
   min-height: 680px;
+  min-width: 0;
 }
 
 @media (max-width: 960px) {
   .notebook-workspace {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -919,6 +920,7 @@
   gap: 1rem;
   box-shadow: var(--shadow-sm);
   max-height: 820px;
+  min-width: 0;
 }
 
 .notes-search-wrap {
@@ -1128,6 +1130,7 @@ html[dir="rtl"] .notebook-items-list {
   gap: 1.15rem;
   box-shadow: var(--shadow-sm);
   position: relative;
+  min-width: 0;
 }
 
 .note-linked-banner {

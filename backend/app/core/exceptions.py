@@ -37,3 +37,9 @@ class UnauthorizedException(AppBaseException):
     def __init__(self, message: str = "مفتاح المصادقة غير صالح أو مفقود.", details: Optional[Any] = None) -> None:
         super().__init__(message=message, status_code=401, details=details)
 
+
+class ValidationException(AppBaseException):
+    """Raised when request payload or parameters fail validation."""
+    def __init__(self, message: str = "بيانات الطلب غير صحيحة.", details: Optional[Any] = None) -> None:
+        super().__init__(message=message, status_code=400, details=details)
+

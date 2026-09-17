@@ -38,6 +38,67 @@
   }
 }
 
+@keyframes navDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes navRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tabReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.app-header {
+  animation: navDrop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stats-banner .stat-card,
+.tabs-group,
+.dashboard-section {
+  animation: tabReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stats-banner .stat-card:nth-child(2) { animation-delay: 70ms; }
+.stats-banner .stat-card:nth-child(3) { animation-delay: 140ms; }
+.stats-banner .stat-card:nth-child(4) { animation-delay: 210ms; }
+
+.playlists-grid > *,
+.tasks-grid > * {
+  animation: floatUp 0.45s var(--transition-smooth) both;
+}
+
+.playlists-grid > *:nth-child(2),
+.tasks-grid > *:nth-child(2) { animation-delay: 80ms; }
+.playlists-grid > *:nth-child(3),
+.tasks-grid > *:nth-child(3) { animation-delay: 160ms; }
+
+.mobile-bottom-nav {
+  animation: navRise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .animate-float {
   animation: floatUp var(--transition-smooth) forwards;
 }

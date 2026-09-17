@@ -690,6 +690,29 @@ html[dir="rtl"] .toast-container {
   .stats-banner {
     grid-template-columns: 1fr;
   }
+
+  .tabs-group {
+    justify-content: space-between;
+    overflow: hidden;
+    gap: 4px;
+  }
+
+  .tab-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 7px;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .tab-btn > span:not(.tab-badge) {
+    display: none;
+  }
+
+  .tab-btn svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 @media (max-width: 380px) {

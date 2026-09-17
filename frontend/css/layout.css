@@ -717,6 +717,7 @@ html[dir="rtl"] .toast-container {
   .tab-btn.active {
     background: rgba(168, 85, 247, 0.2);
     border: 1px solid rgba(217, 70, 239, 0.45);
+    border-radius: var(--radius-lg);
     box-shadow: 0 3px 12px rgba(168, 85, 247, 0.22);
   }
 

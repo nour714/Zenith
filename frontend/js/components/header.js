@@ -33,10 +33,6 @@ export class HeaderComponent {
     $('#mobile-nav-notebook')?.addEventListener('click', () => bus.emit('view:switch', 'notebook'));
     $('#mobile-nav-playlist')?.addEventListener('click', () => bus.emit('modal:search:open'));
     $('#mobile-nav-task')?.addEventListener('click', () => bus.emit('modal:task:open'));
-    $('#mobile-nav-lang')?.addEventListener('click', () => {
-      const nextLang = i18n.lang === 'ar' ? 'en' : 'ar';
-      i18n.setLanguage(nextLang);
-    });
     $('#mobile-nav-settings')?.addEventListener('click', () => bus.emit('modal:settings:open'));
 
     bus.on('view:switched', (viewName) => {

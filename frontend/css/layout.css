@@ -614,7 +614,7 @@ html[dir="rtl"] .toast-container {
     bottom: 0;
     z-index: 60;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 4px;
     padding: 7px 8px max(7px, env(safe-area-inset-bottom));
     background: rgba(8, 5, 17, 0.94);
@@ -636,7 +636,7 @@ html[dir="rtl"] .toast-container {
     align-items: center;
     justify-content: center;
     gap: 3px;
-    font-size: 0.64rem;
+    font-size: 0;
     font-weight: 600;
     position: relative;
   }
@@ -649,6 +649,10 @@ html[dir="rtl"] .toast-container {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .mobile-bottom-nav-btn span {
+    display: none;
   }
 
   .mobile-bottom-nav-btn.active {

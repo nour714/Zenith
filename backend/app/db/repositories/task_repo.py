@@ -1,5 +1,6 @@
 """
 Repository pattern for Custom Tasks SQL operations (PostgreSQL).
+User-scoped for multi-tenancy.
 """
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -11,15 +12,16 @@ class TaskRepository:
     def __init__(self, conn) -> None:
         self.conn = conn
 
-    def create(self, task: TaskCreate) -> Dict[str, Any]:
+    def create(self, task: TaskCreate, user_id: int) -> Dict[str, Any]:
         cursor = self.conn.cursor()
         cursor.execute(
             """
-            INSERT INTO zenith_custom_tasks (title, description, priority, category, due_date, is_completed)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO zenith_custom_tasks (user_id, title, description, priority, category, due_date, is_completed)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING *;
             """,
             (
+                user_id,
                 task.title,
                 task.description,
                 task.priority,
@@ -31,10 +33,15 @@ class TaskRepository:
         row = cursor.fetchone()
         return dict(row)
 
-    def get_all(self, category: Optional[str] = None, completed: Optional[bool] = None) -> List[Dict[str, Any]]:
+    def get_all(
+        self,
+        user_id: int,
+        category: Optional[str] = None,
+        completed: Optional[bool] = None
+    ) -> List[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        query = "SELECT * FROM zenith_custom_tasks WHERE 1=1"
-        params: List[Any] = []
+        query = "SELECT * FROM zenith_custom_tasks WHERE user_id = %s"
+        params: List[Any] = [user_id]
 
         if category:
             query += " AND category = %s"
@@ -47,14 +54,14 @@ class TaskRepository:
         cursor.execute(query, params)
         return [dict(row) for row in cursor.fetchall()]
 
-    def get_by_id(self, task_id: int) -> Optional[Dict[str, Any]]:
+    def get_by_id(self, task_id: int, user_id: int) -> Optional[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM zenith_custom_tasks WHERE id = %s", (task_id,))
+        cursor.execute("SELECT * FROM zenith_custom_tasks WHERE id = %s AND user_id = %s", (task_id, user_id))
         row = cursor.fetchone()
         return dict(row) if row else None
 
-    def update(self, task_id: int, task: TaskUpdate) -> Dict[str, Any]:
-        existing = self.get_by_id(task_id)
+    def update(self, task_id: int, task: TaskUpdate, user_id: int) -> Dict[str, Any]:
+        existing = self.get_by_id(task_id, user_id)
         if not existing:
             raise ResourceNotFoundException("Task", task_id)
 
@@ -75,14 +82,14 @@ class TaskRepository:
         if not update_fields:
             return existing
 
-        values.append(task_id)
-        sql = f"UPDATE zenith_custom_tasks SET {', '.join(update_fields)} WHERE id = %s RETURNING *;"
+        values.extend([task_id, user_id])
+        sql = f"UPDATE zenith_custom_tasks SET {', '.join(update_fields)} WHERE id = %s AND user_id = %s RETURNING *;"
         cursor = self.conn.cursor()
         cursor.execute(sql, values)
         row = cursor.fetchone()
         return dict(row)
 
-    def delete(self, task_id: int) -> bool:
+    def delete(self, task_id: int, user_id: int) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM zenith_custom_tasks WHERE id = %s", (task_id,))
+        cursor.execute("DELETE FROM zenith_custom_tasks WHERE id = %s AND user_id = %s", (task_id, user_id))
         return cursor.rowcount > 0

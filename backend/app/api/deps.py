@@ -1,14 +1,17 @@
 import os
-from typing import Generator, Optional
+from typing import Generator, Optional, Dict, Any
 from fastapi import Depends, Header
 from app.core.config import settings
 from app.core.logging import get_logger
 from app.core.exceptions import UnauthorizedException
+from app.core.security import decode_access_token
 from app.db.session import get_db
+from app.db.repositories.user_repo import UserRepository
 from app.db.repositories.playlist_repo import PlaylistRepository
 from app.db.repositories.task_repo import TaskRepository
 from app.db.repositories.note_repo import NoteRepository
 from app.db.repositories.settings_repo import SettingsRepository
+from app.services.auth_service import AuthService
 from app.services.youtube_service import YouTubeService
 from app.services.playlist_service import PlaylistService
 from app.services.task_service import TaskService
@@ -17,21 +20,39 @@ from app.services.ai_service import AIService
 auth_logger = get_logger("zenith.auth")
 
 
-def verify_auth(
-    x_zenith_key: Optional[str] = Header(None, alias="X-Zenith-Key")
-) -> None:
-    """
-    Minimal auth guard validating X-Zenith-Key against ZENITH_ADMIN_KEY.
-    If ZENITH_ADMIN_KEY is unset, logs a warning and permits open access for local dev.
-    """
-    expected_key = os.getenv("ZENITH_ADMIN_KEY") or settings.ZENITH_ADMIN_KEY
-    if not expected_key:
-        auth_logger.warning("ZENITH_ADMIN_KEY is not set; mutating endpoints are open without authentication.")
-        return
+def get_user_repo(db = Depends(get_db)) -> UserRepository:
+    return UserRepository(db)
 
-    if not x_zenith_key or x_zenith_key != expected_key:
-        raise UnauthorizedException("مفتاح المصادقة غير صالح أو مفقود (X-Zenith-Key).")
 
+def get_auth_service(user_repo: UserRepository = Depends(get_user_repo)) -> AuthService:
+    return AuthService(user_repo)
+
+
+def get_current_user(
+    authorization: Optional[str] = Header(None, alias="Authorization"),
+    user_repo: UserRepository = Depends(get_user_repo)
+) -> Dict[str, Any]:
+    """
+    Extracts Bearer token from Authorization header, validates JWT claims,
+    and returns current user dict. Raises 401 if missing or invalid.
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise UnauthorizedException("يرجى تسجيل الدخول للوصول إلى هذا المحتوى.")
+
+    token = authorization[7:].strip()
+    payload = decode_access_token(token)
+    if not payload or not payload.get("sub"):
+        raise UnauthorizedException("جلسة الدخول منتهية أو غير صالحة. يرجى تسجيل الدخول مجدداً.")
+
+    try:
+        user_id = int(payload["sub"])
+    except (ValueError, TypeError):
+        raise UnauthorizedException("رمز الجلسة غير صالح.")
+
+    user = user_repo.get_by_id(user_id)
+    if not user:
+        raise UnauthorizedException("حساب المستخدم غير موجود.")
+    return user
 
 
 def get_playlist_repo(db = Depends(get_db)) -> PlaylistRepository:
@@ -70,6 +91,5 @@ def get_task_service(
 def get_ai_service(
     settings_repo: SettingsRepository = Depends(get_settings_repo)
 ) -> AIService:
-    # Check if a custom key is stored in DB settings first
     db_key = settings_repo.get("gemini_api_key")
     return AIService(api_key=db_key)

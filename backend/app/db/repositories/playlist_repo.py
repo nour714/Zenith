@@ -1,5 +1,6 @@
 """
 Repository pattern for Playlists and Videos SQL operations (PostgreSQL).
+User-scoped for multi-tenancy.
 """
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -12,6 +13,7 @@ class PlaylistRepository:
 
     def create_playlist(
         self,
+        user_id: int,
         playlist_id: str,
         title: str,
         channel_title: Optional[str],
@@ -24,10 +26,10 @@ class PlaylistRepository:
         cursor.execute(
             """
             INSERT INTO zenith_playlists (
-                playlist_id, title, channel_title, description,
+                user_id, playlist_id, title, channel_title, description,
                 thumbnail_url, webpage_url, total_videos, completed_videos
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, 0)
-            ON CONFLICT(playlist_id) DO UPDATE SET
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 0)
+            ON CONFLICT(user_id, playlist_id) DO UPDATE SET
                 title = excluded.title,
                 channel_title = excluded.channel_title,
                 description = excluded.description,
@@ -37,14 +39,13 @@ class PlaylistRepository:
                 updated_at = CURRENT_TIMESTAMP
             RETURNING id;
             """,
-            (playlist_id, title, channel_title, description, thumbnail_url, webpage_url, total_videos)
+            (user_id, playlist_id, title, channel_title, description, thumbnail_url, webpage_url, total_videos)
         )
         row = cursor.fetchone()
         return row["id"]
 
     def add_videos_batch(self, playlist_db_id: int, videos: List[Dict[str, Any]]) -> None:
         cursor = self.conn.cursor()
-        # Fetch existing completed video_ids to preserve completion status if re-importing
         cursor.execute("SELECT video_id, is_completed, completed_at FROM zenith_videos WHERE playlist_id = %s", (playlist_db_id,))
         existing_status = {row["video_id"]: (row["is_completed"], row["completed_at"]) for row in cursor.fetchall()}
 
@@ -79,7 +80,6 @@ class PlaylistRepository:
                 """,
                 insert_data
             )
-        # Update playlist counts
         cursor.execute(
             """
             UPDATE zenith_playlists
@@ -99,28 +99,32 @@ class PlaylistRepository:
             result.append(row)
         return result
 
-    def get_all_playlists(self) -> List[Dict[str, Any]]:
+    def get_all_playlists(self, user_id: int) -> List[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM zenith_playlists ORDER BY updated_at DESC")
+        cursor.execute("SELECT * FROM zenith_playlists WHERE user_id = %s ORDER BY updated_at DESC", (user_id,))
         rows = cursor.fetchall()
         return self._with_progress(rows)
 
-    def get_playlist_by_id(self, playlist_id: int) -> Optional[Dict[str, Any]]:
+    def get_playlist_by_id(self, playlist_id: int, user_id: int) -> Optional[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM zenith_playlists WHERE id = %s", (playlist_id,))
+        cursor.execute("SELECT * FROM zenith_playlists WHERE id = %s AND user_id = %s", (playlist_id, user_id))
         row = cursor.fetchone()
         if not row:
             return None
         return self._with_progress([row])[0]
 
-    def get_playlist_by_yt_id(self, yt_id: str) -> Optional[Dict[str, Any]]:
+    def get_playlist_by_yt_id(self, yt_id: str, user_id: int) -> Optional[Dict[str, Any]]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM zenith_playlists WHERE playlist_id = %s", (yt_id,))
+        cursor.execute("SELECT * FROM zenith_playlists WHERE playlist_id = %s AND user_id = %s", (yt_id, user_id))
         row = cursor.fetchone()
         return dict(row) if row else None
 
-    def get_videos_for_playlist(self, playlist_id: int) -> List[Dict[str, Any]]:
+    def get_videos_for_playlist(self, playlist_id: int, user_id: int) -> List[Dict[str, Any]]:
         cursor = self.conn.cursor()
+        # Verify ownership
+        cursor.execute("SELECT id FROM zenith_playlists WHERE id = %s AND user_id = %s", (playlist_id, user_id))
+        if not cursor.fetchone():
+            return []
         cursor.execute(
             """
             SELECT * FROM zenith_videos
@@ -132,9 +136,17 @@ class PlaylistRepository:
         rows = cursor.fetchall()
         return [dict(row) for row in rows]
 
-    def toggle_video_status(self, video_id: int, is_completed: bool) -> Dict[str, Any]:
+    def toggle_video_status(self, video_id: int, is_completed: bool, user_id: int) -> Dict[str, Any]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT playlist_id FROM zenith_videos WHERE id = %s", (video_id,))
+        cursor.execute(
+            """
+            SELECT v.playlist_id
+            FROM zenith_videos v
+            JOIN zenith_playlists p ON v.playlist_id = p.id
+            WHERE v.id = %s AND p.user_id = %s
+            """,
+            (video_id, user_id)
+        )
         row = cursor.fetchone()
         if not row:
             raise ResourceNotFoundException("Video", video_id)
@@ -150,7 +162,6 @@ class PlaylistRepository:
             (1 if is_completed else 0, now_str, video_id)
         )
 
-        # Recalculate playlist completed count
         cursor.execute(
             "SELECT COUNT(*) as count FROM zenith_videos WHERE playlist_id = %s AND is_completed = 1",
             (playlist_db_id,)
@@ -174,7 +185,7 @@ class PlaylistRepository:
             "completed_count": completed_count
         }
 
-    def delete_playlist(self, playlist_id: int) -> bool:
+    def delete_playlist(self, playlist_id: int, user_id: int) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM zenith_playlists WHERE id = %s", (playlist_id,))
+        cursor.execute("DELETE FROM zenith_playlists WHERE id = %s AND user_id = %s", (playlist_id, user_id))
         return cursor.rowcount > 0

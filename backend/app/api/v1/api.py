@@ -2,10 +2,11 @@
 V1 API Routers aggregation.
 """
 from fastapi import APIRouter
-from app.api.v1.endpoints import playlists, tasks, notes, settings, ai, stats
+from app.api.v1.endpoints import auth, playlists, tasks, notes, settings, ai, stats
 
 api_router = APIRouter()
 
+api_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 api_router.include_router(playlists.router, prefix="/playlists", tags=["Playlists"])
 api_router.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
 api_router.include_router(notes.router, prefix="/notes", tags=["Notes"])

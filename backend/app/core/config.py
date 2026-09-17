@@ -32,8 +32,12 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: Optional[str] = None
     GEMINI_MODEL: str = "gemini-3.6-flash"
 
-    # Auth config
+    # Auth & Security config
     ZENITH_ADMIN_KEY: Optional[str] = None
+    JWT_SECRET_KEY: str = "zenith-secure-secret-key-3289a7f34089bc21389e1"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 30  # 30 days
+    GOOGLE_CLIENT_ID: Optional[str] = None
 
     # CORS config
     ALLOWED_ORIGINS: str = "*"

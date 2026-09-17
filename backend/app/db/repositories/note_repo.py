@@ -1,5 +1,6 @@
 """
 Repository pattern for Notes SQL operations (PostgreSQL).
+User-scoped for multi-tenancy.
 """
 from typing import Any, Dict, List, Optional
 from app.core.exceptions import ResourceNotFoundException
@@ -10,21 +11,22 @@ class NoteRepository:
     def __init__(self, conn) -> None:
         self.conn = conn
 
-    def create(self, note: NoteCreate) -> Dict[str, Any]:
+    def create(self, note: NoteCreate, user_id: int) -> Dict[str, Any]:
         cursor = self.conn.cursor()
         cursor.execute(
             """
-            INSERT INTO zenith_notes (title, content, tags, playlist_id, video_id)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO zenith_notes (user_id, title, content, tags, playlist_id, video_id)
+            VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING *;
             """,
-            (note.title, note.content, note.tags, note.playlist_id, note.video_id)
+            (user_id, note.title, note.content, note.tags, note.playlist_id, note.video_id)
         )
         row = cursor.fetchone()
         return dict(row)
 
     def get_all(
         self,
+        user_id: int,
         playlist_id: Optional[int] = None,
         video_id: Optional[int] = None,
         search_query: Optional[str] = None
@@ -38,9 +40,9 @@ class NoteRepository:
             FROM zenith_notes n
             LEFT JOIN zenith_playlists p ON n.playlist_id = p.id
             LEFT JOIN zenith_videos v ON n.video_id = v.id
-            WHERE 1=1
+            WHERE n.user_id = %s
         """
-        params: List[Any] = []
+        params: List[Any] = [user_id]
 
         if playlist_id:
             query += " AND n.playlist_id = %s"
@@ -57,7 +59,7 @@ class NoteRepository:
         cursor.execute(query, params)
         return [dict(row) for row in cursor.fetchall()]
 
-    def get_by_id(self, note_id: int) -> Optional[Dict[str, Any]]:
+    def get_by_id(self, note_id: int, user_id: int) -> Optional[Dict[str, Any]]:
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -68,15 +70,15 @@ class NoteRepository:
             FROM zenith_notes n
             LEFT JOIN zenith_playlists p ON n.playlist_id = p.id
             LEFT JOIN zenith_videos v ON n.video_id = v.id
-            WHERE n.id = %s
+            WHERE n.id = %s AND n.user_id = %s
             """,
-            (note_id,)
+            (note_id, user_id)
         )
         row = cursor.fetchone()
         return dict(row) if row else None
 
-    def update(self, note_id: int, note: NoteUpdate) -> Dict[str, Any]:
-        existing = self.get_by_id(note_id)
+    def update(self, note_id: int, note: NoteUpdate, user_id: int) -> Dict[str, Any]:
+        existing = self.get_by_id(note_id, user_id)
         if not existing:
             raise ResourceNotFoundException("Note", note_id)
 
@@ -92,14 +94,14 @@ class NoteRepository:
             return existing
 
         update_fields.append("updated_at = CURRENT_TIMESTAMP")
-        values.append(note_id)
-        sql = f"UPDATE zenith_notes SET {', '.join(update_fields)} WHERE id = %s RETURNING *;"
+        values.extend([note_id, user_id])
+        sql = f"UPDATE zenith_notes SET {', '.join(update_fields)} WHERE id = %s AND user_id = %s RETURNING *;"
         cursor = self.conn.cursor()
         cursor.execute(sql, values)
         row = cursor.fetchone()
         return dict(row)
 
-    def delete(self, note_id: int) -> bool:
+    def delete(self, note_id: int, user_id: int) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM zenith_notes WHERE id = %s", (note_id,))
+        cursor.execute("DELETE FROM zenith_notes WHERE id = %s AND user_id = %s", (note_id, user_id))
         return cursor.rowcount > 0

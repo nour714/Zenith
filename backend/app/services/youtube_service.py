@@ -115,6 +115,14 @@ class YouTubeService:
                 videos: List[Dict[str, Any]] = []
                 total_duration = 0
 
+                # A direct video URL has no playlist entries; keep it usable as a one-item track.
+                if not entries and (
+                    info.get("_type") == "video"
+                    or "watch?v=" in webpage_url
+                    or "youtu.be/" in webpage_url
+                ):
+                    entries = [info]
+
                 for idx, entry in enumerate(entries):
                     if not entry:
                         continue

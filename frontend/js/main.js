@@ -14,6 +14,20 @@ import { SettingsModalComponent } from './components/settings-modal.js';
 import { AIPlanModalComponent } from './components/ai-plan-modal.js';
 import { $ } from './utils/dom.js';
 
+const registerServiceWorker = () => {
+  navigator.serviceWorker.register('./sw.js').catch((error) => {
+    console.warn('Service worker registration failed:', error);
+  });
+};
+
+if ('serviceWorker' in navigator) {
+  if (document.readyState === 'loading') {
+    window.addEventListener('load', registerServiceWorker, { once: true });
+  } else {
+    registerServiceWorker();
+  }
+}
+
 class App {
   constructor() {
     this.init();

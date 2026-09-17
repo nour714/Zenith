@@ -713,6 +713,18 @@ html[dir="rtl"] .toast-container {
     width: 16px;
     height: 16px;
   }
+
+  .tab-btn.active {
+    background: rgba(168, 85, 247, 0.2);
+    border: 1px solid rgba(217, 70, 239, 0.45);
+    box-shadow: 0 3px 12px rgba(168, 85, 247, 0.22);
+  }
+
+  .tab-btn.active .tab-badge {
+    background: var(--gradient-brand);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px var(--accent-primary-glow);
+  }
 }
 
 @media (max-width: 380px) {

@@ -356,8 +356,10 @@
 
 .tab-btn.active {
   color: var(--text-main);
-  background: var(--accent-primary);
-  box-shadow: 0 4px 14px var(--accent-primary-glow);
+  background: var(--gradient-brand);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px var(--accent-primary-glow);
 }
 
 .tab-badge {

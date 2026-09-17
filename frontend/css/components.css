@@ -1385,3 +1385,31 @@ html[dir="rtl"] .note-markdown-preview blockquote {
 .note-save-status.saved {
   color: var(--accent-emerald);
 }
+
+@media (max-width: 500px) {
+  .stat-card {
+    min-height: 82px;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-xl);
+    justify-content: space-between;
+  }
+
+  .stat-icon-wrapper {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-full);
+  }
+
+  .stat-icon-wrapper svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .stat-val {
+    font-size: 1.55rem;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+  }
+}

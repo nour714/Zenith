@@ -57,17 +57,43 @@ class AuthService {
       headers['Authorization'] = `Bearer ${this.token}`;
     }
 
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      method,
-      headers,
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    let res;
+    try {
+      res = await fetch(`${API_BASE}${endpoint}`, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    } catch (networkErr) {
+      console.error(`Network error on ${endpoint}:`, networkErr);
+      throw new Error('تعذر الاتصال بالخادم. يرجى التأكد من تشغيل السيرفر والمحاولة مجدداً.');
+    }
 
-    const json = await res.json();
+    let json = {};
+    const text = await res.text();
+    if (text) {
+      try {
+        json = JSON.parse(text);
+      } catch {
+        json = { message: text };
+      }
+    }
+
     if (!res.ok) {
-      const msg = json.message || json.error || 'فشلت العملية';
+      let msg = json.message || json.error;
+      if (!msg && json.detail) {
+        if (Array.isArray(json.detail)) {
+          msg = json.detail.map(d => d.msg || JSON.stringify(d)).join(', ');
+        } else {
+          msg = String(json.detail);
+        }
+      }
+      if (!msg) {
+        msg = `خطأ ${res.status}: فشل الطلب`;
+      }
       throw new Error(msg);
     }
+
     return json.data !== undefined ? json.data : json;
   }
 

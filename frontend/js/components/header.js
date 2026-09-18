@@ -110,8 +110,8 @@ export class HeaderComponent {
       const isAuthView = viewName === 'auth';
       const headerEl = $('.app-header');
       const mobileNav = $('.mobile-bottom-nav');
-      if (headerEl) headerEl.style.display = isAuthView ? 'none' : 'flex';
-      if (mobileNav) mobileNav.style.display = isAuthView ? 'none' : 'grid';
+      if (headerEl) headerEl.style.display = isAuthView ? 'none' : '';
+      if (mobileNav) mobileNav.style.display = isAuthView ? 'none' : '';
     });
 
     // Auth state changes

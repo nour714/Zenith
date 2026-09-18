@@ -153,6 +153,9 @@
 .nav-page-btn svg {
   width: 15px;
   height: 15px;
+  max-width: 15px;
+  max-height: 15px;
+  flex-shrink: 0;
 }
 
 .nav-page-btn .page-badge {
@@ -278,7 +281,15 @@
 }
 
 .mobile-bottom-nav {
-  display: none;
+  display: none !important;
+}
+
+.mobile-bottom-nav-btn svg {
+  width: 24px;
+  height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  flex-shrink: 0;
 }
 
 /* Page Views System */
@@ -616,10 +627,10 @@ html[dir="rtl"] .toast-container {
   .mobile-bottom-nav {
     position: fixed;
     left: 12px;
-    right: max(5px, calc(12px - 7px));
+    right: 12px;
     bottom: max(8px, env(safe-area-inset-bottom));
     z-index: 60;
-    display: grid;
+    display: grid !important;
     grid-template-columns: repeat(5, 1fr);
     gap: 4px;
     padding: 7px 8px max(7px, env(safe-area-inset-bottom));

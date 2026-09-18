@@ -38,6 +38,13 @@ export class SettingsPageComponent {
       toast.success(newLang === 'ar' ? 'تم تحويل اللغة إلى العربية' : 'Language switched to English');
     });
 
+    // Theme dropdown change
+    const selectTheme = $('#select-settings-page-theme');
+    selectTheme?.addEventListener('change', (e) => {
+      const newTheme = e.target.value;
+      bus.emit('theme:change', newTheme);
+    });
+
     // Logout button
     $('#btn-settings-page-logout')?.addEventListener('click', async () => {
       const confirmed = await toast.confirm(
@@ -54,6 +61,9 @@ export class SettingsPageComponent {
 
     bus.on('auth:state-changed', () => this.loadData());
     bus.on('auth:profile-updated', () => this.renderUserProfile());
+    bus.on('theme:changed', (theme) => {
+      if (selectTheme) selectTheme.value = theme;
+    });
     window.addEventListener('langchanged', () => this.updateLanguageSelection());
   }
 
@@ -61,6 +71,14 @@ export class SettingsPageComponent {
     this.renderUserProfile();
     await this.loadSettings();
     this.updateLanguageSelection();
+    this.updateThemeSelection();
+  }
+
+  updateThemeSelection() {
+    const select = $('#select-settings-page-theme');
+    if (select) {
+      select.value = localStorage.getItem('zenith_theme') || 'dark';
+    }
   }
 
   renderUserProfile() {

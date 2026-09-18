@@ -166,8 +166,8 @@ export class AuthPageComponent {
       if (!clientId) {
         if (container) {
           container.innerHTML = `
-            <div style="font-size: 0.78rem; color: var(--text-dim); text-align: center; padding: 6px;">
-              ${i18n.lang === 'ar' ? '💡 لتفعيل الدخول بـ Google، أضف GOOGLE_CLIENT_ID في ملف .env أو صفحة الإعدادات.' : '💡 To enable Google sign-in, add GOOGLE_CLIENT_ID in your .env or Settings.'}
+            <div data-i18n="auth_google_hint" style="font-size: 0.78rem; color: var(--text-dim); text-align: center; padding: 6px;">
+              ${i18n.t('auth_google_hint')}
             </div>
           `;
         }

@@ -13,20 +13,20 @@
   top: 12px;
   z-index: 50;
   height: 68px;
-  background: rgba(8, 5, 17, 0.86);
+  background: var(--header-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--header-border);
   border-radius: var(--radius-xl);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   left: clamp(1rem, 4vw, 4rem);
-  right: max(0px, calc(clamp(1rem, 4vw, 4rem) - 7px));
+  right: clamp(1rem, 4vw, 4rem);
   width: auto;
   padding: 0 max(1rem, env(safe-area-inset-left)) 0 max(1rem, env(safe-area-inset-right));
-  transition: border-color var(--transition-normal), background var(--transition-normal);
+  transition: border-color var(--transition-normal), background var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .header-brand {
@@ -42,8 +42,8 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(35, 20, 62, 0.95) 0%, rgba(15, 9, 28, 0.98) 100%);
-  border: 1px solid rgba(217, 70, 239, 0.3);
+  background: var(--brand-icon-bg);
+  border: 1px solid var(--brand-icon-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -250,8 +250,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
   color: var(--text-muted);
   font-size: 0.82rem;
   font-weight: 700;
@@ -268,8 +268,8 @@
 
 .header-round-btn:hover {
   color: var(--text-main);
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: var(--pill-hover-bg);
+  border-color: var(--glass-border-hover);
   transform: translateY(-1px);
 }
 
@@ -1334,8 +1334,8 @@ body.view-auth .app-main {
   border-radius: var(--radius-full);
   font-size: 0.82rem;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
   color: var(--text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -1344,7 +1344,7 @@ body.view-auth .app-main {
 .playlists-filter-pill:hover,
 .task-cat-pill:hover,
 .task-status-pill:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--pill-hover-bg);
   color: var(--text-main);
 }
 

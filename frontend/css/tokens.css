@@ -107,4 +107,78 @@
   /* Fonts */
   --font-arabic: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
   --font-latin: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Semantic UI Tokens (Dark Mode Default) */
+  --header-bg: rgba(8, 5, 17, 0.86);
+  --header-border: rgba(255, 255, 255, 0.07);
+  --input-bg: rgba(14, 17, 26, 0.85);
+  --input-border: var(--glass-border);
+  --input-bg-hover: rgba(19, 24, 38, 0.9);
+  --input-bg-focus: rgba(22, 28, 44, 0.98);
+  --card-bg: #140d27;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --brand-icon-bg: linear-gradient(135deg, rgba(35, 20, 62, 0.95) 0%, rgba(15, 9, 28, 0.98) 100%);
+  --brand-icon-border: rgba(217, 70, 239, 0.3);
+  --pill-bg: rgba(255, 255, 255, 0.04);
+  --pill-border: rgba(255, 255, 255, 0.08);
+  --pill-hover-bg: rgba(255, 255, 255, 0.08);
+}
+
+/* Light Theme - Clean Slate, Vibrant Accents & High Contrast */
+[data-theme="light"] {
+  /* Colors - Base Backgrounds */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-tertiary: #e2e8f0;
+  --bg-card: #ffffff;
+  --bg-overlay: rgba(15, 23, 42, 0.5);
+
+  /* Glassmorphism Surfaces */
+  --glass-bg: rgba(255, 255, 255, 0.84);
+  --glass-bg-hover: rgba(255, 255, 255, 0.96);
+  --glass-bg-active: #ffffff;
+  --glass-border: rgba(203, 213, 225, 0.7);
+  --glass-border-hover: rgba(168, 85, 247, 0.45);
+  --glass-border-focus: rgba(147, 51, 234, 0.75);
+  --glass-blur: blur(20px);
+  --glass-blur-heavy: blur(32px);
+
+  /* Typography Colors */
+  --text-main: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Gradients */
+  --gradient-card-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.96) 100%);
+  --gradient-hover: linear-gradient(145deg, rgba(168, 85, 247, 0.06) 0%, rgba(217, 70, 239, 0.02) 100%);
+  --gradient-glow: radial-gradient(circle, rgba(168, 85, 247, 0.14) 0%, rgba(217, 70, 239, 0.04) 45%, transparent 70%);
+
+  /* Elevation & Shadows */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.11);
+  --shadow-glow-indigo: 0 0 22px rgba(168, 85, 247, 0.22);
+  --shadow-glow-primary: 0 0 22px rgba(168, 85, 247, 0.22);
+  --shadow-glow-magenta: 0 0 22px rgba(217, 70, 239, 0.22);
+  --shadow-glow-emerald: 0 0 20px rgba(16, 185, 129, 0.22);
+
+  /* Semantic UI Tokens */
+  --header-bg: rgba(255, 255, 255, 0.88);
+  --header-border: rgba(203, 213, 225, 0.7);
+  --input-bg: #ffffff;
+  --input-border: rgba(203, 213, 225, 0.85);
+  --input-bg-hover: #f8fafc;
+  --input-bg-focus: #ffffff;
+  --card-bg: #ffffff;
+  --card-border: rgba(226, 232, 240, 0.85);
+  --border-color: rgba(226, 232, 240, 0.85);
+  --brand-icon-bg: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  --brand-icon-border: rgba(168, 85, 247, 0.35);
+  --pill-bg: rgba(15, 23, 42, 0.04);
+  --pill-border: rgba(15, 23, 42, 0.08);
+  --pill-hover-bg: rgba(15, 23, 42, 0.08);
 }

@@ -22,6 +22,7 @@ body {
   overflow-x: hidden;
   line-height: 1.6;
   position: relative;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 /* Ambient glow mesh background */
@@ -36,6 +37,7 @@ body::before {
   filter: blur(100px);
   pointer-events: none;
   z-index: 0;
+  transition: background var(--transition-normal);
 }
 
 body::after {
@@ -49,6 +51,15 @@ body::after {
   filter: blur(110px);
   pointer-events: none;
   z-index: 0;
+  transition: background var(--transition-normal);
+}
+
+[data-theme="light"] body::before {
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.07) 0%, rgba(217, 70, 239, 0.02) 50%, transparent 70%);
+}
+
+[data-theme="light"] body::after {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, rgba(147, 51, 234, 0.02) 55%, transparent 70%);
 }
 
 /* Focus Visible Accessibility */
@@ -80,22 +91,22 @@ input, textarea, select {
   font-family: inherit;
   font-size: 0.95rem;
   color: var(--text-main);
-  background: rgba(14, 17, 26, 0.85);
-  border: 1px solid var(--glass-border);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: var(--radius-sm);
   padding: 11px 16px;
   outline: none;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
 }
 
 input:hover, textarea:hover, select:hover {
   border-color: var(--glass-border-hover);
-  background: rgba(19, 24, 38, 0.9);
+  background: var(--input-bg-hover);
 }
 
 input:focus, textarea:focus, select:focus {
   border-color: var(--accent-primary);
-  background: rgba(22, 28, 44, 0.98);
+  background: var(--input-bg-focus);
   box-shadow: 0 0 0 3px var(--accent-primary-glow);
 }
 

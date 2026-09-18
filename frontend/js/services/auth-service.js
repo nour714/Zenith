@@ -41,6 +41,7 @@ class AuthService {
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
     bus.emit('auth:state-changed', { isAuthenticated: true, user });
+    bus.emit('auth:login', user);
   }
 
   clearSession() {
@@ -49,6 +50,7 @@ class AuthService {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     bus.emit('auth:state-changed', { isAuthenticated: false, user: null });
+    bus.emit('auth:logout');
   }
 
   async _request(endpoint, body = null, method = 'POST') {

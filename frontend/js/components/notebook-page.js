@@ -5,6 +5,7 @@
  * YouTube video deep-linkage, and markdown export.
  */
 import { api } from '../services/api-client.js';
+import { authService } from '../services/auth-service.js';
 import { store } from '../core/store.js';
 import { bus } from '../core/event-bus.js';
 import { i18n } from '../i18n/translator.js';
@@ -28,7 +29,9 @@ export class NotebookPageComponent {
     this.bindEvents();
     this.setupToolbar();
     this.setupModeSwitch();
-    await this.loadNotes();
+    if (authService.isAuthenticated()) {
+      await this.loadNotes();
+    }
   }
 
   bindEvents() {
@@ -94,6 +97,32 @@ export class NotebookPageComponent {
     });
 
     bus.on('notes:refresh', () => this.loadNotes());
+
+    // Sync with auth lifecycle
+    bus.on('auth:state-changed', async ({ isAuthenticated }) => {
+      if (isAuthenticated) {
+        await this.loadNotes();
+      } else {
+        this.notes = [];
+        this.resetEditor();
+        this.renderNotesList();
+        this.updateHeaderBadge();
+      }
+    });
+
+    // Sync with global store state changes
+    bus.on('state:changed', (state) => {
+      if (state?.notes && state.notes !== this.notes) {
+        this.notes = state.notes;
+        this.renderNotesList();
+        this.updateHeaderBadge();
+      }
+    });
+
+    window.addEventListener('langchanged', () => {
+      this.renderNotesList();
+      this.updateHeaderBadge();
+    });
   }
 
   setupModeSwitch() {
@@ -147,6 +176,13 @@ export class NotebookPageComponent {
   }
 
   async loadNotes() {
+    if (!authService.isAuthenticated()) {
+      this.notes = [];
+      this.renderNotesList();
+      this.updateHeaderBadge();
+      return;
+    }
+
     try {
       this.notes = await api.getNotes();
       store.state.notes = this.notes;

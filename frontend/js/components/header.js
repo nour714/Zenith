@@ -11,9 +11,46 @@ import { $ } from '../utils/dom.js';
 
 export class HeaderComponent {
   constructor() {
+    this.initTheme();
     this.bindEvents();
     this.renderUser();
     this.updateStats(store.getState().stats);
+  }
+
+  initTheme() {
+    const savedTheme = localStorage.getItem('zenith_theme') || 'dark';
+    this.applyTheme(savedTheme, false);
+
+    const themeBtn = $('#btn-toggle-theme');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        this.applyTheme(nextTheme, true);
+      });
+    }
+
+    bus.on('theme:change', (newTheme) => {
+      this.applyTheme(newTheme, false);
+    });
+  }
+
+  applyTheme(theme, notify = true) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('zenith_theme', theme);
+
+    const sunIcon = $('#btn-toggle-theme .theme-icon-sun');
+    const moonIcon = $('#btn-toggle-theme .theme-icon-moon');
+
+    if (sunIcon && moonIcon) {
+      sunIcon.style.display = theme === 'dark' ? 'block' : 'none';
+      moonIcon.style.display = theme === 'light' ? 'block' : 'none';
+    }
+
+    if (notify) {
+      bus.emit('theme:changed', theme);
+      toast.info(theme === 'dark' ? (i18n.lang === 'ar' ? 'الوضع الليلي 🌙' : 'Dark Mode 🌙') : (i18n.lang === 'ar' ? 'الوضع النهاري ☀️' : 'Light Mode ☀️'));
+    }
   }
 
   bindEvents() {

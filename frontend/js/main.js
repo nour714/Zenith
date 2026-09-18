@@ -3,16 +3,16 @@
  * Architecture: 5 Full Pages (Dashboard, Playlists, Tasks, Notebook, Settings) + Auth View.
  * Equipped with Route Guards, multi-tenancy auth state, and reactive sync.
  */
-import { i18n } from './i18n/translator.js?v=3';
+import { i18n } from './i18n/translator.js?v=4';
 import { store } from './core/store.js';
 import { bus } from './core/event-bus.js';
 import { authService } from './services/auth-service.js';
-import { HeaderComponent } from './components/header.js?v=3';
-import { AuthPageComponent } from './components/auth-page.js?v=1';
-import { PlaylistsPageComponent } from './components/playlists-page.js?v=1';
-import { TasksPageComponent } from './components/tasks-page.js?v=1';
-import { NotebookPageComponent } from './components/notebook-page.js?v=3';
-import { SettingsPageComponent } from './components/settings-page.js?v=1';
+import { HeaderComponent } from './components/header.js?v=4';
+import { AuthPageComponent } from './components/auth-page.js?v=2';
+import { PlaylistsPageComponent } from './components/playlists-page.js?v=2';
+import { TasksPageComponent } from './components/tasks-page.js?v=2';
+import { NotebookPageComponent } from './components/notebook-page.js?v=4';
+import { SettingsPageComponent } from './components/settings-page.js?v=2';
 import { AIPlanModalComponent } from './components/ai-plan-modal.js?v=2';
 import { renderPlaylistCard } from './components/playlist-card.js';
 import { TaskBoardComponent } from './components/task-board.js';
@@ -52,9 +52,6 @@ class App {
 
     // Setup Page Navigation Routing & Route Guards
     this.setupViewRouting();
-
-    // Setup Tabs
-    this.setupTabs();
 
     // Dashboard shortcut buttons to navigate to full pages
     $('#btn-dash-goto-playlists')?.addEventListener('click', () => bus.emit('view:switch', 'playlists'));
@@ -136,22 +133,6 @@ class App {
 
     window.addEventListener('hashchange', handleHash);
     handleHash();
-  }
-
-  setupTabs() {
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabButtons.forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
-        const tab = btn.dataset.tab;
-        store.setTab(tab);
-      });
-    });
   }
 
   renderDashboard(state) {

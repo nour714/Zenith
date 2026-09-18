@@ -1,8 +1,8 @@
 /**
  * Internationalization (I18n) Engine with reactive RTL/LTR switching.
  */
-import ar from './ar.js?v=2';
-import en from './en.js?v=2';
+import ar from './ar.js?v=3';
+import en from './en.js?v=3';
 
 const dictionaries = { ar, en };
 
@@ -52,12 +52,24 @@ class Translator {
       }
     });
 
-    // Update titles
+    // Update titles and aria-labels
     document.querySelectorAll('[data-i18n-title]').forEach(el => {
       const key = el.getAttribute('data-i18n-title');
       const text = this.t(key);
       if (text) {
         el.setAttribute('title', text);
+        if (el.hasAttribute('aria-label')) {
+          el.setAttribute('aria-label', text);
+        }
+      }
+    });
+
+    // Update specific aria-labels
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+      const key = el.getAttribute('data-i18n-aria');
+      const text = this.t(key);
+      if (text) {
+        el.setAttribute('aria-label', text);
       }
     });
   }

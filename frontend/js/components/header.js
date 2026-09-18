@@ -69,12 +69,12 @@ export class HeaderComponent {
         mobileBtn?.classList.toggle('active', isActive);
       });
 
-      // Show/hide navigation and user actions depending on auth state
+      // Show/hide header and mobile nav depending on auth state
       const isAuthView = viewName === 'auth';
-      const navPages = $('.header-nav-pages');
+      const headerEl = $('.app-header');
       const mobileNav = $('.mobile-bottom-nav');
-      if (navPages) navPages.style.display = isAuthView ? 'none' : 'flex';
-      if (mobileNav) mobileNav.style.display = isAuthView ? 'none' : 'flex';
+      if (headerEl) headerEl.style.display = isAuthView ? 'none' : 'flex';
+      if (mobileNav) mobileNav.style.display = isAuthView ? 'none' : 'grid';
     });
 
     // Auth state changes

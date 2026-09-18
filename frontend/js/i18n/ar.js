@@ -87,4 +87,8 @@ export default {
   tab_split: "انقسام",
   empty_notes_search: "لا توجد ملاحظات مطابقة للبحث.",
   notebook_total_count: "إجمالي الملاحظات",
+  auth_no_account: "ليس لديك حساب؟",
+  auth_register_link: "إنشاء حساب الآن",
+  auth_have_account: "لديك حساب بالفعل؟",
+  auth_login_link: "تسجيل الدخول",
 };

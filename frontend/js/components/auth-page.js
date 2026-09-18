@@ -1,5 +1,6 @@
 /**
- * Auth Page Component: Manages Sign In, Sign Up, and Google OAuth flow.
+ * Auth Page Component: Manages Sign In, Sign Up, Google OAuth flow,
+ * floating language switcher, password visibility toggles, and seamless tab transitions.
  */
 import { authService } from '../services/auth-service.js';
 import { bus } from '../core/event-bus.js';
@@ -12,34 +13,53 @@ export class AuthPageComponent {
     this.mode = 'login'; // 'login' | 'register'
     this.bindEvents();
     this.initGoogleOAuth();
+    this.updateLangLabel();
   }
 
   bindEvents() {
-    // Mode switcher buttons
+    // Mode switcher buttons & prompt links
     const btnTabLogin = $('#auth-tab-login');
     const btnTabRegister = $('#auth-tab-register');
-    const formLogin = $('#form-auth-login');
-    const formRegister = $('#form-auth-register');
+    const linkSwitchRegister = $('#link-switch-to-register');
+    const linkSwitchLogin = $('#link-switch-to-login');
 
-    btnTabLogin?.addEventListener('click', () => {
-      this.mode = 'login';
-      btnTabLogin.classList.add('active');
-      btnTabRegister?.classList.remove('active');
-      formLogin?.style.setProperty('display', 'flex');
-      formRegister?.style.setProperty('display', 'none');
-      this.clearError();
+    btnTabLogin?.addEventListener('click', () => this.switchMode('login'));
+    btnTabRegister?.addEventListener('click', () => this.switchMode('register'));
+    linkSwitchRegister?.addEventListener('click', () => this.switchMode('register'));
+    linkSwitchLogin?.addEventListener('click', () => this.switchMode('login'));
+
+    // Floating language switcher on auth screen
+    const langBtn = $('#btn-auth-lang-toggle');
+    langBtn?.addEventListener('click', () => {
+      const nextLang = i18n.lang === 'ar' ? 'en' : 'ar';
+      i18n.setLanguage(nextLang);
+      this.updateLangLabel();
     });
 
-    btnTabRegister?.addEventListener('click', () => {
-      this.mode = 'register';
-      btnTabRegister.classList.add('active');
-      btnTabLogin?.classList.remove('active');
-      formLogin?.style.setProperty('display', 'none');
-      formRegister?.style.setProperty('display', 'flex');
-      this.clearError();
+    window.addEventListener('langchanged', () => this.updateLangLabel());
+
+    // Password visibility toggles
+    document.querySelectorAll('.btn-toggle-password').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        if (!input) return;
+
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+
+        const eyeIcon = btn.querySelector('.icon-eye');
+        const eyeOffIcon = btn.querySelector('.icon-eye-off');
+
+        if (eyeIcon && eyeOffIcon) {
+          eyeIcon.style.display = isPassword ? 'none' : 'block';
+          eyeOffIcon.style.display = isPassword ? 'block' : 'none';
+        }
+      });
     });
 
     // Login Form Submit
+    const formLogin = $('#form-auth-login');
     formLogin?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = $('#login-email')?.value.trim();
@@ -65,6 +85,7 @@ export class AuthPageComponent {
     });
 
     // Register Form Submit
+    const formRegister = $('#form-auth-register');
     formRegister?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fullName = $('#register-name')?.value.trim();
@@ -106,6 +127,34 @@ export class AuthPageComponent {
       bus.emit('view:switch', 'auth');
       toast.info(i18n.lang === 'ar' ? 'يرجى تسجيل الدخول للمتابعة' : 'Please sign in to continue');
     });
+  }
+
+  switchMode(mode) {
+    this.mode = mode;
+    const btnTabLogin = $('#auth-tab-login');
+    const btnTabRegister = $('#auth-tab-register');
+    const formLogin = $('#form-auth-login');
+    const formRegister = $('#form-auth-register');
+
+    if (mode === 'login') {
+      btnTabLogin?.classList.add('active');
+      btnTabRegister?.classList.remove('active');
+      formLogin?.style.setProperty('display', 'flex');
+      formRegister?.style.setProperty('display', 'none');
+    } else {
+      btnTabRegister?.classList.add('active');
+      btnTabLogin?.classList.remove('active');
+      formLogin?.style.setProperty('display', 'none');
+      formRegister?.style.setProperty('display', 'flex');
+    }
+    this.clearError();
+  }
+
+  updateLangLabel() {
+    const label = $('#auth-lang-label');
+    if (label) {
+      label.textContent = i18n.lang === 'ar' ? 'EN' : 'عربي';
+    }
   }
 
   async initGoogleOAuth() {

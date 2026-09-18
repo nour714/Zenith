@@ -87,4 +87,8 @@ export default {
   tab_split: "Split",
   empty_notes_search: "No notes matching your query.",
   notebook_total_count: "Total Notes",
+  auth_no_account: "Don't have an account?",
+  auth_register_link: "Sign up now",
+  auth_have_account: "Already have an account?",
+  auth_login_link: "Sign In",
 };

@@ -105,6 +105,7 @@ class App {
       });
 
       bus.emit('view:switched', viewKey);
+      document.body.classList.toggle('view-auth', viewKey === 'auth');
 
       if (window.location.hash !== `#${viewKey}`) {
         window.history.replaceState(null, '', `#${viewKey}`);

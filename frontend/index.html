@@ -452,8 +452,8 @@
               <span style="color: #ef4444;">✦</span>
               <span data-i18n="playlists_add_new_title">إضافة واستكشاف مسار تعليمي جديد</span>
             </h3>
-            <form id="form-playlists-page-add" style="display: flex; flex-direction: column; gap: 12px;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <form id="form-playlists-page-add" class="page-feature-form" style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="form-grid-row-2">
                 <div>
                   <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_playlist_name">اسم الكورس / المسار</label>
                   <input id="input-page-playlist-name" type="text" style="width: 100%;" placeholder="مثال: كورس بايثون للمبتدئين" data-i18n-placeholder="ph_playlist_name">
@@ -468,7 +468,7 @@
                 <input id="input-page-direct-url" type="url" style="width: 100%;" placeholder="https://www.youtube.com/playlist?list=..." data-i18n-placeholder="ph_direct_url">
               </div>
               <div id="playlists-page-status-box" style="display: none; padding: 10px; border-radius: var(--radius-sm); font-size: 0.88rem; text-align: center;"></div>
-              <div style="display: flex; justify-content: flex-end;">
+              <div class="form-submit-row" style="display: flex; justify-content: flex-end;">
                 <button id="btn-playlists-page-submit" type="submit" class="btn btn-primary" style="padding: 8px 24px;">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   <span data-i18n="btn_search_extract">بحث واستخراج المسار</span>
@@ -515,8 +515,8 @@
               <span style="color: var(--accent-purple);">✦</span>
               <span data-i18n="modal_task_title">إضافة مهمة جديدة</span>
             </h3>
-            <form id="form-page-create-task" style="display: flex; flex-direction: column; gap: 12px;">
-              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px;">
+            <form id="form-page-create-task" class="page-feature-form" style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="form-grid-row-3">
                 <div>
                   <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_title">عنوان المهمة</label>
                   <input id="input-page-task-title" type="text" required style="width: 100%;" placeholder="مثال: مراجعة الكود وحل التمارين" data-i18n-placeholder="ph_task_title">
@@ -539,13 +539,13 @@
                   </select>
                 </div>
               </div>
-              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: flex-end;">
+              <div class="form-grid-row-desc">
                 <div>
                   <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_desc">تفاصيل المهمة (اختياري)</label>
                   <input id="input-page-task-desc" type="text" style="width: 100%;" placeholder="تفاصيل إضافية أو مراجع..." data-i18n-placeholder="ph_task_desc">
                 </div>
-                <div style="display: flex; gap: 10px; align-items: flex-end;">
-                  <div style="flex: 1;">
+                <div class="form-submit-row">
+                  <div style="flex: 1; width: 100%;">
                     <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_duedate">تاريخ الاستحقاق</label>
                     <input id="input-page-task-duedate" type="date" style="width: 100%;">
                   </div>

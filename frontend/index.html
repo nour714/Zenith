@@ -610,151 +610,134 @@
         </div>
       </section>
 
-  <!-- Modal: Search & Add YouTube Playlist -->
-  <div id="modal-search-playlist" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="color: #ef4444; display: flex; align-items: center;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-          </div>
-          <h3 style="font-size: 1.18rem; font-weight: 700;" data-i18n="modal_search_title">إضافة مسار يوتيوب</h3>
-        </div>
-        <button id="btn-close-search-modal" class="btn-icon" aria-label="Close">✕</button>
-      </div>
-      <form id="form-search-playlist">
-        <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px;">
-          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;" data-i18n="modal_search_hint">
-            اكتب اسم الكورس واسم القناة وسيقوم النظام بالبحث الفوري عنها وعرض فيديوهاتها:
-          </p>
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_playlist_name">اسم قائمة التشغيل / الكورس</label>
-            <input id="input-playlist-name" type="text" style="width: 100%;" placeholder="مثال: كورس بايثون للمبتدئين" data-i18n-placeholder="ph_playlist_name">
-          </div>
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_channel_name">اسم القناة (اختياري)</label>
-            <input id="input-channel-name" type="text" style="width: 100%;" placeholder="مثال: محمد الدسوقي أو Codezilla" data-i18n-placeholder="ph_channel_name">
-          </div>
-          <div style="text-align: center; color: var(--text-dim); font-size: 0.82rem;">— <span data-i18n="lbl_or_direct_url">أو الصق رابط القائمة المباشر</span> —</div>
-          <div>
-            <input id="input-direct-url" type="url" style="width: 100%;" placeholder="https://www.youtube.com/playlist?list=..." data-i18n-placeholder="ph_direct_url">
-          </div>
-          <div id="search-status-box" style="display: none; padding: 12px; border-radius: var(--radius-sm); font-size: 0.88rem; text-align: center;"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="btn-cancel-search-modal" class="btn btn-secondary" data-i18n="btn_cancel">إلغاء</button>
-          <button type="submit" id="btn-submit-search" class="btn btn-primary" data-i18n="btn_search">بحث واستخراج</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: Add Custom Task -->
-  <div id="modal-task" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 style="font-size: 1.18rem; font-weight: 700;" data-i18n="modal_task_title">إضافة مهمة سريعة</h3>
-        <button id="btn-close-task-modal" class="btn-icon" aria-label="Close">✕</button>
-      </div>
-      <form id="form-create-task">
-        <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_title">عنوان المهمة</label>
-            <input id="input-task-title" type="text" style="width: 100%;" required placeholder="مثال: مراجعة الكود وحل التمارين" data-i18n-placeholder="ph_task_title">
-          </div>
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_desc">التفاصيل (اختياري)</label>
-            <textarea id="input-task-desc" style="width: 100%; height: 75px; resize: none;"></textarea>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <!-- View: Dedicated Full Settings & Account Page -->
+      <section id="view-settings" class="page-view" aria-label="Settings and Profile">
+        <div class="page-layout-container">
+          <div class="page-hero-banner">
             <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_priority">الأولوية</label>
-              <select id="select-task-priority" style="width: 100%;">
-                <option value="medium">متوسطة (Medium)</option>
-                <option value="high">عالية (High)</option>
-                <option value="low">منخفضة (Low)</option>
-              </select>
-            </div>
-            <div>
-              <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_task_category">التصنيف</label>
-              <select id="select-task-category" style="width: 100%;">
-                <option value="general">عام (General)</option>
-                <option value="study">مذاكرة (Study)</option>
-                <option value="work">عمل (Work)</option>
-                <option value="personal">شخصي (Personal)</option>
-              </select>
+              <h2 class="page-hero-title">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 .33-1.82V9A1.65 1.65 0 0 0 21 10h.09a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span data-i18n="nav_settings">الإعدادات والحساب</span>
+              </h2>
+              <p class="page-hero-subtitle">إدارة الحساب الشخصي، مفتاح الذكاء الاصطناعي Google Gemini، ولغة التطبيق.</p>
             </div>
           </div>
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">تاريخ الاستحقاق (اختياري)</label>
-            <input id="input-task-duedate" type="date" style="width: 100%;">
+
+          <div class="settings-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+            <!-- Profile Info & Password Card -->
+            <div class="glass-card page-feature-card">
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+                <div id="settings-profile-avatar" class="user-avatar-large">Z</div>
+                <div>
+                  <h3 id="settings-profile-name" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">المستخدم</h3>
+                  <p id="settings-profile-email" style="font-size: 0.85rem; color: var(--text-dim);">user@example.com</p>
+                </div>
+              </div>
+
+              <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 14px;" data-i18n="settings_profile_section">البيانات الشخصية</h4>
+              <form id="form-settings-profile" style="display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="auth_full_name">الاسم بالكامل</label>
+                  <input id="input-settings-name" type="text" style="width: 100%;" placeholder="محمد علي">
+                </div>
+
+                <div style="margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+                  <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 10px;" data-i18n="settings_password_section">تغيير كلمة المرور (اختياري)</span>
+                  <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                      <label style="display: block; font-size: 0.8rem; margin-bottom: 4px;" data-i18n="settings_current_password">كلمة المرور الحالية</label>
+                      <input id="input-settings-current-password" type="password" style="width: 100%;" placeholder="••••••••">
+                    </div>
+                    <div>
+                      <label style="display: block; font-size: 0.8rem; margin-bottom: 4px;" data-i18n="settings_new_password">كلمة المرور الجديدة</label>
+                      <input id="input-settings-new-password" type="password" style="width: 100%;" placeholder="6 أحرف على الأقل">
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                  <button id="btn-settings-profile-submit" type="submit" class="btn btn-primary" style="padding: 8px 24px;">
+                    <span data-i18n="btn_save">حفظ التغييرات</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- AI Settings & Preferences Card -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div class="glass-card page-feature-card">
+                <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                  <span style="color: var(--accent-fuchsia);">✦</span>
+                  <span data-i18n="settings_ai_section">الذكاء الاصطناعي (Google Gemini)</span>
+                </h4>
+                <form id="form-settings-ai" style="display: flex; flex-direction: column; gap: 12px;">
+                  <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_gemini_key">مفتاح Google Gemini API</label>
+                    <input id="input-settings-page-gemini" type="password" style="width: 100%;" placeholder="AIzaSy...">
+                    <p style="font-size: 0.78rem; color: var(--text-dim); margin-top: 6px; line-height: 1.4;" data-i18n="gemini_hint">
+                      يُستخدم لإنشاء خطط مذاكرة بالذكاء الاصطناعي وتحسين وتلخيص الملاحظات. يُخزّن بأمان لكل مستخدم على حدة.
+                    </p>
+                  </div>
+                  <div style="display: flex; justify-content: flex-end;">
+                    <button id="btn-settings-ai-submit" type="submit" class="btn btn-primary" style="padding: 8px 20px;">
+                      <span data-i18n="btn_save">حفظ المفتاح</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- General App Preferences & Logout Card -->
+              <div class="glass-card page-feature-card">
+                <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 14px;" data-i18n="settings_general_section">تفضيلات التطبيق</h4>
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                  <div>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="settings_language">لغة التطبيق</label>
+                    <select id="select-settings-page-language" style="width: 100%;">
+                      <option value="ar" data-i18n="language_arabic">العربية (Arabic)</option>
+                      <option value="en" data-i18n="language_english">English (الإنجليزية)</option>
+                    </select>
+                  </div>
+
+                  <div style="margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.9rem; color: #ef4444;" data-i18n="auth_btn_logout">تسجيل الخروج</div>
+                      <div style="font-size: 0.78rem; color: var(--text-dim);" data-i18n="auth_logout_hint">إنهاء الجلسة الحالية على هذا المتصفح</div>
+                    </div>
+                    <button id="btn-settings-page-logout" type="button" class="btn btn-secondary logout-btn" style="padding: 6px 16px; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+                      <span data-i18n="auth_btn_logout">خروج</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal: AI Study Plan -->
+    <div id="modal-ai-plan" class="modal-backdrop" role="dialog" aria-modal="true">
+      <div class="modal-card" style="max-width: 680px;">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="color: var(--accent-purple); display: flex;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l2.4 6.8 6.8 2.4-6.8 2.4L12 20.4l-2.4-6.8L2.8 11.2l6.8-2.4z"/></svg>
+            </div>
+            <h3 style="font-size: 1.18rem; font-weight: 700;">خطة المذاكرة بالذكاء الاصطناعي</h3>
+          </div>
+          <button id="btn-close-ai-modal" class="btn-icon" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+          <div id="ai-plan-content"></div>
         </div>
         <div class="modal-footer">
-          <button type="button" id="btn-cancel-task-modal" class="btn btn-secondary" data-i18n="btn_cancel">إلغاء</button>
-          <button type="submit" class="btn btn-primary" data-i18n="btn_save">حفظ المهمة</button>
+          <button type="button" id="btn-cancel-ai-modal" class="btn btn-secondary" data-i18n="btn_close">إغلاق</button>
+          <button type="button" id="btn-save-plan-to-notebook" class="btn btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>حفظ في النوت بوك</span>
+          </button>
         </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: AI Study Plan -->
-  <div id="modal-ai-plan" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal-card" style="max-width: 680px;">
-      <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="color: var(--accent-purple); display: flex;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l2.4 6.8 6.8 2.4-6.8 2.4L12 20.4l-2.4-6.8L2.8 11.2l6.8-2.4z"/></svg>
-          </div>
-          <h3 style="font-size: 1.18rem; font-weight: 700;">خطة المذاكرة بالذكاء الاصطناعي</h3>
-        </div>
-        <button id="btn-close-ai-modal" class="btn-icon" aria-label="Close">✕</button>
       </div>
-      <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
-        <div id="ai-plan-content"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="btn-cancel-ai-modal" class="btn btn-secondary" data-i18n="btn_close">إغلاق</button>
-        <button type="button" id="btn-save-plan-to-notebook" class="btn btn-primary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          <span>حفظ في النوت بوك</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal: Settings -->
-  <div id="modal-settings" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <h3 style="font-size: 1.18rem; font-weight: 700;" data-i18n="modal_settings_title">الإعدادات والذكاء الاصطناعي</h3>
-        </div>
-        <button id="btn-close-settings-modal" class="btn-icon" aria-label="Close">✕</button>
-      </div>
-      <form id="form-settings">
-        <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px;">
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="lbl_gemini_key">مفتاح Google Gemini API (اختياري)</label>
-            <input id="input-gemini-key" type="password" style="width: 100%;" placeholder="AIzaSy...">
-            <p style="font-size: 0.78rem; color: var(--text-dim); margin-top: 6px; line-height: 1.4;" data-i18n="gemini_hint">
-              للحصول على خطط مذاكرة آلية وتحسين ذكي للملاحظات. التطبيق يعمل بكامل طاقته للبحث والتتبع بدون المفتاح أيضاً.
-            </p>
-          </div>
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;" data-i18n="settings_language">لغة التطبيق</label>
-            <select id="select-app-language" style="width: 100%;">
-              <option value="ar" data-i18n="language_arabic">العربية</option>
-              <option value="en" data-i18n="language_english">English</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="btn-cancel-settings-modal" class="btn btn-secondary" data-i18n="btn_cancel">إلغاء</button>
-          <button type="submit" class="btn btn-primary" data-i18n="btn_save">حفظ الإعدادات</button>
-        </div>
-      </form>
     </div>
   </div>
 

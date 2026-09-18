@@ -12,16 +12,17 @@ class SettingsRepository:
     def get_all(self, user_id: Optional[int] = None) -> Dict[str, str]:
         cursor = self.conn.cursor()
         settings: Dict[str, str] = {}
-        # 1. Fetch global settings
-        cursor.execute("SELECT key, value FROM zenith_settings")
-        for row in cursor.fetchall():
-            settings[row["key"]] = row["value"]
 
-        # 2. Overlay user settings if user_id is provided
         if user_id is not None:
             cursor.execute("SELECT key, value FROM zenith_user_settings WHERE user_id = %s", (user_id,))
             for row in cursor.fetchall():
                 settings[row["key"]] = row["value"]
+            return settings
+
+        # Fallback for unauthenticated/system settings
+        cursor.execute("SELECT key, value FROM zenith_settings")
+        for row in cursor.fetchall():
+            settings[row["key"]] = row["value"]
 
         return settings
 
@@ -30,8 +31,7 @@ class SettingsRepository:
         if user_id is not None:
             cursor.execute("SELECT value FROM zenith_user_settings WHERE user_id = %s AND key = %s", (user_id, key))
             row = cursor.fetchone()
-            if row:
-                return row["value"]
+            return row["value"] if row else default
 
         # Fallback to global
         cursor.execute("SELECT value FROM zenith_settings WHERE key = %s", (key,))

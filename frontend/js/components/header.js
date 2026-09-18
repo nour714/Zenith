@@ -1,14 +1,18 @@
 /**
- * Header Component: Controls brand, global stats bar, language switcher and modal triggers.
+ * Header Component: Controls brand, global navigation across 5 full pages,
+ * user profile chip, language switcher, logout, and stats synchronization.
  */
 import { store } from '../core/store.js';
 import { bus } from '../core/event-bus.js';
 import { i18n } from '../i18n/translator.js';
+import { authService } from '../services/auth-service.js';
+import { toast } from '../utils/toast.js';
 import { $ } from '../utils/dom.js';
 
 export class HeaderComponent {
   constructor() {
     this.bindEvents();
+    this.renderUser();
     this.updateStats(store.getState().stats);
   }
 
@@ -24,43 +28,92 @@ export class HeaderComponent {
     }
 
     // Brand click returns to dashboard
-    $('.header-brand')?.addEventListener('click', () => bus.emit('view:switch', 'dashboard'));
-
-    // Navigation Pages (Dashboard vs Dedicated Notebook Page)
-    $('#nav-btn-dashboard')?.addEventListener('click', () => bus.emit('view:switch', 'dashboard'));
-    $('#nav-btn-notebook')?.addEventListener('click', () => bus.emit('view:switch', 'notebook'));
-    $('#mobile-nav-dashboard')?.addEventListener('click', () => bus.emit('view:switch', 'dashboard'));
-    $('#mobile-nav-notebook')?.addEventListener('click', () => bus.emit('view:switch', 'notebook'));
-    $('#mobile-nav-playlist')?.addEventListener('click', () => bus.emit('modal:search:open'));
-    $('#mobile-nav-task')?.addEventListener('click', () => bus.emit('modal:task:open'));
-    $('#mobile-nav-settings')?.addEventListener('click', () => bus.emit('modal:settings:open'));
-
-    bus.on('view:switched', (viewName) => {
-      const btnDashboard = $('#nav-btn-dashboard');
-      const btnNotebook = $('#nav-btn-notebook');
-
-      if (viewName === 'notebook') {
-        btnDashboard?.classList.remove('active');
-        btnNotebook?.classList.add('active');
-      } else {
-        btnNotebook?.classList.remove('active');
-        btnDashboard?.classList.add('active');
+    $('.header-brand')?.addEventListener('click', () => {
+      if (authService.isAuthenticated()) {
+        bus.emit('view:switch', 'dashboard');
       }
-
-      const mobileDashboard = $('#mobile-nav-dashboard');
-      const mobileNotebook = $('#mobile-nav-notebook');
-      mobileDashboard?.classList.toggle('active', viewName !== 'notebook');
-      mobileNotebook?.classList.toggle('active', viewName === 'notebook');
     });
 
-    // Modal openers
-    $('#btn-open-search')?.addEventListener('click', () => bus.emit('modal:search:open'));
-    $('#btn-open-task-modal')?.addEventListener('click', () => bus.emit('modal:task:open'));
-    $('#btn-open-settings')?.addEventListener('click', () => bus.emit('modal:settings:open'));
+    // Top Header Navigation (5 Full Pages)
+    const pageKeys = ['dashboard', 'playlists', 'tasks', 'notebook', 'settings'];
+    pageKeys.forEach(page => {
+      $(`#nav-btn-${page}`)?.addEventListener('click', () => bus.emit('view:switch', page));
+      $(`#mobile-nav-${page}`)?.addEventListener('click', () => bus.emit('view:switch', page));
+    });
 
-    // Listen for state changes
+    // User Profile Mini Chip click navigates to settings
+    $('#header-user-chip')?.addEventListener('click', () => bus.emit('view:switch', 'settings'));
+
+    // Header Logout Button
+    $('#btn-header-logout')?.addEventListener('click', async () => {
+      const confirmed = await toast.confirm(
+        i18n.lang === 'ar' ? 'تسجيل الخروج' : 'Sign Out',
+        i18n.lang === 'ar' ? 'هل أنت متأكد من رغبتك في تسجيل الخروج من حسابك؟' : 'Are you sure you want to sign out?',
+        i18n.lang === 'ar' ? 'نعم، خروج' : 'Sign Out',
+        i18n.lang === 'ar' ? 'إلغاء' : 'Cancel'
+      );
+      if (confirmed) {
+        authService.logout();
+        toast.info(i18n.lang === 'ar' ? 'تم تسجيل الخروج بنجاح' : 'Signed out successfully');
+      }
+    });
+
+    // View switched listener
+    bus.on('view:switched', (viewName) => {
+      pageKeys.forEach(page => {
+        const desktopBtn = $(`#nav-btn-${page}`);
+        const mobileBtn = $(`#mobile-nav-${page}`);
+        const isActive = page === viewName;
+
+        desktopBtn?.classList.toggle('active', isActive);
+        mobileBtn?.classList.toggle('active', isActive);
+      });
+
+      // Show/hide navigation and user actions depending on auth state
+      const isAuthView = viewName === 'auth';
+      const navPages = $('.header-nav-pages');
+      const mobileNav = $('.mobile-bottom-nav');
+      if (navPages) navPages.style.display = isAuthView ? 'none' : 'flex';
+      if (mobileNav) mobileNav.style.display = isAuthView ? 'none' : 'flex';
+    });
+
+    // Auth state changes
+    bus.on('auth:state-changed', () => this.renderUser());
+    bus.on('auth:profile-updated', () => this.renderUser());
+
+    // Stats updates
     bus.on('stats:updated', stats => this.updateStats(stats));
     bus.on('state:changed', state => this.updateStats(state.stats));
+  }
+
+  renderUser() {
+    const userChip = $('#header-user-chip');
+    const logoutBtn = $('#btn-header-logout');
+    const userAvatar = $('#header-user-avatar');
+    const userName = $('#header-user-name');
+
+    if (!authService.isAuthenticated()) {
+      if (userChip) userChip.style.display = 'none';
+      if (logoutBtn) logoutBtn.style.display = 'none';
+      return;
+    }
+
+    const user = authService.getUser();
+    if (userChip) userChip.style.display = 'flex';
+    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+
+    if (userName) {
+      userName.textContent = user?.full_name || user?.email?.split('@')[0] || 'User';
+    }
+
+    if (userAvatar) {
+      if (user?.avatar_url) {
+        userAvatar.innerHTML = `<img src="${user.avatar_url}" alt="${user.full_name || ''}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+      } else {
+        const initial = (user?.full_name || user?.email || 'Z')[0].toUpperCase();
+        userAvatar.textContent = initial;
+      }
+    }
   }
 
   updateStats(stats) {
@@ -70,12 +123,14 @@ export class HeaderComponent {
     const elCompVideos = $('#stat-val-completed-videos');
     const elTotalTasks = $('#stat-val-total-tasks');
     const elOverallProgress = $('#stat-val-overall-progress');
+    const headerNotesCount = $('#header-notes-count');
     const mobileNotesCount = $('#mobile-notes-count');
 
     if (elTotalVideos) elTotalVideos.textContent = stats.total_videos || 0;
     if (elCompVideos) elCompVideos.textContent = stats.completed_videos || 0;
     if (elTotalTasks) elTotalTasks.textContent = `${stats.completed_tasks || 0}/${stats.total_tasks || 0}`;
     if (elOverallProgress) elOverallProgress.textContent = `${stats.overall_progress_percentage || 0}%`;
+    if (headerNotesCount) headerNotesCount.textContent = stats.total_notes || 0;
     if (mobileNotesCount) mobileNotesCount.textContent = stats.total_notes || 0;
   }
 }

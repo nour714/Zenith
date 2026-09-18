@@ -36,12 +36,18 @@ export class ContinueLearningComponent {
   constructor() {
     this.container = $('#dashboard-continue-learning-slot');
     this.init();
+    this.render();
   }
 
   init() {
     bus.on('continue-learning:updated', () => this.render());
     bus.on('playlists:updated', () => this.render());
     bus.on('i18n:changed', () => this.render());
+    bus.on('view:switched', (view) => {
+      if (view === 'dashboard') {
+        this.render();
+      }
+    });
   }
 
   render() {

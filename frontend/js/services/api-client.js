@@ -28,10 +28,28 @@ class APIClient {
         throw new Error('جلسة الدخول منتهية أو غير صالحة. يرجى تسجيل الدخول.');
       }
 
-      const json = await response.json();
+      let json = {};
+      const text = await response.text();
+      if (text) {
+        try {
+          json = JSON.parse(text);
+        } catch {
+          json = { message: text };
+        }
+      }
 
       if (!response.ok) {
-        const errorMsg = json.message || json.error || `Error ${response.status}: Request failed`;
+        let errorMsg = json.message || json.error;
+        if (!errorMsg && json.detail) {
+          if (Array.isArray(json.detail)) {
+            errorMsg = json.detail.map(d => d.msg || JSON.stringify(d)).join(', ');
+          } else {
+            errorMsg = String(json.detail);
+          }
+        }
+        if (!errorMsg) {
+          errorMsg = `Error ${response.status}: Request failed`;
+        }
         throw new Error(errorMsg);
       }
 

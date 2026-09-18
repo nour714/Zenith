@@ -164,121 +164,325 @@
 
     <!-- Main Content -->
     <main class="app-main">
-      <!-- View: Dashboard (Courses & Tasks) -->
-      <section id="view-dashboard" class="page-view active" aria-label="Dashboard">
-        <!-- Stats Overview Banner -->
-        <section class="stats-banner" aria-label="Statistics Overview">
-        <div class="glass-card stat-card">
-          <div class="stat-icon-wrapper" style="background: rgba(6, 182, 212, 0.16); color: var(--accent-cyan);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-          </div>
-          <div>
-            <div id="stat-val-total-videos" class="stat-val">0</div>
-            <div class="stat-label" data-i18n="stat_total_videos">فيديوهات مسجلة</div>
-          </div>
-        </div>
+      <!-- View: Authentication (Sign In & Sign Up & Google OAuth) -->
+      <section id="view-auth" class="page-view" aria-label="Zenith Authentication">
+        <div class="auth-page-wrapper">
+          <div class="glass-card auth-card animate-float">
+            <!-- Brand header -->
+            <div class="auth-header">
+              <div class="auth-logo-wrap">
+                <svg class="brand-logo-svg" style="width: 52px; height: 52px;" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="zn-auth-l" x1="7" y1="30" x2="18" y2="6" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#9333ea"/>
+                      <stop offset="100%" stop-color="#c084fc"/>
+                    </linearGradient>
+                    <linearGradient id="zn-auth-r" x1="18" y1="6" x2="29" y2="30" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#ec4899"/>
+                      <stop offset="100%" stop-color="#d946ef"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M 18 6.5 L 7.5 29 C 7.2 29.8 7.8 30.5 8.6 30.5 L 18 26.5 Z" fill="url(#zn-auth-l)"/>
+                  <path d="M 18 6.5 L 18 26.5 L 27.4 30.5 C 28.2 30.5 28.8 29.8 28.5 29 Z" fill="url(#zn-auth-r)"/>
+                  <circle cx="18" cy="6" r="2" fill="#ffffff"/>
+                </svg>
+              </div>
+              <h1 class="auth-brand-title" data-i18n="brand_title">Zenith</h1>
+              <p class="auth-brand-tagline" data-i18n="auth_subtitle">بوابتك نحو ذروة التعلم وتنظيم المسارات والملاحظات الذكية</p>
+            </div>
 
-        <div class="glass-card stat-card">
-          <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.16); color: var(--accent-emerald);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
-          <div>
-            <div id="stat-val-completed-videos" class="stat-val">0</div>
-            <div class="stat-label" data-i18n="stat_completed_videos">فيديوهات مكتملة</div>
-          </div>
-        </div>
+            <!-- Tab Switcher -->
+            <div class="auth-mode-tabs">
+              <button id="auth-tab-login" class="auth-tab-btn active" type="button" data-i18n="auth_login_tab">تسجيل الدخول</button>
+              <button id="auth-tab-register" class="auth-tab-btn" type="button" data-i18n="auth_register_tab">إنشاء حساب جديد</button>
+            </div>
 
-        <div class="glass-card stat-card">
-          <div class="stat-icon-wrapper" style="background: rgba(139, 92, 246, 0.16); color: var(--accent-purple);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          </div>
-          <div>
-            <div id="stat-val-total-tasks" class="stat-val">0/0</div>
-            <div class="stat-label" data-i18n="stat_total_tasks">المهام العامة</div>
-          </div>
-        </div>
+            <!-- Error Notification Box -->
+            <div id="auth-error-box" class="auth-alert-box" style="display: none;"></div>
 
-        <div class="glass-card stat-card">
-          <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.16); color: var(--accent-amber);">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div>
-            <div id="stat-val-overall-progress" class="stat-val">0%</div>
-            <div class="stat-label" data-i18n="stat_overall_progress">نسبة الإنجاز الكلية</div>
+            <!-- Login Form -->
+            <form id="form-auth-login" class="auth-form" style="display: flex;">
+              <div class="form-group">
+                <label for="login-email" data-i18n="auth_email">البريد الإلكتروني</label>
+                <input id="login-email" type="email" required placeholder="you@example.com" autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="login-password" data-i18n="auth_password">كلمة المرور</label>
+                <input id="login-password" type="password" required placeholder="••••••••" autocomplete="current-password">
+              </div>
+              <button id="btn-login-submit" type="submit" class="btn btn-primary auth-submit-btn">
+                <span data-i18n="auth_btn_login">دخول إلى حسابي</span>
+              </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="form-auth-register" class="auth-form" style="display: none;">
+              <div class="form-group">
+                <label for="register-name" data-i18n="auth_full_name">الاسم بالكامل</label>
+                <input id="register-name" type="text" placeholder="محمد علي" autocomplete="name">
+              </div>
+              <div class="form-group">
+                <label for="register-email" data-i18n="auth_email">البريد الإلكتروني</label>
+                <input id="register-email" type="email" required placeholder="you@example.com" autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="register-password" data-i18n="auth_password">كلمة المرور</label>
+                <input id="register-password" type="password" required minlength="6" placeholder="6 أحرف على الأقل" autocomplete="new-password">
+              </div>
+              <div class="form-group">
+                <label for="register-password-confirm">تأكيد كلمة المرور</label>
+                <input id="register-password-confirm" type="password" required minlength="6" placeholder="أعد كتابة كلمة المرور" autocomplete="new-password">
+              </div>
+              <button id="btn-register-submit" type="submit" class="btn btn-primary auth-submit-btn">
+                <span data-i18n="auth_btn_register">إنشاء حساب جديد</span>
+              </button>
+            </form>
+
+            <!-- Or Divider -->
+            <div class="auth-divider">
+              <span>— <span data-i18n="auth_or_divider">أو المتابعة عبر</span> —</span>
+            </div>
+
+            <!-- Google OAuth Container -->
+            <div id="google-signin-btn-container" class="google-auth-wrap"></div>
           </div>
         </div>
       </section>
 
-      <!-- Tab Filter Navigation -->
-      <nav class="nav-tabs-bar" aria-label="Dashboard Filters">
-        <div class="tabs-group" role="tablist">
-          <button class="tab-btn active" data-tab="all" role="tab" aria-selected="true">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            <span data-i18n="nav_all">الكل</span>
-            <span id="badge-all" class="tab-badge">0</span>
-          </button>
-          <button class="tab-btn" data-tab="playlists" role="tab" aria-selected="false">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-            <span data-i18n="nav_playlists">مسارات يوتيوب</span>
-            <span id="badge-playlists" class="tab-badge">0</span>
-          </button>
-          <button class="tab-btn" data-tab="tasks" role="tab" aria-selected="false">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            <span data-i18n="nav_tasks">المهام اليومية</span>
-            <span id="badge-tasks" class="tab-badge">0</span>
-          </button>
-          <button class="tab-btn" data-tab="completed" role="tab" aria-selected="false">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span data-i18n="nav_completed">المكتملة</span>
-            <span id="badge-completed" class="tab-badge">0</span>
-          </button>
+      <!-- View: Dashboard (Command Center) -->
+      <section id="view-dashboard" class="page-view active" aria-label="Dashboard">
+        <!-- Stats Overview Banner -->
+        <section class="stats-banner" aria-label="Statistics Overview">
+          <div class="glass-card stat-card">
+            <div class="stat-icon-wrapper" style="background: rgba(6, 182, 212, 0.16); color: var(--accent-cyan);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <div>
+              <div id="stat-val-total-videos" class="stat-val">0</div>
+              <div class="stat-label" data-i18n="stat_total_videos">فيديوهات مسجلة</div>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.16); color: var(--accent-emerald);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <div id="stat-val-completed-videos" class="stat-val">0</div>
+              <div class="stat-label" data-i18n="stat_completed_videos">فيديوهات مكتملة</div>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <div class="stat-icon-wrapper" style="background: rgba(139, 92, 246, 0.16); color: var(--accent-purple);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div>
+              <div id="stat-val-total-tasks" class="stat-val">0/0</div>
+              <div class="stat-label" data-i18n="stat_total_tasks">المهام العامة</div>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.16); color: var(--accent-amber);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div id="stat-val-overall-progress" class="stat-val">0%</div>
+              <div class="stat-label" data-i18n="stat_overall_progress">نسبة الإنجاز الكلية</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Command Center Quick Actions & Overview -->
+        <div id="dashboard-content">
+          <!-- Active Playlists Preview -->
+          <section id="playlists-section" class="dashboard-section" aria-label="Active Playlists">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <div class="section-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                </div>
+                <h2 class="section-title" data-i18n="nav_playlists">مسارات يوتيوب النشطة</h2>
+                <span id="section-badge-playlists" class="badge badge-cyan">0</span>
+              </div>
+              <button class="btn btn-secondary" id="btn-dash-goto-playlists" style="padding: 6px 14px; font-size: 0.84rem;">
+                <span>عرض وإدارة كل المسارات ↗</span>
+              </button>
+            </div>
+            <div id="playlists-grid" class="playlists-grid"></div>
+          </section>
+
+          <!-- Today's Priority Tasks Preview -->
+          <section id="tasks-section" class="dashboard-section" aria-label="Today Tasks">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <div class="section-icon" style="color: var(--accent-purple);">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                </div>
+                <h2 class="section-title" data-i18n="nav_tasks">أولويات ومهام اليوم</h2>
+                <span id="section-badge-tasks" class="badge badge-purple">0</span>
+              </div>
+              <button class="btn btn-secondary" id="btn-dash-goto-tasks" style="padding: 6px 14px; font-size: 0.84rem;">
+                <span>إدارة كافة المهام ↗</span>
+              </button>
+            </div>
+            <div id="tasks-grid" class="tasks-grid"></div>
+          </section>
+
+          <!-- Dashboard Empty State -->
+          <div id="dashboard-empty-state" style="display: none;"></div>
         </div>
-      </nav>
+      </section>
 
-      <!-- Dashboard View: Structured Sections -->
-      <div id="dashboard-content">
-        <!-- Playlists Section -->
-        <section id="playlists-section" class="dashboard-section" aria-label="YouTube Playlists">
-          <div class="section-header">
-            <div class="section-title-wrap">
-              <div class="section-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-              </div>
-              <h2 class="section-title" data-i18n="nav_playlists">مسارات يوتيوب</h2>
-              <span id="section-badge-playlists" class="badge badge-cyan">0</span>
+      <!-- View: Dedicated Full Playlists & Courses Page -->
+      <section id="view-playlists" class="page-view" aria-label="YouTube Learning Playlists">
+        <div class="page-layout-container">
+          <div class="page-hero-banner">
+            <div>
+              <h2 class="page-hero-title">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                <span data-i18n="nav_playlists">مسارات يوتيوب التعليمية</span>
+                <span id="page-playlists-count-badge" class="badge badge-cyan">0</span>
+              </h2>
+              <p class="page-hero-subtitle">استكشف وتابع مساراتك التعليمية مع استخراج آلي لجميع الفيديوهات وتتبع تقدمك بدقة.</p>
             </div>
-            <button class="btn btn-secondary" id="btn-section-add-playlist" style="padding: 6px 14px; font-size: 0.84rem;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <span data-i18n="btn_add_playlist">إضافة مسار</span>
-            </button>
           </div>
-          <div id="playlists-grid" class="playlists-grid">
-            <!-- Rendered by JS -->
-          </div>
-        </section>
 
-        <!-- Tasks Section -->
-        <section id="tasks-section" class="dashboard-section" aria-label="Daily Tasks">
-          <div class="section-header">
-            <div class="section-title-wrap">
-              <div class="section-icon" style="color: var(--accent-purple);">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <!-- Add Playlist Card -->
+          <div class="glass-card page-feature-card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span style="color: #ef4444;">✦</span>
+              <span>إضافة واستكشاف مسار تعليمي جديد</span>
+            </h3>
+            <form id="form-playlists-page-add" style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_playlist_name">اسم الكورس / المسار</label>
+                  <input id="input-page-playlist-name" type="text" style="width: 100%;" placeholder="مثال: كورس بايثون للمبتدئين" data-i18n-placeholder="ph_playlist_name">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_channel_name">اسم القناة (اختياري)</label>
+                  <input id="input-page-channel-name" type="text" style="width: 100%;" placeholder="مثال: Codezilla" data-i18n-placeholder="ph_channel_name">
+                </div>
               </div>
-              <h2 class="section-title" data-i18n="nav_tasks">المهام اليومية</h2>
-              <span id="section-badge-tasks" class="badge badge-purple">0</span>
-            </div>
-            <button class="btn btn-secondary" id="btn-section-add-task" style="padding: 6px 14px; font-size: 0.84rem;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <span data-i18n="btn_add_task">مهمة سريعة</span>
-            </button>
+              <div style="text-align: center; color: var(--text-dim); font-size: 0.8rem;">— <span data-i18n="lbl_or_direct_url">أو الصق رابط القائمة المباشر</span> —</div>
+              <div>
+                <input id="input-page-direct-url" type="url" style="width: 100%;" placeholder="https://www.youtube.com/playlist?list=..." data-i18n-placeholder="ph_direct_url">
+              </div>
+              <div id="playlists-page-status-box" style="display: none; padding: 10px; border-radius: var(--radius-sm); font-size: 0.88rem; text-align: center;"></div>
+              <div style="display: flex; justify-content: flex-end;">
+                <button id="btn-playlists-page-submit" type="submit" class="btn btn-primary" style="padding: 8px 24px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>بحث واستخراج المسار</span>
+                </button>
+              </div>
+            </form>
           </div>
-          <div id="tasks-grid" class="tasks-grid">
-            <!-- Rendered by JS -->
-          </div>
-        </section>
 
-        <!-- Global Empty State container -->
-        <div id="dashboard-empty-state" style="display: none;"></div>
+          <!-- Playlists Filter Bar -->
+          <div class="playlists-filter-bar">
+            <div class="tabs-group">
+              <button class="tab-btn playlists-filter-pill active" data-filter="all">الكل</button>
+              <button class="tab-btn playlists-filter-pill" data-filter="in_progress">قيد المتابعة</button>
+              <button class="tab-btn playlists-filter-pill" data-filter="completed">المكتملة</button>
+            </div>
+          </div>
+
+          <!-- Playlists Grid -->
+          <div id="page-playlists-grid" class="playlists-grid"></div>
+          <div id="page-playlists-empty" style="display: none; text-align: center; padding: 3rem 1rem;">
+            <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 8px;" data-i18n="empty_playlists_title">لا توجد مسارات تعليمية بعد</p>
+            <p style="font-size: 0.9rem; color: var(--text-dim);" data-i18n="empty_playlists_desc">أضف قائمتك الأولى بكتابة اسمها واسم القناة أو رابطها المباشر أعلاه.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- View: Dedicated Full Tasks Workspace Page -->
+      <section id="view-tasks" class="page-view" aria-label="Daily Tasks">
+        <div class="page-layout-container">
+          <div class="page-hero-banner">
+            <div>
+              <h2 class="page-hero-title">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                <span data-i18n="nav_tasks">إدارة المهام اليومية</span>
+                <span id="page-tasks-count-badge" class="badge badge-purple">0</span>
+              </h2>
+              <p class="page-hero-subtitle">نظم أهدافك اليومية ومهام دراستك وعملك بسهولة ودقة.</p>
+            </div>
+          </div>
+
+          <!-- Create Task Card -->
+          <div class="glass-card page-feature-card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span style="color: var(--accent-purple);">✦</span>
+              <span data-i18n="modal_task_title">إضافة مهمة جديدة</span>
+            </h3>
+            <form id="form-page-create-task" style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px;">
+                <div>
+                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_title">عنوان المهمة</label>
+                  <input id="input-page-task-title" type="text" required style="width: 100%;" placeholder="مثال: مراجعة الكود وحل التمارين" data-i18n-placeholder="ph_task_title">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_priority">الأولوية</label>
+                  <select id="select-page-task-priority" style="width: 100%;">
+                    <option value="medium">متوسطة (Medium)</option>
+                    <option value="high">عالية (High)</option>
+                    <option value="low">منخفضة (Low)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_category">التصنيف</label>
+                  <select id="select-page-task-category" style="width: 100%;">
+                    <option value="general">عام (General)</option>
+                    <option value="study">مذاكرة (Study)</option>
+                    <option value="work">عمل (Work)</option>
+                    <option value="personal">شخصي (Personal)</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: flex-end;">
+                <div>
+                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_desc">تفاصيل المهمة (اختياري)</label>
+                  <input id="input-page-task-desc" type="text" style="width: 100%;" placeholder="تفاصيل إضافية أو مراجع...">
+                </div>
+                <div style="display: flex; gap: 10px; align-items: flex-end;">
+                  <div style="flex: 1;">
+                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;">تاريخ الاستحقاق</label>
+                    <input id="input-page-task-duedate" type="date" style="width: 100%;">
+                  </div>
+                  <button id="btn-page-task-submit" type="submit" class="btn btn-primary" style="padding: 9px 20px; white-space: nowrap;">
+                    <span>حفظ المهمة</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Tasks Filter Bar -->
+          <div class="tasks-page-filter-bar">
+            <div class="tabs-group">
+              <button class="tab-btn task-cat-pill active" data-cat="all">كل التصنيفات</button>
+              <button class="tab-btn task-cat-pill" data-cat="study">مذاكرة</button>
+              <button class="tab-btn task-cat-pill" data-cat="work">عمل</button>
+              <button class="tab-btn task-cat-pill" data-cat="personal">شخصي</button>
+              <button class="tab-btn task-cat-pill" data-cat="general">عام</button>
+            </div>
+            <div class="tabs-group">
+              <button class="tab-btn task-status-pill active" data-status="all">الكل</button>
+              <button class="tab-btn task-status-pill" data-status="pending">قيد التنفيذ</button>
+              <button class="tab-btn task-status-pill" data-status="completed">المكتملة</button>
+            </div>
+          </div>
+
+          <!-- Tasks Grid -->
+          <div id="page-tasks-grid" class="tasks-grid"></div>
+          <div id="page-tasks-empty" style="display: none; text-align: center; padding: 3rem 1rem;">
+            <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 8px;" data-i18n="empty_tasks_title">لا توجد مهام حالية</p>
+            <p style="font-size: 0.9rem; color: var(--text-dim);" data-i18n="empty_tasks_desc">سجل أهدافك اليومية ومهامك لتنظيم يومك أعلاه.</p>
+          </div>
+        </div>
       </section>
 
       <!-- View: Dedicated Notebook Page -->

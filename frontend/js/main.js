@@ -60,6 +60,11 @@ class App {
     $('#btn-dash-goto-playlists')?.addEventListener('click', () => bus.emit('view:switch', 'playlists'));
     $('#btn-dash-goto-tasks')?.addEventListener('click', () => bus.emit('view:switch', 'tasks'));
 
+    // Fallbacks for legacy modal events -> route to corresponding full pages
+    bus.on('modal:search:open', () => bus.emit('view:switch', 'playlists'));
+    bus.on('modal:task:open', () => bus.emit('view:switch', 'tasks'));
+    bus.on('modal:settings:open', () => bus.emit('view:switch', 'settings'));
+
     // Listen to store updates
     bus.on('state:changed', (state) => this.renderDashboard(state));
     bus.on('playlists:updated', () => this.renderDashboard(store.getState()));

@@ -10,6 +10,7 @@ import { escapeHTML } from '../utils/sanitize.js';
 import { formatDuration } from '../utils/formatters.js';
 import { triggerConfetti } from '../utils/confetti.js';
 import { toast } from '../utils/toast.js';
+import { recordLastWatched } from './continue-learning.js';
 
 export function renderPlaylistCard(playlist) {
   const card = document.createElement('div');
@@ -169,6 +170,13 @@ export function renderPlaylistCard(playlist) {
 
 async function loadVideosList(playlistId, card) {
   const container = card.querySelector('.videos-list-container');
+  container.innerHTML = `
+    <div style="padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+      <div class="skeleton skeleton-line w-80"></div>
+      <div class="skeleton skeleton-line w-60"></div>
+      <div class="skeleton skeleton-line w-80"></div>
+    </div>
+  `;
   try {
     const playlistDetail = await api.getPlaylist(playlistId);
     const videos = playlistDetail.videos || [];
@@ -197,11 +205,26 @@ async function loadVideosList(playlistId, card) {
           <button class="video-item-action-btn btn-take-note" title="${i18n.t('drawer_notebook_title')}" aria-label="Take note for video">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </button>
-          <a href="${escapeHTML(v.webpage_url)}" target="_blank" rel="noopener noreferrer" class="video-item-action-btn" title="${i18n.lang === 'ar' ? 'مشاهدة على يوتيوب' : 'Watch on YouTube'}" aria-label="Watch on YouTube">
+          <a href="${escapeHTML(v.webpage_url)}" target="_blank" rel="noopener noreferrer" class="video-item-action-btn btn-watch-video" title="${i18n.lang === 'ar' ? 'مشاهدة على يوتيوب' : 'Watch on YouTube'}" aria-label="Watch on YouTube">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           </a>
         </div>
       `;
+
+      // Track last watched on click
+      const trackWatch = () => {
+        recordLastWatched({
+          playlistId: playlistId,
+          playlistTitle: playlistDetail.title,
+          videoId: v.id,
+          videoTitle: v.title,
+          videoUrl: v.webpage_url,
+          thumbnailUrl: playlistDetail.thumbnail_url,
+          channelTitle: playlistDetail.channel_title
+        });
+      };
+
+      item.querySelector('.btn-watch-video')?.addEventListener('click', trackWatch);
 
       // Checkbox event
       const cb = item.querySelector('.video-checkbox');
@@ -226,6 +249,7 @@ async function loadVideosList(playlistId, card) {
 
       // Note button - opens the dedicated Notebook page for this video
       item.querySelector('.btn-take-note').addEventListener('click', () => {
+        trackWatch();
         bus.emit('notebook:open', {
           playlistId: playlistId,
           playlistTitle: playlistDetail.title,

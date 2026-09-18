@@ -95,6 +95,20 @@ export class HeaderComponent {
       }
     });
 
+    // Search buttons (Quick Switcher)
+    $('#btn-header-search')?.addEventListener('click', () => bus.emit('quick-switcher:open'));
+    $('#mobile-nav-search')?.addEventListener('click', () => bus.emit('quick-switcher:open'));
+
+    // Mobile FAB button handler
+    $('#btn-mobile-fab')?.addEventListener('click', () => {
+      const currentView = store.getState().currentView || 'dashboard';
+      if (currentView === 'playlists') {
+        bus.emit('modal:playlist:open');
+      } else {
+        bus.emit('modal:task:open');
+      }
+    });
+
     // View switched listener
     bus.on('view:switched', (viewName) => {
       pageKeys.forEach(page => {

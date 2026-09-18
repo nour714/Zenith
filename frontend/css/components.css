@@ -1528,3 +1528,572 @@ html[dir="rtl"] .note-markdown-preview blockquote {
 .note-card-item {
   border-radius: var(--radius-lg);
 }
+
+/* ==========================================================================
+   UX Overhaul Components (Mobile-First, Micro-interactions, Skeletons)
+   ========================================================================== */
+
+/* 1. Shimmer Skeleton Cards */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.skeleton-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 220px;
+}
+
+.skeleton-thumb {
+  width: 100%;
+  height: 140px;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: var(--radius-xs);
+}
+
+.skeleton-line.w-80 { width: 80%; }
+.skeleton-line.w-60 { width: 60%; }
+.skeleton-line.w-40 { width: 40%; }
+.skeleton-line.h-title { height: 20px; }
+
+.skeleton-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.skeleton-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+}
+
+/* 2. Mobile Floating Action Button (FAB) */
+.mobile-fab-wrap {
+  display: none;
+  position: fixed;
+  bottom: calc(var(--bottom-nav-height, 64px) + 16px);
+  inset-inline-end: 18px;
+  z-index: 95;
+}
+
+@media (max-width: 860px) {
+  .mobile-fab-wrap {
+    display: block;
+  }
+}
+
+.mobile-fab {
+  width: var(--fab-size, 56px);
+  height: var(--fab-size, 56px);
+  border-radius: var(--radius-full);
+  background: var(--gradient-brand);
+  color: #ffffff;
+  border: none;
+  box-shadow: var(--fab-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-fab:active {
+  transform: scale(0.92);
+}
+
+.mobile-fab svg {
+  width: 26px;
+  height: 26px;
+  transition: transform var(--transition-fast);
+}
+
+/* 3. Bottom Sheet Component */
+.bottom-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-overlay);
+  backdrop-filter: var(--glass-blur);
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bottom-sheet-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bottom-sheet-card {
+  width: 100%;
+  max-width: 580px;
+  max-height: 86vh;
+  background: var(--bottom-sheet-bg);
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  border-bottom: none;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bottom-sheet-backdrop.open .bottom-sheet-card {
+  transform: translateY(0);
+}
+
+.bottom-sheet-handle-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0 6px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.bottom-sheet-handle {
+  width: 44px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: var(--bottom-sheet-handle);
+}
+
+.bottom-sheet-header {
+  padding: 10px 20px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.bottom-sheet-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bottom-sheet-body {
+  padding: 18px 20px 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
+
+/* 4. Swipe-to-Action for Tasks & Video Items */
+.swipe-item-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.swipe-action-reveal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-radius: var(--radius-lg);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+.swipe-action-right {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.swipe-action-left {
+  background: linear-gradient(90deg, #e11d48 0%, #f43f5e 100%);
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.swipe-content {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* 5. Undo Toast with Progress Bar */
+.toast-item.toast-undo {
+  padding: 12px 16px 14px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 300px;
+  max-width: 420px;
+  border-color: var(--accent-magenta);
+  box-shadow: 0 8px 32px rgba(236, 72, 153, 0.3);
+}
+
+.toast-undo-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toast-undo-btn {
+  background: rgba(236, 72, 153, 0.2);
+  border: 1px solid var(--accent-magenta);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.toast-undo-btn:hover {
+  background: var(--accent-magenta);
+  box-shadow: 0 0 14px var(--accent-magenta);
+}
+
+.toast-undo-progress {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  width: 100%;
+}
+
+.toast-undo-bar {
+  height: 100%;
+  background: var(--gradient-brand);
+  width: 100%;
+  animation: toastProgress 5s linear forwards;
+}
+
+/* 6. Continue Learning Hero Card */
+.continue-learning-card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(30, 16, 58, 0.85) 0%, rgba(15, 9, 29, 0.95) 100%);
+  border: 1px solid rgba(217, 70, 239, 0.35);
+  box-shadow: 0 10px 36px rgba(168, 85, 247, 0.22);
+  padding: 1.4rem;
+  margin-bottom: 1.8rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+[data-theme="light"] .continue-learning-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 240, 255, 0.95) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 8px 30px rgba(168, 85, 247, 0.12);
+}
+
+.continue-learning-card:hover {
+  border-color: var(--accent-magenta);
+  transform: translateY(-2px);
+}
+
+.continue-learning-thumb-wrap {
+  position: relative;
+  width: 140px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.continue-learning-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.continue-learning-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  opacity: 0.85;
+  transition: opacity var(--transition-fast);
+}
+
+.continue-learning-card:hover .continue-learning-play-overlay {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.continue-learning-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.continue-learning-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-magenta);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.continue-learning-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+
+.continue-learning-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.continue-learning-cta {
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .continue-learning-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 1.1rem;
+  }
+  .continue-learning-thumb-wrap {
+    width: 100%;
+    height: 140px;
+  }
+  .continue-learning-cta button {
+    width: 100%;
+  }
+}
+
+/* 7. Quick Switcher / Universal Search Modal */
+.quick-switcher-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-overlay);
+  backdrop-filter: var(--glass-blur-heavy);
+  z-index: 2500;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.quick-switcher-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.quick-switcher-modal {
+  width: 90%;
+  max-width: 620px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border-focus);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(168, 85, 247, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-12px) scale(0.98);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quick-switcher-backdrop.open .quick-switcher-modal {
+  transform: translateY(0) scale(1);
+}
+
+.quick-switcher-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.quick-switcher-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  color: var(--text-main);
+  font-family: inherit;
+}
+
+.quick-switcher-shortcut-badge {
+  font-size: 0.74rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  color: var(--text-dim);
+}
+
+.quick-switcher-results {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.quick-switcher-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.quick-switcher-item:hover,
+.quick-switcher-item.active {
+  background: rgba(168, 85, 247, 0.16);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.quick-switcher-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.quick-switcher-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-switcher-item-title {
+  font-size: 0.94rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quick-switcher-item-category {
+  font-size: 0.76rem;
+  color: var(--text-dim);
+}
+
+.quick-switcher-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 8. Mobile Note Editor Toolbar Touch Optimizations */
+@media (max-width: 768px) {
+  .note-editor-toolbar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding: 8px 10px;
+    gap: 8px;
+    scrollbar-width: none;
+  }
+  .note-editor-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+  .toolbar-group {
+    flex-shrink: 0;
+  }
+  .toolbar-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toolbar-mode-btn {
+    min-height: 38px;
+    padding: 6px 12px;
+  }
+}
+
+/* Pull to refresh spinner indicator */
+.ptr-indicator {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: top 0.2s ease, transform 0.2s ease;
+  z-index: 50;
+  pointer-events: none;
+}
+

@@ -11,6 +11,7 @@ import { bus } from '../core/event-bus.js';
 import { i18n } from '../i18n/translator.js';
 import { escapeHTML } from '../utils/sanitize.js';
 import { toast } from '../utils/toast.js';
+import { attachSwipeAction } from '../utils/gestures.js';
 import { $ } from '../utils/dom.js';
 
 export class NotebookPageComponent {
@@ -281,25 +282,34 @@ export class NotebookPageComponent {
         }
       });
 
-      card.querySelector('.note-card-item-delete').addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const confirmed = await toast.confirm(
-          i18n.lang === 'ar' ? 'حذف الملاحظة' : 'Delete Note',
-          i18n.lang === 'ar' ? `هل تريد بالتأكيد حذف ملاحظة "${note.title}"؟` : `Delete note "${note.title}"?`
-        );
-
-        if (confirmed) {
-          try {
-            await api.deleteNote(note.id);
-            if (this.activeNoteId === note.id) {
-              this.resetEditor();
+      const deleteNoteWithUndo = () => {
+        card.style.display = 'none';
+        const isAr = i18n.lang === 'ar';
+        toast.undo(
+          isAr ? `تم حذف ملاحظة "${note.title || 'بدون عنوان'}"` : `Deleted note "${note.title || 'Untitled'}"`,
+          () => {
+            card.style.display = '';
+          },
+          async () => {
+            try {
+              await api.deleteNote(note.id);
+              if (this.activeNoteId === note.id) {
+                this.resetEditor();
+              }
+              card.remove();
+              await this.loadNotes();
+            } catch (err) {
+              card.style.display = '';
+              toast.error(err.message);
             }
-            toast.info(i18n.lang === 'ar' ? 'تم حذف الملاحظة' : 'Note deleted');
-            await this.loadNotes();
-          } catch (err) {
-            toast.error(err.message);
-          }
-        }
+          },
+          5000
+        );
+      };
+
+      card.querySelector('.note-card-item-delete').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteNoteWithUndo();
       });
 
       listContainer.appendChild(card);

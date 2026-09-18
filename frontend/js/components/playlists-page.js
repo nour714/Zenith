@@ -8,6 +8,8 @@ import { bus } from '../core/event-bus.js';
 import { renderPlaylistCard } from './playlist-card.js';
 import { toast } from '../utils/toast.js';
 import { i18n } from '../i18n/translator.js';
+import { attachPullToRefresh } from '../utils/gestures.js';
+import { bottomSheet } from './bottom-sheet.js';
 import { $ } from '../utils/dom.js';
 
 export class PlaylistsPageComponent {
@@ -39,7 +41,17 @@ export class PlaylistsPageComponent {
     // Reactive store listeners
     bus.on('playlists:updated', () => this.render());
     bus.on('state:changed', () => this.render());
+    bus.on('modal:playlist:open', () => this.openMobileAddSheet());
     window.addEventListener('langchanged', () => this.render());
+
+    // Pull-to-refresh on mobile
+    const pageEl = $('#view-playlists');
+    if (pageEl) {
+      attachPullToRefresh(pageEl, async () => {
+        await store.refreshPlaylists();
+        toast.info(i18n.lang === 'ar' ? 'تم تحديث المسارات التعليمية' : 'Playlists refreshed');
+      });
+    }
   }
 
   async handleAddPlaylist() {
@@ -138,12 +150,92 @@ export class PlaylistsPageComponent {
 
     grid.innerHTML = '';
     if (filtered.length === 0) {
-      if (emptyState) emptyState.style.display = 'block';
+      if (emptyState) {
+        emptyState.style.display = 'block';
+        const isAr = i18n.lang === 'ar';
+        emptyState.innerHTML = `
+          <div style="font-size: 2.4rem; margin-bottom: 10px;">🎓</div>
+          <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">${i18n.t('empty_playlists_title') || 'No learning tracks yet'}</p>
+          <p style="font-size: 0.9rem; color: var(--text-dim); max-width: 400px; margin: 0 auto 16px;">${i18n.t('empty_playlists_desc') || 'Add your first track above.'}</p>
+          <button type="button" class="btn btn-primary btn-empty-add-playlist" style="padding: 8px 20px;">
+            <span>+ ${isAr ? 'إضافة أول مسار تعليمي' : 'Add First Course'}</span>
+          </button>
+        `;
+        emptyState.querySelector('.btn-empty-add-playlist')?.addEventListener('click', () => {
+          this.openMobileAddSheet();
+        });
+      }
     } else {
       if (emptyState) emptyState.style.display = 'none';
       filtered.forEach(p => {
         grid.appendChild(renderPlaylistCard(p));
       });
     }
+  }
+
+  openMobileAddSheet() {
+    const isAr = i18n.lang === 'ar';
+    const content = document.createElement('form');
+    content.className = 'auth-form';
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
+    content.style.gap = '12px';
+    content.innerHTML = `
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">${isAr ? 'اسم الكورس / المسار' : 'Course / Track Name'}</label>
+        <input id="sheet-input-playlist-name" type="text" placeholder="${isAr ? 'مثال: كورس بايثون للمبتدئين' : 'e.g. Python for Beginners'}" style="width: 100%;" required>
+      </div>
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">${isAr ? 'اسم القناة (اختياري)' : 'Channel Name (Optional)'}</label>
+        <input id="sheet-input-channel-name" type="text" placeholder="${isAr ? 'مثال: Codezilla' : 'e.g. Traversy Media'}" style="width: 100%;">
+      </div>
+      <div style="text-align: center; color: var(--text-dim); font-size: 0.8rem;">— ${isAr ? 'أو الصق الرابط المباشر' : 'or direct URL'} —</div>
+      <div class="form-group">
+        <input id="sheet-input-direct-url" type="url" placeholder="https://www.youtube.com/playlist?list=..." style="width: 100%;">
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top: 6px; padding: 12px; width: 100%;">
+        <span>${isAr ? 'بحث واستخراج المسار' : 'Search & Extract Track'}</span>
+      </button>
+    `;
+
+    content.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pName = content.querySelector('#sheet-input-playlist-name').value.trim();
+      const cName = content.querySelector('#sheet-input-channel-name').value.trim();
+      const uUrl = content.querySelector('#sheet-input-direct-url').value.trim();
+
+      if (!pName && !uUrl) {
+        toast.info(isAr ? 'يرجى إدخال اسم الكورس أو الرابط' : 'Please enter course name or URL');
+        return;
+      }
+
+      const btn = content.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner" style="width: 14px; height: 14px;"></span> ${isAr ? 'جاري الاستخراج...' : 'Extracting...'}`;
+
+      try {
+        await api.importPlaylist({
+          playlist_name: pName || null,
+          channel_name: cName || null,
+          direct_url: uUrl || null
+        });
+        toast.success(isAr ? 'تم استيراد المسار بنجاح 🎯' : 'Course imported successfully');
+        bottomSheet.close();
+        await store.refreshPlaylists();
+      } catch (err) {
+        toast.error(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>${isAr ? 'بحث واستخراج المسار' : 'Search & Extract Track'}</span>`;
+      }
+    });
+
+    bottomSheet.open(
+      `<span>✦</span> <span>${isAr ? 'إضافة مسار تعليمي جديد' : 'Add Course Track'}</span>`,
+      content,
+      () => {
+        content.querySelector('#sheet-input-playlist-name')?.focus();
+      }
+    );
   }
 }

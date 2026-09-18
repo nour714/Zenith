@@ -63,6 +63,49 @@ class ToastManager {
     this.show(msg, 'info', duration);
   }
 
+  undo(message, onUndo, onDismiss, duration = 5000) {
+    if (!this.container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-item toast-undo';
+
+    const isRTL = document.documentElement.dir === 'rtl';
+    const undoText = isRTL ? 'تراجع' : 'Undo';
+
+    toast.innerHTML = `
+      <div class="toast-undo-content">
+        <span style="font-weight: 600; line-height: 1.4;">${message}</span>
+        <button type="button" class="toast-undo-btn">${undoText}</button>
+      </div>
+      <div class="toast-undo-progress">
+        <div class="toast-undo-bar" style="animation-duration: ${duration}ms;"></div>
+      </div>
+    `;
+
+    let undone = false;
+    const undoBtn = toast.querySelector('.toast-undo-btn');
+
+    const timer = setTimeout(() => {
+      if (!undone) {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 250);
+        if (typeof onDismiss === 'function') onDismiss();
+      }
+    }, duration);
+
+    undoBtn.addEventListener('click', () => {
+      undone = true;
+      clearTimeout(timer);
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+      setTimeout(() => toast.remove(), 250);
+      if (typeof onUndo === 'function') onUndo();
+    });
+
+    this.container.appendChild(toast);
+  }
+
   buildConfirmDialog() {
     let modal = $('#modal-custom-confirm');
     if (!modal) {

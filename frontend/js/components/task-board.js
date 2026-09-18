@@ -9,6 +9,7 @@ import { i18n } from '../i18n/translator.js';
 import { escapeHTML } from '../utils/sanitize.js';
 import { triggerConfetti } from '../utils/confetti.js';
 import { toast } from '../utils/toast.js';
+import { attachSwipeAction } from '../utils/gestures.js';
 import { $ } from '../utils/dom.js';
 
 export class TaskBoardComponent {
@@ -17,9 +18,9 @@ export class TaskBoardComponent {
   }
 
   static renderTaskCard(task) {
-    const card = document.createElement('div');
-    card.className = `task-item-card animate-float ${task.is_completed ? 'completed' : ''}`;
-    card.dataset.id = task.id;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'swipe-item-container animate-float';
+    wrapper.dataset.id = task.id;
 
     const priorityColors = {
       high: 'var(--accent-rose)',
@@ -34,73 +35,85 @@ export class TaskBoardComponent {
       personal: i18n.lang === 'ar' ? 'شخصي' : 'Personal'
     };
 
-    card.innerHTML = `
-      <input type="checkbox" class="video-checkbox" ${task.is_completed ? 'checked' : ''} style="margin-top: 3px;" aria-label="${escapeHTML(task.title)}">
-      <div class="task-content">
-        <h4 class="task-title">${escapeHTML(task.title)}</h4>
-        ${task.description ? `<p class="task-desc">${escapeHTML(task.description)}</p>` : ''}
-        <div class="task-meta-row">
-          <span class="badge" style="background: rgba(255,255,255,0.06); color: ${priorityColors[task.priority] || 'var(--text-muted)'}; font-size: 0.72rem;">
-            ● ${task.priority ? task.priority.toUpperCase() : 'NORMAL'}
-          </span>
-          <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--text-dim); font-size: 0.72rem;">
-            ${categoryNames[task.category] || task.category || 'General'}
-          </span>
-          ${task.due_date ? `
-            <span style="font-size: 0.75rem; color: var(--text-dim); display: inline-flex; align-items: center; gap: 4px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              ${escapeHTML(task.due_date)}
+    wrapper.innerHTML = `
+      <div class="swipe-action-reveal"></div>
+      <div class="swipe-content task-item-card ${task.is_completed ? 'completed' : ''}">
+        <input type="checkbox" class="video-checkbox" ${task.is_completed ? 'checked' : ''} style="margin-top: 3px;" aria-label="${escapeHTML(task.title)}">
+        <div class="task-content">
+          <h4 class="task-title">${escapeHTML(task.title)}</h4>
+          ${task.description ? `<p class="task-desc">${escapeHTML(task.description)}</p>` : ''}
+          <div class="task-meta-row">
+            <span class="badge" style="background: rgba(255,255,255,0.06); color: ${priorityColors[task.priority] || 'var(--text-muted)'}; font-size: 0.72rem;">
+              ● ${task.priority ? task.priority.toUpperCase() : 'NORMAL'}
             </span>
-          ` : ''}
+            <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--text-dim); font-size: 0.72rem;">
+              ${categoryNames[task.category] || task.category || 'General'}
+            </span>
+            ${task.due_date ? `
+              <span style="font-size: 0.75rem; color: var(--text-dim); display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                ${escapeHTML(task.due_date)}
+              </span>
+            ` : ''}
+          </div>
         </div>
+        <button class="btn-delete-task" title="${i18n.t('btn_delete')}" aria-label="Delete Task">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
       </div>
-      <button class="btn-delete-task" title="${i18n.t('btn_delete')}" aria-label="Delete Task">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      </button>
     `;
 
-    // Toggle Task
-    const cb = card.querySelector('input[type="checkbox"]');
-    cb.addEventListener('change', async () => {
+    const card = wrapper.querySelector('.swipe-content');
+    const cb = wrapper.querySelector('input[type="checkbox"]');
+
+    const toggleCompletion = async () => {
       try {
         await api.toggleTask(task.id);
-        const isComp = cb.checked;
+        const isComp = !card.classList.contains('completed');
         card.classList.toggle('completed', isComp);
+        cb.checked = isComp;
         if (isComp) {
           triggerConfetti();
-          toast.success(i18n.lang === 'ar' ? 'تم إنجاز المهمة بنجاح!' : 'Task completed!');
+          toast.success(i18n.lang === 'ar' ? 'تم إنجاز المهمة بنجاح! 🎯' : 'Task completed!');
         }
         await store.refreshTasks();
       } catch (err) {
-        cb.checked = !cb.checked;
         toast.error(err.message);
       }
-    });
+    };
 
-    // Delete Task with accessible dialog
-    card.querySelector('.btn-delete-task').addEventListener('click', async () => {
-      const confirmed = await toast.confirm(
-        i18n.lang === 'ar' ? 'حذف المهمة' : 'Delete Task',
-        i18n.lang === 'ar' ? `هل أنت متأكد من حذف المهمة "${task.title}"؟` : `Are you sure you want to delete "${task.title}"?`,
-        i18n.lang === 'ar' ? 'نعم، حذف' : 'Delete',
-        i18n.lang === 'ar' ? 'إلغاء' : 'Cancel'
+    cb.addEventListener('change', toggleCompletion);
+
+    const deleteTaskWithUndo = () => {
+      wrapper.style.display = 'none';
+      const isAr = i18n.lang === 'ar';
+      toast.undo(
+        isAr ? `تم حذف "${task.title}"` : `Deleted "${task.title}"`,
+        () => {
+          wrapper.style.display = '';
+        },
+        async () => {
+          try {
+            await api.deleteTask(task.id);
+            wrapper.remove();
+            await store.refreshTasks();
+          } catch (err) {
+            wrapper.style.display = '';
+            toast.error(err.message);
+          }
+        },
+        5000
       );
+    };
 
-      if (confirmed) {
-        try {
-          await api.deleteTask(task.id);
-          card.style.opacity = '0';
-          card.style.transform = 'scale(0.95)';
-          setTimeout(() => card.remove(), 250);
-          toast.info(i18n.lang === 'ar' ? 'تم حذف المهمة' : 'Task deleted');
-          await store.refreshTasks();
-        } catch (err) {
-          toast.error(err.message);
-        }
-      }
+    wrapper.querySelector('.btn-delete-task').addEventListener('click', deleteTaskWithUndo);
+
+    attachSwipeAction(wrapper, {
+      onSwipeComplete: toggleCompletion,
+      onSwipeDelete: deleteTaskWithUndo
     });
 
-    return card;
+    return wrapper;
   }
 
   initModal() {

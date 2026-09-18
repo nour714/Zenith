@@ -1,17 +1,21 @@
 /**
  * Main Application Bootstrapper (ES Modules).
- * Polished with UI/UX Pro Max standards, distinct sections, and zero layout stretching.
+ * Architecture: 5 Full Pages (Dashboard, Playlists, Tasks, Notebook, Settings) + Auth View.
+ * Equipped with Route Guards, multi-tenancy auth state, and reactive sync.
  */
-import { i18n } from './i18n/translator.js?v=2';
+import { i18n } from './i18n/translator.js?v=3';
 import { store } from './core/store.js';
 import { bus } from './core/event-bus.js';
-import { HeaderComponent } from './components/header.js?v=2';
+import { authService } from './services/auth-service.js';
+import { HeaderComponent } from './components/header.js?v=3';
+import { AuthPageComponent } from './components/auth-page.js?v=1';
+import { PlaylistsPageComponent } from './components/playlists-page.js?v=1';
+import { TasksPageComponent } from './components/tasks-page.js?v=1';
+import { NotebookPageComponent } from './components/notebook-page.js?v=3';
+import { SettingsPageComponent } from './components/settings-page.js?v=1';
+import { AIPlanModalComponent } from './components/ai-plan-modal.js?v=2';
 import { renderPlaylistCard } from './components/playlist-card.js';
 import { TaskBoardComponent } from './components/task-board.js';
-import { NotebookPageComponent } from './components/notebook-page.js?v=2';
-import { SearchModalComponent } from './components/search-modal.js';
-import { SettingsModalComponent } from './components/settings-modal.js?v=2';
-import { AIPlanModalComponent } from './components/ai-plan-modal.js?v=2';
 import { $ } from './utils/dom.js';
 
 const registerServiceWorker = () => {
@@ -37,23 +41,24 @@ class App {
     // Apply translations & direction
     i18n.applyToDOM();
 
-    // Initialize Components
+    // Initialize View Components
     new HeaderComponent();
-    new TaskBoardComponent();
+    new AuthPageComponent();
+    new PlaylistsPageComponent();
+    new TasksPageComponent();
     new NotebookPageComponent();
-    new SearchModalComponent();
-    new SettingsModalComponent();
+    new SettingsPageComponent();
     new AIPlanModalComponent();
 
-    // Setup Page Navigation Routing
+    // Setup Page Navigation Routing & Route Guards
     this.setupViewRouting();
 
     // Setup Tabs
     this.setupTabs();
 
-    // Section quick add buttons
-    $('#btn-section-add-playlist')?.addEventListener('click', () => bus.emit('modal:search:open'));
-    $('#btn-section-add-task')?.addEventListener('click', () => bus.emit('modal:task:open'));
+    // Dashboard shortcut buttons to navigate to full pages
+    $('#btn-dash-goto-playlists')?.addEventListener('click', () => bus.emit('view:switch', 'playlists'));
+    $('#btn-dash-goto-tasks')?.addEventListener('click', () => bus.emit('view:switch', 'tasks'));
 
     // Listen to store updates
     bus.on('state:changed', (state) => this.renderDashboard(state));
@@ -61,28 +66,41 @@ class App {
     bus.on('tasks:updated', () => this.renderDashboard(store.getState()));
     window.addEventListener('langchanged', () => this.renderDashboard(store.getState()));
 
-    // Initial Load
-    await store.loadAll();
+    // Initial Load if authenticated
+    if (authService.isAuthenticated()) {
+      await store.loadAll();
+    }
   }
 
   setupViewRouting() {
     const views = {
+      auth: $('#view-auth'),
       dashboard: $('#view-dashboard'),
-      notebook: $('#view-notebook')
+      playlists: $('#view-playlists'),
+      tasks: $('#view-tasks'),
+      notebook: $('#view-notebook'),
+      settings: $('#view-settings')
     };
 
     const switchView = (targetView) => {
-      const viewKey = views[targetView] ? targetView : 'dashboard';
+      let viewKey = views[targetView] ? targetView : 'dashboard';
+
+      // Route Guards: force to auth if unauthenticated; force to dashboard if authenticated and on auth
+      const isAuthenticated = authService.isAuthenticated();
+      if (!isAuthenticated) {
+        viewKey = 'auth';
+      } else if (viewKey === 'auth') {
+        viewKey = 'dashboard';
+      }
+
       Object.entries(views).forEach(([name, el]) => {
         if (el) {
-          if (name === viewKey) {
-            el.classList.add('active');
-          } else {
-            el.classList.remove('active');
-          }
+          el.classList.toggle('active', name === viewKey);
         }
       });
+
       bus.emit('view:switched', viewKey);
+
       if (window.location.hash !== `#${viewKey}`) {
         window.history.replaceState(null, '', `#${viewKey}`);
       }
@@ -91,14 +109,23 @@ class App {
 
     bus.on('view:switch', (viewName) => switchView(viewName));
 
+    bus.on('auth:login', async () => {
+      await store.loadAll();
+      switchView('dashboard');
+    });
+
+    bus.on('auth:logout', () => {
+      switchView('auth');
+    });
+
+    bus.on('auth:unauthorized', () => {
+      switchView('auth');
+    });
+
     // Handle hash on load and popstate
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'notebook') {
-        switchView('notebook');
-      } else {
-        switchView('dashboard');
-      }
+      switchView(hash);
     };
 
     window.addEventListener('hashchange', handleHash);
@@ -223,8 +250,8 @@ class App {
           </div>
         `;
 
-        emptyStateContainer.querySelector('.btn-empty-add-playlist')?.addEventListener('click', () => bus.emit('modal:search:open'));
-        emptyStateContainer.querySelector('.btn-empty-add-task')?.addEventListener('click', () => bus.emit('modal:task:open'));
+        emptyStateContainer.querySelector('.btn-empty-add-playlist')?.addEventListener('click', () => bus.emit('view:switch', 'playlists'));
+        emptyStateContainer.querySelector('.btn-empty-add-task')?.addEventListener('click', () => bus.emit('view:switch', 'tasks'));
       }
     } else {
       if (emptyStateContainer) emptyStateContainer.style.display = 'none';
@@ -235,10 +262,15 @@ class App {
     const completedCount = playlists.filter(p => p.total_videos > 0 && p.completed_videos === p.total_videos).length +
                            tasks.filter(t => t.is_completed).length;
 
-    $('#badge-all').textContent = totalCount;
-    $('#badge-playlists').textContent = playlists.length;
-    $('#badge-tasks').textContent = tasks.length;
-    $('#badge-completed').textContent = completedCount;
+    const badgeAll = $('#badge-all');
+    const badgePlaylists = $('#badge-playlists');
+    const badgeTasks = $('#badge-tasks');
+    const badgeCompleted = $('#badge-completed');
+
+    if (badgeAll) badgeAll.textContent = totalCount;
+    if (badgePlaylists) badgePlaylists.textContent = playlists.length;
+    if (badgeTasks) badgeTasks.textContent = tasks.length;
+    if (badgeCompleted) badgeCompleted.textContent = completedCount;
   }
 }
 

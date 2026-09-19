@@ -21,7 +21,7 @@ export function renderBasicMarkdown(text) {
 
   // Headers (###, ##, #)
   safe = safe.replace(/^### (.*$)/gim, '<h4 style="margin: 0.5rem 0; color: #38bdf8;">$1</h4>');
-  safe = safe.replace(/^## (.*$)/gim, '<h3 style="margin: 0.75rem 0; color: #c084fc;">$1</h3>');
+  safe = safe.replace(/^## (.*$)/gim, '<h3 style="margin: 0.75rem 0; color: #34d399;">$1</h3>');
   safe = safe.replace(/^# (.*$)/gim, '<h2 style="margin: 1rem 0; color: #f8fafc;">$1</h2>');
 
   // Bold & Italic

@@ -164,9 +164,9 @@
 }
 
 .badge-indigo {
-  background: rgba(168, 85, 247, 0.18);
-  color: #d8b4fe;
-  border: 1px solid rgba(168, 85, 247, 0.4);
+  background: rgba(15, 118, 110, 0.22);
+  color: #6ee7b7;
+  border: 1px solid rgba(52, 211, 153, 0.35);
 }
 
 .badge-cyan {
@@ -182,9 +182,9 @@
 }
 
 .badge-purple {
-  background: rgba(139, 92, 246, 0.18);
-  color: #c084fc;
-  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: rgba(52, 211, 153, 0.16);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.35);
 }
 
 .playlist-info {
@@ -445,16 +445,16 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.45), transparent);
+  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.45), transparent);
   opacity: 0;
   transition: opacity var(--transition-normal);
 }
 
 .task-item-card:hover,
 .task-card:hover {
-  border-color: rgba(168, 85, 247, 0.4);
+  border-color: rgba(52, 211, 153, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 16px rgba(168, 85, 247, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 16px rgba(52, 211, 153, 0.15);
 }
 
 .task-item-card:hover::before,
@@ -465,8 +465,8 @@
 .task-item-card.completed,
 .task-card.is-completed {
   opacity: 0.65;
-  background: rgba(11, 7, 21, 0.55);
-  border-color: rgba(16, 185, 129, 0.2);
+  background: rgba(6, 21, 18, 0.55);
+  border-color: rgba(52, 211, 153, 0.2);
 }
 
 .task-item-card.completed .task-title,
@@ -520,17 +520,17 @@
 }
 
 .task-custom-checkbox:hover .checkbox-visual {
-  border-color: rgba(168, 85, 247, 0.65);
-  background: rgba(168, 85, 247, 0.12);
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
+  border-color: rgba(52, 211, 153, 0.65);
+  background: rgba(52, 211, 153, 0.12);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
   transform: scale(1.05);
 }
 
 .task-custom-checkbox input[type="checkbox"]:checked + .checkbox-visual {
-  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  background: var(--gradient-brand);
   border-color: rgba(255, 255, 255, 0.25);
   color: #ffffff;
-  box-shadow: 0 2px 10px rgba(168, 85, 247, 0.45);
+  box-shadow: 0 2px 10px rgba(52, 211, 153, 0.45);
 }
 
 .task-custom-checkbox .checkbox-visual svg {
@@ -659,10 +659,10 @@
 }
 
 .btn-task-edit:hover {
-  color: #c084fc;
-  background: rgba(168, 85, 247, 0.15);
-  border-color: rgba(168, 85, 247, 0.45);
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
+  color: #34D399;
+  background: rgba(52, 211, 153, 0.15);
+  border-color: rgba(52, 211, 153, 0.45);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
 }
 
 .btn-task-delete:hover,
@@ -800,12 +800,12 @@
 }
 
 #notebook-notes-list::-webkit-scrollbar-thumb {
-  background: rgba(168, 85, 247, 0.35);
+  background: rgba(52, 211, 153, 0.35);
   border-radius: var(--radius-full);
 }
 
 #notebook-notes-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(217, 70, 239, 0.6);
+  background: rgba(15, 118, 110, 0.6);
 }
 
 /* Modals */
@@ -1176,7 +1176,7 @@ html[dir="rtl"] .notebook-items-list {
 }
 
 .notebook-items-list::-webkit-scrollbar-thumb {
-  background: rgba(168, 85, 247, 0.3);
+  background: rgba(52, 211, 153, 0.3);
   border-radius: var(--radius-full);
 }
 
@@ -1200,9 +1200,9 @@ html[dir="rtl"] .notebook-items-list {
 }
 
 .note-card-item.active {
-  background: rgba(168, 85, 247, 0.14);
-  border-color: rgba(217, 70, 239, 0.45);
-  box-shadow: 0 2px 14px rgba(168, 85, 247, 0.2);
+  background: rgba(52, 211, 153, 0.14);
+  border-color: rgba(52, 211, 153, 0.45);
+  box-shadow: 0 2px 14px rgba(52, 211, 153, 0.2);
 }
 
 .note-card-item-header {
@@ -1293,8 +1293,8 @@ html[dir="rtl"] .notebook-items-list {
 }
 
 .note-linked-banner {
-  background: linear-gradient(90deg, rgba(168, 85, 247, 0.15) 0%, rgba(217, 70, 239, 0.08) 100%);
-  border: 1px solid rgba(217, 70, 239, 0.3);
+  background: linear-gradient(90deg, rgba(15, 118, 110, 0.18) 0%, rgba(52, 211, 153, 0.1) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.3);
   padding: 8px 16px;
   border-radius: var(--radius-sm);
   display: flex;
@@ -1309,7 +1309,7 @@ html[dir="rtl"] .notebook-items-list {
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
-  color: var(--accent-purple);
+  color: var(--accent-primary);
   font-weight: 600;
 }
 
@@ -1474,8 +1474,8 @@ html[dir="rtl"] .notebook-items-list {
 }
 
 .note-markdown-preview code {
-  background: rgba(168, 85, 247, 0.15);
-  color: var(--accent-fuchsia);
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--accent-primary);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: monospace;
@@ -1856,8 +1856,8 @@ html[dir="rtl"] .note-markdown-preview blockquote {
   gap: 8px;
   min-width: 300px;
   max-width: 420px;
-  border-color: var(--accent-magenta);
-  box-shadow: 0 8px 32px rgba(236, 72, 153, 0.3);
+  border-color: var(--accent-primary);
+  box-shadow: 0 8px 32px rgba(15, 118, 110, 0.35);
 }
 
 .toast-undo-content {
@@ -1868,8 +1868,8 @@ html[dir="rtl"] .note-markdown-preview blockquote {
 }
 
 .toast-undo-btn {
-  background: rgba(236, 72, 153, 0.2);
-  border: 1px solid var(--accent-magenta);
+  background: rgba(15, 118, 110, 0.3);
+  border: 1px solid var(--accent-primary);
   color: #ffffff;
   font-weight: 700;
   font-size: 0.85rem;
@@ -1881,8 +1881,8 @@ html[dir="rtl"] .note-markdown-preview blockquote {
 }
 
 .toast-undo-btn:hover {
-  background: var(--accent-magenta);
-  box-shadow: 0 0 14px var(--accent-magenta);
+  background: var(--accent-primary);
+  box-shadow: 0 0 14px var(--accent-primary-glow);
 }
 
 .toast-undo-progress {
@@ -1904,9 +1904,9 @@ html[dir="rtl"] .note-markdown-preview blockquote {
 .continue-learning-card {
   position: relative;
   border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, rgba(30, 16, 58, 0.85) 0%, rgba(15, 9, 29, 0.95) 100%);
-  border: 1px solid rgba(217, 70, 239, 0.35);
-  box-shadow: 0 10px 36px rgba(168, 85, 247, 0.22);
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.22) 0%, rgba(11, 31, 27, 0.95) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  box-shadow: 0 10px 36px rgba(15, 118, 110, 0.22);
   padding: 1.4rem;
   margin-bottom: 1.8rem;
   overflow: hidden;
@@ -1917,13 +1917,13 @@ html[dir="rtl"] .note-markdown-preview blockquote {
 }
 
 [data-theme="light"] .continue-learning-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 240, 255, 0.95) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  box-shadow: 0 8px 30px rgba(168, 85, 247, 0.12);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.95) 100%);
+  border: 1px solid rgba(15, 118, 110, 0.25);
+  box-shadow: 0 8px 30px rgba(15, 118, 110, 0.12);
 }
 
 .continue-learning-card:hover {
-  border-color: var(--accent-magenta);
+  border-color: var(--accent-primary);
   transform: translateY(-2px);
 }
 
@@ -2043,7 +2043,7 @@ html[dir="rtl"] .note-markdown-preview blockquote {
   background: var(--bg-card);
   border: 1px solid var(--glass-border-focus);
   border-radius: var(--radius-xl);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(168, 85, 247, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(52, 211, 153, 0.25);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -2105,8 +2105,8 @@ html[dir="rtl"] .note-markdown-preview blockquote {
 
 .quick-switcher-item:hover,
 .quick-switcher-item.active {
-  background: rgba(168, 85, 247, 0.16);
-  border: 1px solid rgba(168, 85, 247, 0.35);
+  background: rgba(52, 211, 153, 0.16);
+  border: 1px solid rgba(52, 211, 153, 0.35);
 }
 
 .quick-switcher-item-icon {

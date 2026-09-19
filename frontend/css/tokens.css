@@ -1,79 +1,88 @@
 /* Design Tokens & CSS Variables - Zenith Design System (UI/UX Pro Max)
- * Theme: Luxury Neon Violet & Electric Magenta
+ * Official Brand System: Emerald Deep Teal (#0F766E), Luminous Mint (#34D399), Forest Obsidian (#0B1F1B)
  */
 :root {
-  /* Colors - Base Backgrounds (Deep Velvet Midnight Obsidian) */
-  --bg-primary: #090613;
-  --bg-secondary: #0f0b1f;
-  --bg-tertiary: #16102c;
-  --bg-card: #140d27;
-  --bg-overlay: rgba(7, 4, 15, 0.86);
+  /* Brand Master Colors */
+  --brand-primary: #0F766E;           /* Deep Emerald Teal */
+  --brand-accent: #34D399;            /* Luminous Mint */
+  --brand-dark: #0B1F1B;              /* Dark Obsidian Forest */
+
+  /* Colors - Base Backgrounds (Deep Obsidian Forest) */
+  --bg-primary: #061512;
+  --bg-secondary: #0B1F1B;
+  --bg-tertiary: #0e2822;
+  --bg-card: #10322b;
+  --bg-overlay: rgba(6, 21, 18, 0.88);
 
   /* Glassmorphism Surfaces */
-  --glass-bg: rgba(20, 13, 38, 0.74);
-  --glass-bg-hover: rgba(30, 20, 56, 0.88);
-  --glass-bg-active: rgba(40, 26, 75, 0.96);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hover: rgba(217, 70, 239, 0.42);
-  --glass-border-focus: rgba(168, 85, 247, 0.78);
+  --glass-bg: rgba(11, 31, 27, 0.76);
+  --glass-bg-hover: rgba(16, 45, 39, 0.88);
+  --glass-bg-active: rgba(20, 56, 48, 0.96);
+  --glass-border: rgba(52, 211, 153, 0.12);
+  --glass-border-hover: rgba(52, 211, 153, 0.45);
+  --glass-border-focus: rgba(52, 211, 153, 0.78);
   --glass-blur: blur(20px);
   --glass-blur-heavy: blur(32px);
 
-  /* Brand & Vibrant Accents - Neon Violet & Magenta Palette */
-  --accent-primary: #a855f7;          /* Neon Violet */
-  --accent-primary-hover: #9333ea;
-  --accent-primary-glow: rgba(168, 85, 247, 0.42);
+  /* Brand & Vibrant Accents - Mint, Emerald & Teal Palette */
+  --accent-primary: #34D399;          /* Luminous Mint */
+  --accent-primary-hover: #10b981;
+  --accent-primary-glow: rgba(52, 211, 153, 0.38);
 
-  --accent-magenta: #ec4899;          /* Electric Magenta */
-  --accent-magenta-hover: #db2777;
-  --accent-magenta-glow: rgba(236, 72, 153, 0.42);
+  --accent-teal: #0F766E;             /* Deep Emerald Teal */
+  --accent-teal-hover: #0d655e;
+  --accent-teal-glow: rgba(15, 118, 110, 0.4);
 
-  --accent-fuchsia: #d946ef;          /* Cyber Fuchsia */
-  --accent-fuchsia-glow: rgba(217, 70, 239, 0.42);
+  --accent-magenta: #2dd4bf;          /* Vibrant Turquoise (compatibility alias) */
+  --accent-magenta-hover: #14b8a6;
+  --accent-magenta-glow: rgba(45, 212, 191, 0.35);
 
-  --accent-purple: #c084fc;           /* Luminous Lavender */
-  --accent-purple-hover: #a855f7;
-  --accent-purple-glow: rgba(192, 132, 252, 0.4);
+  --accent-fuchsia: #34D399;          /* Mint Glow (compatibility alias) */
+  --accent-fuchsia-glow: rgba(52, 211, 153, 0.35);
+
+  --accent-purple: #6ee7b7;           /* Sage Mint (compatibility alias) */
+  --accent-purple-hover: #34d399;
+  --accent-purple-glow: rgba(110, 231, 183, 0.35);
 
   --accent-cyan: #38bdf8;             /* Electric Ice Cyan */
   --accent-cyan-hover: #0ea5e9;
   --accent-cyan-glow: rgba(56, 189, 248, 0.32);
 
-  --accent-emerald: #10b981;          /* Mint Emerald */
+  --accent-emerald: #10b981;          /* Vibrant Emerald */
   --accent-emerald-hover: #059669;
-  --accent-emerald-glow: rgba(16, 185, 129, 0.32);
+  --accent-emerald-glow: rgba(16, 185, 129, 0.35);
 
   --accent-amber: #f59e0b;            /* Warm Amber */
   --accent-amber-glow: rgba(245, 158, 11, 0.32);
 
-  --accent-rose: #f43f5e;             /* Clean Rose */
+  --accent-rose: #f43f5e;             /* Clean Rose (urgent / delete) */
   --accent-rose-hover: #e11d48;
   --accent-rose-glow: rgba(244, 63, 94, 0.32);
 
-  /* Typography Colors (High Contrast WCAG AAA with soft violet warmth) */
+  /* Typography Colors (High Contrast WCAG AAA with crisp mint tint) */
   --text-main: #ffffff;
-  --text-body: #ede9fe;
-  --text-muted: #a78bfa;
-  --text-dim: #7c6f9f;
-  --text-inverse: #090613;
+  --text-body: #e6f7f2;
+  --text-muted: #8ecfbd;
+  --text-dim: #548b7d;
+  --text-inverse: #0B1F1B;
 
   /* Gradients */
-  --gradient-brand: linear-gradient(135deg, #a855f7 0%, #d946ef 50%, #ec4899 100%);
-  --gradient-neon: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
-  --gradient-emerald: linear-gradient(135deg, #10b981 0%, #38bdf8 100%);
-  --gradient-card-overlay: linear-gradient(180deg, rgba(9, 6, 19, 0.12) 0%, rgba(9, 6, 19, 0.96) 100%);
-  --gradient-hover: linear-gradient(145deg, rgba(217, 70, 239, 0.08) 0%, rgba(168, 85, 247, 0.02) 100%);
-  --gradient-glow: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(217, 70, 239, 0.08) 45%, transparent 70%);
+  --gradient-brand: linear-gradient(135deg, #0F766E 0%, #059669 45%, #34D399 100%);
+  --gradient-neon: linear-gradient(135deg, #0F766E 0%, #34D399 100%);
+  --gradient-emerald: linear-gradient(135deg, #0F766E 0%, #34D399 100%);
+  --gradient-card-overlay: linear-gradient(180deg, rgba(6, 21, 18, 0.12) 0%, rgba(6, 21, 18, 0.96) 100%);
+  --gradient-hover: linear-gradient(145deg, rgba(52, 211, 153, 0.08) 0%, rgba(15, 118, 110, 0.04) 100%);
+  --gradient-glow: radial-gradient(circle, rgba(52, 211, 153, 0.22) 0%, rgba(15, 118, 110, 0.08) 45%, transparent 70%);
 
   /* Elevation & Shadows */
   --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 3px 8px rgba(0, 0, 0, 0.45);
   --shadow-md: 0 8px 26px rgba(0, 0, 0, 0.55);
   --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.7);
-  --shadow-glow-indigo: 0 0 28px rgba(168, 85, 247, 0.35); /* Compatibility alias */
-  --shadow-glow-primary: 0 0 28px rgba(168, 85, 247, 0.35);
-  --shadow-glow-magenta: 0 0 28px rgba(217, 70, 239, 0.35);
-  --shadow-glow-emerald: 0 0 25px rgba(16, 185, 129, 0.28);
+  --shadow-glow-indigo: 0 0 28px rgba(52, 211, 153, 0.35); /* Compatibility alias */
+  --shadow-glow-primary: 0 0 28px rgba(52, 211, 153, 0.35);
+  --shadow-glow-magenta: 0 0 28px rgba(45, 212, 191, 0.35);
+  --shadow-glow-emerald: 0 0 28px rgba(52, 211, 153, 0.35);
 
   /* Radii */
   --radius-xs: 6px;
@@ -109,93 +118,93 @@
   --font-latin: 'Inter', system-ui, -apple-system, sans-serif;
 
   /* Semantic UI Tokens (Dark Mode Default) */
-  --header-bg: rgba(8, 5, 17, 0.86);
-  --header-border: rgba(255, 255, 255, 0.07);
-  --input-bg: rgba(14, 17, 26, 0.85);
-  --input-border: var(--glass-border);
-  --input-bg-hover: rgba(19, 24, 38, 0.9);
-  --input-bg-focus: rgba(22, 28, 44, 0.98);
-  --card-bg: #140d27;
-  --card-border: rgba(255, 255, 255, 0.08);
-  --border-color: rgba(255, 255, 255, 0.08);
+  --header-bg: rgba(7, 22, 19, 0.88);
+  --header-border: rgba(52, 211, 153, 0.18);
+  --input-bg: rgba(11, 31, 27, 0.85);
+  --input-border: rgba(52, 211, 153, 0.16);
+  --input-bg-hover: rgba(16, 45, 39, 0.9);
+  --input-bg-focus: rgba(18, 52, 45, 0.98);
+  --card-bg: #0e2923;
+  --card-border: rgba(52, 211, 153, 0.15);
+  --border-color: rgba(52, 211, 153, 0.15);
   --brand-icon-bg: #0B1F1B;
-  --brand-icon-border: rgba(52, 211, 153, 0.28);
-  --pill-bg: rgba(255, 255, 255, 0.04);
-  --pill-border: rgba(255, 255, 255, 0.08);
-  --pill-hover-bg: rgba(255, 255, 255, 0.08);
+  --brand-icon-border: rgba(52, 211, 153, 0.35);
+  --pill-bg: rgba(52, 211, 153, 0.06);
+  --pill-border: rgba(52, 211, 153, 0.14);
+  --pill-hover-bg: rgba(52, 211, 153, 0.12);
 
   /* UX & Mobile-First Tokens */
   --touch-target-min: 44px;
-  --skeleton-bg: rgba(255, 255, 255, 0.06);
-  --skeleton-shimmer: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.12) 50%, transparent 100%);
-  --bottom-sheet-bg: #110b24;
-  --bottom-sheet-handle: rgba(255, 255, 255, 0.28);
+  --skeleton-bg: rgba(52, 211, 153, 0.06);
+  --skeleton-shimmer: linear-gradient(90deg, transparent 0%, rgba(52, 211, 153, 0.14) 50%, transparent 100%);
+  --bottom-sheet-bg: #08201b;
+  --bottom-sheet-handle: rgba(255, 255, 255, 0.3);
   --fab-size: 56px;
-  --fab-bg: var(--gradient-neon);
-  --fab-shadow: 0 10px 28px rgba(168, 85, 247, 0.45);
+  --fab-bg: var(--gradient-brand);
+  --fab-shadow: 0 10px 28px rgba(52, 211, 153, 0.45);
 }
 
 /* Light Theme - Clean Slate, Vibrant Accents & High Contrast */
 [data-theme="light"] {
   /* Colors - Base Backgrounds */
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-tertiary: #e2e8f0;
+  --bg-primary: #f4fbf7;
+  --bg-secondary: #e8f5ee;
+  --bg-tertiary: #dcf0e4;
   --bg-card: #ffffff;
-  --bg-overlay: rgba(15, 23, 42, 0.5);
+  --bg-overlay: rgba(11, 31, 27, 0.5);
 
   /* Glassmorphism Surfaces */
-  --glass-bg: rgba(255, 255, 255, 0.84);
+  --glass-bg: rgba(255, 255, 255, 0.86);
   --glass-bg-hover: rgba(255, 255, 255, 0.96);
   --glass-bg-active: #ffffff;
-  --glass-border: rgba(203, 213, 225, 0.7);
-  --glass-border-hover: rgba(168, 85, 247, 0.45);
-  --glass-border-focus: rgba(147, 51, 234, 0.75);
+  --glass-border: rgba(15, 118, 110, 0.15);
+  --glass-border-hover: rgba(15, 118, 110, 0.45);
+  --glass-border-focus: rgba(15, 118, 110, 0.75);
   --glass-blur: blur(20px);
   --glass-blur-heavy: blur(32px);
 
-  /* Typography Colors */
-  --text-main: #0f172a;
-  --text-body: #334155;
-  --text-muted: #64748b;
-  --text-dim: #94a3b8;
+  /* Typography Colors (Master Brand Text: #0B1F1B) */
+  --text-main: #0B1F1B;
+  --text-body: #193830;
+  --text-muted: #3a685c;
+  --text-dim: #6d968b;
   --text-inverse: #ffffff;
 
   /* Gradients */
   --gradient-card-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.96) 100%);
-  --gradient-hover: linear-gradient(145deg, rgba(168, 85, 247, 0.06) 0%, rgba(217, 70, 239, 0.02) 100%);
-  --gradient-glow: radial-gradient(circle, rgba(168, 85, 247, 0.14) 0%, rgba(217, 70, 239, 0.04) 45%, transparent 70%);
+  --gradient-hover: linear-gradient(145deg, rgba(15, 118, 110, 0.06) 0%, rgba(52, 211, 153, 0.03) 100%);
+  --gradient-glow: radial-gradient(circle, rgba(15, 118, 110, 0.14) 0%, rgba(52, 211, 153, 0.05) 45%, transparent 70%);
 
   /* Elevation & Shadows */
   --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.07);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.11);
-  --shadow-glow-indigo: 0 0 22px rgba(168, 85, 247, 0.22);
-  --shadow-glow-primary: 0 0 22px rgba(168, 85, 247, 0.22);
-  --shadow-glow-magenta: 0 0 22px rgba(217, 70, 239, 0.22);
-  --shadow-glow-emerald: 0 0 20px rgba(16, 185, 129, 0.22);
+  --shadow-glow-indigo: 0 0 22px rgba(15, 118, 110, 0.22);
+  --shadow-glow-primary: 0 0 22px rgba(15, 118, 110, 0.22);
+  --shadow-glow-magenta: 0 0 22px rgba(52, 211, 153, 0.22);
+  --shadow-glow-emerald: 0 0 20px rgba(52, 211, 153, 0.22);
 
   /* Semantic UI Tokens */
-  --header-bg: rgba(255, 255, 255, 0.88);
-  --header-border: rgba(203, 213, 225, 0.7);
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-border: rgba(15, 118, 110, 0.15);
   --input-bg: #ffffff;
-  --input-border: rgba(203, 213, 225, 0.85);
-  --input-bg-hover: #f8fafc;
+  --input-border: rgba(15, 118, 110, 0.25);
+  --input-bg-hover: #f4fbf7;
   --input-bg-focus: #ffffff;
   --card-bg: #ffffff;
-  --card-border: rgba(226, 232, 240, 0.85);
-  --border-color: rgba(226, 232, 240, 0.85);
+  --card-border: rgba(15, 118, 110, 0.12);
+  --border-color: rgba(15, 118, 110, 0.12);
   --brand-icon-bg: #0B1F1B;
-  --brand-icon-border: rgba(52, 211, 153, 0.25);
-  --pill-bg: rgba(15, 23, 42, 0.04);
-  --pill-border: rgba(15, 23, 42, 0.08);
-  --pill-hover-bg: rgba(15, 23, 42, 0.08);
+  --brand-icon-border: rgba(52, 211, 153, 0.28);
+  --pill-bg: rgba(15, 118, 110, 0.05);
+  --pill-border: rgba(15, 118, 110, 0.12);
+  --pill-hover-bg: rgba(15, 118, 110, 0.1);
 
   /* Light Theme UX & Mobile-First Tokens */
-  --skeleton-bg: rgba(15, 23, 42, 0.07);
-  --skeleton-shimmer: linear-gradient(90deg, transparent 0%, rgba(15, 23, 42, 0.09) 50%, transparent 100%);
+  --skeleton-bg: rgba(11, 31, 27, 0.07);
+  --skeleton-shimmer: linear-gradient(90deg, transparent 0%, rgba(11, 31, 27, 0.09) 50%, transparent 100%);
   --bottom-sheet-bg: #ffffff;
-  --bottom-sheet-handle: rgba(15, 23, 42, 0.22);
-  --fab-shadow: 0 10px 24px rgba(147, 51, 234, 0.35);
+  --bottom-sheet-handle: rgba(11, 31, 27, 0.22);
+  --fab-shadow: 0 10px 24px rgba(15, 118, 110, 0.35);
 }

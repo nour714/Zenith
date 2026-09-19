@@ -77,6 +77,10 @@ export class HeaderComponent {
         mobileBtn?.classList.toggle('active', isActive);
       });
 
+      // Highlight user profile chip when viewing settings
+      const userChip = $('#header-user-chip');
+      userChip?.classList.toggle('active', viewName === 'settings');
+
       // Show/hide header and mobile nav depending on auth state
       const isAuthView = viewName === 'auth';
       const headerEl = $('.app-header');
@@ -103,14 +107,17 @@ export class HeaderComponent {
     const userChip = $('#header-user-chip');
     const userAvatar = $('#header-user-avatar');
     const userName = $('#header-user-name');
+    const settingsBtn = $('#nav-btn-settings');
 
     if (!authService.isAuthenticated()) {
       if (userChip) userChip.style.display = 'none';
+      if (settingsBtn) settingsBtn.style.display = 'none';
       return;
     }
 
     const user = authService.getUser();
-    if (userChip) userChip.style.display = 'flex';
+    if (userChip) userChip.style.display = 'inline-flex';
+    if (settingsBtn) settingsBtn.style.display = 'inline-flex';
 
     if (userName) {
       userName.textContent = user?.full_name || user?.email?.split('@')[0] || 'User';

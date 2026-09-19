@@ -7,7 +7,7 @@ import { i18n } from './i18n/translator.js?v=4';
 import { store } from './core/store.js';
 import { bus } from './core/event-bus.js';
 import { authService } from './services/auth-service.js';
-import { HeaderComponent } from './components/header.js?v=4';
+import { HeaderComponent } from './components/header.js?v=5';
 import { AuthPageComponent } from './components/auth-page.js?v=2';
 import { PlaylistsPageComponent } from './components/playlists-page.js?v=2';
 import { TasksPageComponent } from './components/tasks-page.js?v=2';

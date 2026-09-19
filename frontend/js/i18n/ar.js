@@ -163,5 +163,10 @@ export default {
   fab_add: "إضافة سريعة",
   fab_add_task: "إضافة مهمة جديدة",
   fab_add_playlist: "إضافة مسار يوتيوب",
+  fab_add_note: "إضافة ملاحظة جديدة",
+  nb_tab_notes: "قائمة الملاحظات",
+  nb_tab_editor: "محرر الملاحظة",
+  nb_back_to_list: "العودة للقائمة",
+  nb_editing_note: "تحرير الملاحظة",
   swipe_hint_mobile: "اسحب لليمين للإنجاز، ولليسار للحذف",
 };

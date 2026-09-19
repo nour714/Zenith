@@ -163,5 +163,10 @@ export default {
   fab_add: "Quick Add",
   fab_add_task: "Add New Task",
   fab_add_playlist: "Add YouTube Track",
+  fab_add_note: "Add New Note",
+  nb_tab_notes: "Notes Directory",
+  nb_tab_editor: "Note Editor",
+  nb_back_to_list: "Back to Notes",
+  nb_editing_note: "Editing Note",
   swipe_hint_mobile: "Swipe right to complete, left to delete",
 };

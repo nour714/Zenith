@@ -21,6 +21,7 @@ export class NotebookPageComponent {
     this.filterType = 'all'; // 'all' | 'linked' | 'general'
     this.searchQuery = '';
     this.currentMode = 'edit'; // 'edit' | 'preview' | 'split'
+    this.mobileTab = 'list'; // 'list' | 'editor'
     this.notes = [];
 
     this.init();
@@ -37,7 +38,21 @@ export class NotebookPageComponent {
 
   bindEvents() {
     // New Note
-    $('#btn-notebook-new-note')?.addEventListener('click', () => this.resetEditor());
+    $('#btn-notebook-new-note')?.addEventListener('click', () => {
+      this.resetEditor();
+      this.setMobileTab('editor');
+    });
+
+    // Mobile Workspace View Switcher
+    $('#btn-nb-tab-list')?.addEventListener('click', () => this.setMobileTab('list'));
+    $('#btn-nb-tab-editor')?.addEventListener('click', () => this.setMobileTab('editor'));
+    $('#btn-nb-back-to-list')?.addEventListener('click', () => this.setMobileTab('list'));
+
+    // Listen for mobile FAB new note
+    bus.on('notebook:new-note', () => {
+      this.resetEditor();
+      this.setMobileTab('editor');
+    });
 
     // Save Note
     $('#btn-notebook-save-note')?.addEventListener('click', () => this.saveCurrentNote());
@@ -193,9 +208,9 @@ export class NotebookPageComponent {
       // If active note exists, re-sync; else select first note if available
       if (this.activeNoteId) {
         const current = this.notes.find(n => n.id === this.activeNoteId);
-        if (current) this.selectNote(current);
+        if (current) this.selectNote(current, false);
       } else if (this.notes.length > 0 && !this.linkedContext) {
-        this.selectNote(this.notes[0]);
+        this.selectNote(this.notes[0], false);
       }
     } catch (err) {
       console.error('Failed to load notes:', err);
@@ -205,9 +220,11 @@ export class NotebookPageComponent {
   updateHeaderBadge() {
     const badge = $('#header-notes-count');
     const topbarCount = $('#notebook-page-total-count');
+    const mobileCount = $('#nb-tab-list-count');
     const count = this.notes.length;
     if (badge) badge.textContent = count;
     if (topbarCount) topbarCount.textContent = count;
+    if (mobileCount) mobileCount.textContent = count;
   }
 
   renderNotesList() {
@@ -278,7 +295,7 @@ export class NotebookPageComponent {
 
       card.addEventListener('click', (e) => {
         if (!e.target.closest('.note-card-item-delete')) {
-          this.selectNote(note);
+          this.selectNote(note, true);
         }
       });
 
@@ -316,7 +333,7 @@ export class NotebookPageComponent {
     });
   }
 
-  selectNote(note) {
+  selectNote(note, shouldSwitchMobileTab = false) {
     this.activeNoteId = note.id;
     this.linkedContext = null;
 
@@ -350,6 +367,10 @@ export class NotebookPageComponent {
     this.updateMarkdownPreview();
     this.setSaveStatus('saved');
     this.renderNotesList();
+
+    if (shouldSwitchMobileTab) {
+      this.setMobileTab('editor');
+    }
   }
 
   createNewLinkedNote(context) {
@@ -386,6 +407,7 @@ export class NotebookPageComponent {
     this.setSaveStatus('unsaved');
     $('#notebook-content-input').focus();
     this.renderNotesList();
+    this.setMobileTab('editor');
   }
 
   resetEditor() {
@@ -572,5 +594,31 @@ export class NotebookPageComponent {
     safe = safe.replace(/<p><\/p>/g, '');
 
     return safe;
+  }
+
+  /**
+   * Toggle between Notes List and Note Editor on mobile devices.
+   */
+  setMobileTab(tab) {
+    this.mobileTab = tab;
+    const workspace = $('.notebook-workspace');
+    const tabListBtn = $('#btn-nb-tab-list');
+    const tabEditorBtn = $('#btn-nb-tab-editor');
+
+    if (workspace) {
+      workspace.classList.remove('nb-view-list', 'nb-view-editor');
+      workspace.classList.add(`nb-view-${tab}`);
+    }
+
+    if (tabListBtn) tabListBtn.classList.toggle('active', tab === 'list');
+    if (tabEditorBtn) tabEditorBtn.classList.toggle('active', tab === 'editor');
+    document.body.classList.toggle('nb-editor-active', tab === 'editor');
+
+    if (tab === 'editor') {
+      const titleInput = $('#notebook-title-input');
+      if (titleInput && !titleInput.value) {
+        titleInput.focus();
+      }
+    }
   }
 }

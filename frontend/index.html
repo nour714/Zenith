@@ -625,8 +625,21 @@
             </div>
           </div>
 
+          <!-- Mobile Workspace View Switcher -->
+          <div class="notebook-mobile-switcher" id="nb-mobile-switcher">
+            <button id="btn-nb-tab-list" class="nb-mobile-tab-btn active" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+              <span data-i18n="nb_tab_notes">الملاحظات</span>
+              <span id="nb-tab-list-count" class="badge badge-fuchsia">0</span>
+            </button>
+            <button id="btn-nb-tab-editor" class="nb-mobile-tab-btn" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              <span data-i18n="nb_tab_editor">محرر الملاحظة</span>
+            </button>
+          </div>
+
           <!-- Master-Detail Workspace -->
-          <div class="notebook-workspace">
+          <div class="notebook-workspace nb-view-list">
             <!-- Sidebar: Notes Directory -->
             <aside class="notebook-sidebar">
               <div class="notes-search-wrap">
@@ -651,6 +664,17 @@
 
             <!-- Editor / Preview Panel -->
             <section class="notebook-editor-panel">
+              <!-- Mobile Back to List bar -->
+              <div class="nb-editor-mobile-bar" id="nb-editor-mobile-bar">
+                <button id="btn-nb-back-to-list" class="btn btn-secondary" type="button" style="padding: 5px 12px; font-size: 0.8rem;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                  <span data-i18n="nb_back_to_list">العودة للقائمة</span>
+                </button>
+                <span class="nb-editor-status-text" style="font-size: 0.78rem; color: var(--text-dim);">
+                  ✍️ <span data-i18n="nb_editing_note">تحرير الملاحظة</span>
+                </span>
+              </div>
+
               <!-- Linked YouTube Video Banner (Dynamic) -->
               <div id="notebook-linked-banner" class="note-linked-banner" style="display: none;">
                 <div class="note-linked-info">

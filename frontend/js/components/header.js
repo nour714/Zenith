@@ -59,6 +59,8 @@ export class HeaderComponent {
       const currentView = store.getState().currentView || 'dashboard';
       if (currentView === 'playlists') {
         bus.emit('modal:playlist:open');
+      } else if (currentView === 'notebook') {
+        bus.emit('notebook:new-note');
       } else {
         bus.emit('modal:task:open');
       }
@@ -81,6 +83,11 @@ export class HeaderComponent {
       const mobileNav = $('.mobile-bottom-nav');
       if (headerEl) headerEl.style.display = isAuthView ? 'none' : '';
       if (mobileNav) mobileNav.style.display = isAuthView ? 'none' : '';
+
+      // Reset notebook editor body class if navigated away
+      if (viewName !== 'notebook') {
+        document.body.classList.remove('nb-editor-active');
+      }
     });
 
     // Auth state changes

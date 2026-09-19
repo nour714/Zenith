@@ -21,7 +21,6 @@ export class NotebookPageComponent {
     this.filterType = 'all'; // 'all' | 'linked' | 'general'
     this.searchQuery = '';
     this.currentMode = 'edit'; // 'edit' | 'preview' | 'split'
-    this.mobileTab = 'list'; // 'list' | 'editor'
     this.notes = [];
 
     this.init();
@@ -37,21 +36,28 @@ export class NotebookPageComponent {
   }
 
   bindEvents() {
-    // New Note
-    $('#btn-notebook-new-note')?.addEventListener('click', () => {
+    // Toggle New Note Action Card Form
+    $('#btn-toggle-notebook-form')?.addEventListener('click', (e) => {
+      e.stopPropagation();
       this.resetEditor();
-      this.setMobileTab('editor');
+      this.toggleForm();
     });
 
-    // Mobile Workspace View Switcher
-    $('#btn-nb-tab-list')?.addEventListener('click', () => this.setMobileTab('list'));
-    $('#btn-nb-tab-editor')?.addEventListener('click', () => this.setMobileTab('editor'));
-    $('#btn-nb-back-to-list')?.addEventListener('click', () => this.setMobileTab('list'));
+    $('#header-notebook-toggle')?.addEventListener('click', (e) => {
+      if (e.target.closest('#btn-toggle-notebook-form')) return;
+      this.resetEditor();
+      this.toggleForm();
+    });
+
+    $('#btn-cancel-notebook-form')?.addEventListener('click', () => {
+      this.toggleForm(false);
+    });
 
     // Listen for mobile FAB new note
     bus.on('notebook:new-note', () => {
       this.resetEditor();
-      this.setMobileTab('editor');
+      this.toggleForm(true);
+      $('#card-notebook-add')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     // Save Note
@@ -220,11 +226,9 @@ export class NotebookPageComponent {
   updateHeaderBadge() {
     const badge = $('#header-notes-count');
     const topbarCount = $('#notebook-page-total-count');
-    const mobileCount = $('#nb-tab-list-count');
     const count = this.notes.length;
     if (badge) badge.textContent = count;
     if (topbarCount) topbarCount.textContent = count;
-    if (mobileCount) mobileCount.textContent = count;
   }
 
   renderNotesList() {
@@ -333,7 +337,7 @@ export class NotebookPageComponent {
     });
   }
 
-  selectNote(note, shouldSwitchMobileTab = false) {
+  selectNote(note, shouldOpenForm = false) {
     this.activeNoteId = note.id;
     this.linkedContext = null;
 
@@ -368,8 +372,9 @@ export class NotebookPageComponent {
     this.setSaveStatus('saved');
     this.renderNotesList();
 
-    if (shouldSwitchMobileTab) {
-      this.setMobileTab('editor');
+    if (shouldOpenForm) {
+      this.toggleForm(true);
+      $('#card-notebook-add')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -407,7 +412,8 @@ export class NotebookPageComponent {
     this.setSaveStatus('unsaved');
     $('#notebook-content-input').focus();
     this.renderNotesList();
-    this.setMobileTab('editor');
+    this.toggleForm(true);
+    $('#card-notebook-add')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   resetEditor() {
@@ -462,6 +468,9 @@ export class NotebookPageComponent {
       this.setSaveStatus('saved');
       toast.success(i18n.lang === 'ar' ? 'تم حفظ الملاحظة بنجاح ✓' : 'Note saved successfully ✓');
       await this.loadNotes();
+      if (window.innerWidth <= 768) {
+        this.toggleForm(false);
+      }
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -597,28 +606,21 @@ export class NotebookPageComponent {
   }
 
   /**
-   * Toggle between Notes List and Note Editor on mobile devices.
+   * Toggle notebook add/edit form collapse.
    */
-  setMobileTab(tab) {
-    this.mobileTab = tab;
-    const workspace = $('.notebook-workspace');
-    const tabListBtn = $('#btn-nb-tab-list');
-    const tabEditorBtn = $('#btn-nb-tab-editor');
+  toggleForm(forceState = null) {
+    const formCollapse = $('#notebook-form-collapse');
+    const toggleBtn = $('#btn-toggle-notebook-form');
+    if (!formCollapse) return;
 
-    if (workspace) {
-      workspace.classList.remove('nb-view-list', 'nb-view-editor');
-      workspace.classList.add(`nb-view-${tab}`);
-    }
+    const isCurrentlyOpen = formCollapse.style.display !== 'none';
+    const nextOpen = forceState !== null ? forceState : !isCurrentlyOpen;
 
-    if (tabListBtn) tabListBtn.classList.toggle('active', tab === 'list');
-    if (tabEditorBtn) tabEditorBtn.classList.toggle('active', tab === 'editor');
-    document.body.classList.toggle('nb-editor-active', tab === 'editor');
+    formCollapse.style.display = nextOpen ? 'block' : 'none';
+    toggleBtn?.classList.toggle('active', nextOpen);
 
-    if (tab === 'editor') {
-      const titleInput = $('#notebook-title-input');
-      if (titleInput && !titleInput.value) {
-        titleInput.focus();
-      }
+    if (nextOpen) {
+      $('#notebook-title-input')?.focus();
     }
   }
 }

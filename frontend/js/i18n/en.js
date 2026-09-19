@@ -167,6 +167,7 @@ export default {
   nb_tab_notes: "Notes Directory",
   nb_tab_editor: "Note Editor",
   nb_back_to_list: "Back to Notes",
-  nb_editing_note: "Editing Note",
+  notebook_add_new_title: "Write & Record New Note",
+  notebook_page_subtitle: "Record smart notes, code snippets, AI summaries, and direct video links.",
   swipe_hint_mobile: "Swipe right to complete, left to delete",
 };

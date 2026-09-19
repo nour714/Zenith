@@ -167,6 +167,7 @@ export default {
   nb_tab_notes: "قائمة الملاحظات",
   nb_tab_editor: "محرر الملاحظة",
   nb_back_to_list: "العودة للقائمة",
-  nb_editing_note: "تحرير الملاحظة",
+  notebook_add_new_title: "تدوين وكتابة ملاحظة جديدة",
+  notebook_page_subtitle: "سجل ملاحظاتك الذكية وأكوادك البرمجية مع تلخيص الذكاء الاصطناعي وربط مباشر بالفيديوهات.",
   swipe_hint_mobile: "اسحب لليمين للإنجاز، ولليسار للحذف",
 };

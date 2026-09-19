@@ -392,6 +392,11 @@
   align-items: start; /* Prevents unwanted vertical stretching */
 }
 
+.tasks-grid > * {
+  height: auto !important;
+  align-self: start !important;
+}
+
 /* URL Input LTR Override */
 input[type="url"] {
   direction: ltr;

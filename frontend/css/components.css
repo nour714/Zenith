@@ -433,6 +433,8 @@
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
+  height: auto;
+  align-self: start;
 }
 
 .task-item-card::before,
@@ -1807,6 +1809,8 @@ html[dir="rtl"] .note-markdown-preview blockquote {
   border-radius: var(--radius-lg);
   touch-action: pan-y;
   user-select: none;
+  height: auto;
+  align-self: start;
 }
 
 .swipe-action-reveal {
@@ -1841,6 +1845,7 @@ html[dir="rtl"] .note-markdown-preview blockquote {
   border-radius: var(--radius-lg);
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
+  height: auto;
 }
 
 /* 5. Undo Toast with Progress Bar */

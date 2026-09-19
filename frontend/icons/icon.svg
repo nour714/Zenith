@@ -1,49 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <radialGradient id="zn-icon-bg" cx="50%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#1f1438"/>
-      <stop offset="60%" stop-color="#0e081c"/>
-      <stop offset="100%" stop-color="#07040e"/>
-    </radialGradient>
-    <linearGradient id="zn-icon-left" x1="100" y1="410" x2="256" y2="70" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#c084fc"/>
+    <!-- Master Zenith Brand Gradient: Mint #34D399 to Deep Teal #0F766E -->
+    <linearGradient id="zn-icon-grad" x1="85%" y1="15%" x2="15%" y2="85%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#0F766E"/>
     </linearGradient>
-    <linearGradient id="zn-icon-right" x1="256" y1="70" x2="412" y2="410" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#ec4899"/>
-      <stop offset="100%" stop-color="#f43f5e"/>
-    </linearGradient>
-    <linearGradient id="zn-icon-play" x1="215" y1="180" x2="325" y2="300" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#fdf4ff"/>
-    </linearGradient>
-    <linearGradient id="zn-icon-border" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="rgba(192, 132, 252, 0.45)"/>
-      <stop offset="50%" stop-color="rgba(236, 72, 153, 0.25)"/>
-      <stop offset="100%" stop-color="rgba(124, 58, 237, 0.15)"/>
+    <linearGradient id="zn-icon-border" x1="0" y1="0" x2="512" y2="512">
+      <stop offset="0%" stop-color="rgba(52, 211, 153, 0.45)"/>
+      <stop offset="100%" stop-color="rgba(15, 118, 110, 0.15)"/>
     </linearGradient>
   </defs>
 
-  <!-- Squircle Rounded App Icon Backdrop -->
-  <rect width="512" height="512" rx="120" fill="url(#zn-icon-bg)"/>
-  <rect x="2" y="2" width="508" height="508" rx="118" fill="none" stroke="url(#zn-icon-border)" stroke-width="4"/>
+  <!-- Squircle Rounded App Icon Backdrop (#0B1F1B) -->
+  <rect width="512" height="512" rx="124" fill="#0B1F1B"/>
+  <rect x="3" y="3" width="506" height="506" rx="122" fill="none" stroke="url(#zn-icon-border)" stroke-width="6"/>
 
-  <!-- Base Shadow Ground -->
-  <path d="M 120 415 L 256 365 L 392 415 Z" fill="#040207" opacity="0.65"/>
-
-  <!-- Left Ascent Facet -->
-  <path d="M 256 75 L 105 400 C 100 410 108 422 120 422 L 256 365 Z" fill="url(#zn-icon-left)"/>
-
-  <!-- Right Descent Facet -->
-  <path d="M 256 75 L 256 365 L 392 422 C 404 422 412 410 407 400 Z" fill="url(#zn-icon-right)"/>
-
-  <!-- Center Ridge Highlight Line -->
-  <line x1="256" y1="75" x2="256" y2="365" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity="0.65"/>
-
-  <!-- Play Core Symbol (Centered Video Learning) -->
-  <path d="M 220 195 C 220 184 232 178 241 183 L 320 236 C 330 242 330 258 320 264 L 241 317 C 232 322 220 316 220 305 Z" fill="url(#zn-icon-play)"/>
-
-  <!-- Pinnacle Apex Star (Zenith Pinnacle) -->
-  <circle cx="256" cy="70" r="22" fill="#ffffff"/>
-  <path d="M 256 32 L 266 60 L 294 70 L 266 80 L 256 108 L 246 80 L 218 70 L 246 60 Z" fill="#ffffff" opacity="0.95"/>
+  <!-- Centered Zenith Dynamic Z Brand Emblem -->
+  <g transform="translate(68, 68) scale(3.76)">
+    <!-- Shape 1: Top Bar & Primary Diagonal Ribbon -->
+    <path d="M 33 26 L 75 26 A 3 3 0 0 1 77.5 27.5 A 3 3 0 0 1 77 31 L 65 43 L 28.5 79.5 A 4.5 4.5 0 0 1 22 79.5 A 4.5 4.5 0 0 1 22 73 L 49 40 L 33 40 A 3.5 3.5 0 0 1 29.5 36.5 L 29.5 29.5 A 3.5 3.5 0 0 1 33 26 Z" fill="url(#zn-icon-grad)"/>
+    <!-- Shape 2: Bottom-Right Dynamic Facet -->
+    <path d="M 63.5 45 A 3.5 3.5 0 0 1 67 45 L 79 57 A 4 4 0 0 1 79 62.5 L 64 77.5 A 3.5 3.5 0 0 1 61.5 78.5 L 38 78.5 A 3.5 3.5 0 0 1 35.5 74 L 61 47.5 A 3.5 3.5 0 0 1 63.5 45 Z" fill="url(#zn-icon-grad)"/>
+  </g>
 </svg>

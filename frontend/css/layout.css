@@ -58,14 +58,14 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 35% 25%, rgba(217, 70, 239, 0.3) 0%, transparent 65%);
+  background: radial-gradient(circle at 35% 25%, rgba(52, 211, 153, 0.25) 0%, transparent 65%);
   pointer-events: none;
 }
 
 .brand-icon:hover {
   transform: translateY(-1px) scale(1.04);
-  border-color: rgba(217, 70, 239, 0.65);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55), 0 0 24px var(--accent-fuchsia-glow);
+  border-color: rgba(52, 211, 153, 0.65);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55), 0 0 24px rgba(52, 211, 153, 0.35);
 }
 
 .brand-icon svg {
@@ -913,7 +913,7 @@ body.view-auth .app-main {
   align-items: center;
   justify-content: center;
   margin-bottom: 0.85rem;
-  filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.5));
+  filter: drop-shadow(0 0 20px rgba(52, 211, 153, 0.45));
   transition: transform var(--transition-normal);
 }
 

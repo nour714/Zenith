@@ -22,6 +22,14 @@ export class TasksPageComponent {
   }
 
   bindEvents() {
+    // Toggle collapsible add task form
+    $('#btn-toggle-tasks-form')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleForm();
+    });
+    $('#header-tasks-toggle')?.addEventListener('click', () => this.toggleForm());
+    $('#btn-cancel-tasks-form')?.addEventListener('click', () => this.toggleForm(false));
+
     // Form submit for adding task
     const form = $('#form-page-create-task');
     form?.addEventListener('submit', async (e) => {
@@ -53,7 +61,7 @@ export class TasksPageComponent {
 
     bus.on('tasks:updated', () => this.render());
     bus.on('state:changed', () => this.render());
-    bus.on('modal:task:open', () => this.openMobileAddTaskSheet());
+    bus.on('modal:task:open', () => this.toggleForm(true));
     window.addEventListener('langchanged', () => this.render());
 
     // Pull to refresh on mobile
@@ -63,6 +71,26 @@ export class TasksPageComponent {
         await store.refreshTasks();
         toast.info(i18n.lang === 'ar' ? 'تم تحديث المهام' : 'Tasks refreshed');
       });
+    }
+  }
+
+  toggleForm(forceOpen = null) {
+    const collapseEl = $('#tasks-form-collapse');
+    const toggleBtn = $('#btn-toggle-tasks-form');
+    if (!collapseEl) return;
+
+    const isCurrentlyOpen = collapseEl.style.display !== 'none';
+    const shouldOpen = forceOpen !== null ? forceOpen : !isCurrentlyOpen;
+
+    if (shouldOpen) {
+      collapseEl.style.display = 'block';
+      collapseEl.classList.add('open');
+      toggleBtn?.classList.add('active');
+      $('#input-page-task-title')?.focus();
+    } else {
+      collapseEl.style.display = 'none';
+      collapseEl.classList.remove('open');
+      toggleBtn?.classList.remove('active');
     }
   }
 
@@ -95,6 +123,7 @@ export class TasksPageComponent {
       if (inputDueDate) inputDueDate.value = '';
 
       await store.refreshTasks();
+      this.toggleForm(false);
     } catch (err) {
       toast.error(err.message);
     } finally {

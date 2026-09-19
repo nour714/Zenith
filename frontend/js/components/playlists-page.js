@@ -20,6 +20,14 @@ export class PlaylistsPageComponent {
   }
 
   bindEvents() {
+    // Toggle collapsible add playlist form
+    $('#btn-toggle-playlists-form')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleForm();
+    });
+    $('#header-playlists-toggle')?.addEventListener('click', () => this.toggleForm());
+    $('#btn-cancel-playlists-form')?.addEventListener('click', () => this.toggleForm(false));
+
     // Form submit for adding playlist
     const form = $('#form-playlists-page-add');
     form?.addEventListener('submit', async (e) => {
@@ -41,7 +49,7 @@ export class PlaylistsPageComponent {
     // Reactive store listeners
     bus.on('playlists:updated', () => this.render());
     bus.on('state:changed', () => this.render());
-    bus.on('modal:playlist:open', () => this.openMobileAddSheet());
+    bus.on('modal:playlist:open', () => this.toggleForm(true));
     window.addEventListener('langchanged', () => this.render());
 
     // Pull-to-refresh on mobile
@@ -51,6 +59,26 @@ export class PlaylistsPageComponent {
         await store.refreshPlaylists();
         toast.info(i18n.lang === 'ar' ? 'تم تحديث المسارات التعليمية' : 'Playlists refreshed');
       });
+    }
+  }
+
+  toggleForm(forceOpen = null) {
+    const collapseEl = $('#playlists-form-collapse');
+    const toggleBtn = $('#btn-toggle-playlists-form');
+    if (!collapseEl) return;
+
+    const isCurrentlyOpen = collapseEl.style.display !== 'none';
+    const shouldOpen = forceOpen !== null ? forceOpen : !isCurrentlyOpen;
+
+    if (shouldOpen) {
+      collapseEl.style.display = 'block';
+      collapseEl.classList.add('open');
+      toggleBtn?.classList.add('active');
+      $('#input-page-playlist-name')?.focus();
+    } else {
+      collapseEl.style.display = 'none';
+      collapseEl.classList.remove('open');
+      toggleBtn?.classList.remove('active');
     }
   }
 
@@ -92,6 +120,7 @@ export class PlaylistsPageComponent {
       if (inputUrl) inputUrl.value = '';
 
       await store.refreshPlaylists();
+      this.toggleForm(false);
       setTimeout(() => {
         if (statusBox) statusBox.style.display = 'none';
       }, 4000);

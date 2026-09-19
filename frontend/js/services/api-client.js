@@ -110,6 +110,13 @@ class APIClient {
     });
   }
 
+  updateTask(taskId, taskData) {
+    return this.request(`/tasks/${taskId}`, {
+      method: 'PUT',
+      body: JSON.stringify(taskData),
+    });
+  }
+
   toggleTask(taskId) {
     return this.request(`/tasks/${taskId}/toggle`, {
       method: 'PATCH',

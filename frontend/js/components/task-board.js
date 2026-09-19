@@ -38,15 +38,23 @@ export class TaskBoardComponent {
     wrapper.innerHTML = `
       <div class="swipe-action-reveal"></div>
       <div class="swipe-content task-item-card ${task.is_completed ? 'completed' : ''}">
-        <input type="checkbox" class="video-checkbox" ${task.is_completed ? 'checked' : ''} style="margin-top: 3px;" aria-label="${escapeHTML(task.title)}">
+        <!-- Custom Modern Checkbox -->
+        <label class="task-custom-checkbox" title="${task.is_completed ? (i18n.lang === 'ar' ? 'إلغاء الإنجاز' : 'Mark Incomplete') : (i18n.lang === 'ar' ? 'إتمام المهمة' : 'Mark Completed')}">
+          <input type="checkbox" class="video-checkbox" ${task.is_completed ? 'checked' : ''} aria-label="${escapeHTML(task.title)}">
+          <span class="checkbox-visual">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+        </label>
         <div class="task-content">
           <h4 class="task-title">${escapeHTML(task.title)}</h4>
           ${task.description ? `<p class="task-desc">${escapeHTML(task.description)}</p>` : ''}
           <div class="task-meta-row">
-            <span class="badge" style="background: rgba(255,255,255,0.06); color: ${priorityColors[task.priority] || 'var(--text-muted)'}; font-size: 0.72rem;">
+            <span class="badge priority-badge" style="background: rgba(255,255,255,0.06); color: ${priorityColors[task.priority] || 'var(--text-muted)'}; font-size: 0.72rem;">
               ● ${task.priority ? task.priority.toUpperCase() : 'NORMAL'}
             </span>
-            <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--text-dim); font-size: 0.72rem;">
+            <span class="badge category-badge" style="background: rgba(255,255,255,0.06); color: var(--text-dim); font-size: 0.72rem;">
               ${categoryNames[task.category] || task.category || 'General'}
             </span>
             ${task.due_date ? `
@@ -57,9 +65,17 @@ export class TaskBoardComponent {
             ` : ''}
           </div>
         </div>
-        <button class="btn-delete-task" title="${i18n.t('btn_delete')}" aria-label="Delete Task">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        </button>
+        <div class="task-card-actions">
+          <button type="button" class="btn-task-action btn-task-edit" title="${i18n.lang === 'ar' ? 'تعديل المهمة' : 'Edit Task'}" aria-label="Edit Task">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button type="button" class="btn-task-action btn-task-delete" title="${i18n.t('btn_delete')}" aria-label="Delete Task">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
       </div>
     `;
 
@@ -84,6 +100,13 @@ export class TaskBoardComponent {
 
     cb.addEventListener('change', toggleCompletion);
 
+    // Edit task handler -> switches view to tasks and triggers edit
+    wrapper.querySelector('.btn-task-edit')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      bus.emit('view:switch', 'tasks');
+      bus.emit('task:edit', task);
+    });
+
     const deleteTaskWithUndo = () => {
       wrapper.style.display = 'none';
       const isAr = i18n.lang === 'ar';
@@ -106,7 +129,10 @@ export class TaskBoardComponent {
       );
     };
 
-    wrapper.querySelector('.btn-delete-task').addEventListener('click', deleteTaskWithUndo);
+    wrapper.querySelector('.btn-task-delete')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      deleteTaskWithUndo();
+    });
 
     attachSwipeAction(wrapper, {
       onSwipeComplete: toggleCompletion,

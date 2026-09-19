@@ -17,6 +17,7 @@ export class TasksPageComponent {
   constructor() {
     this.selectedCategory = 'all';
     this.selectedStatus = 'all'; // 'all' | 'pending' | 'completed'
+    this.editingTaskId = null;
     this.bindEvents();
     this.render();
   }
@@ -25,12 +26,20 @@ export class TasksPageComponent {
     // Toggle collapsible add task form
     $('#btn-toggle-tasks-form')?.addEventListener('click', (e) => {
       e.stopPropagation();
+      const collapseEl = $('#tasks-form-collapse');
+      const isCurrentlyOpen = collapseEl && collapseEl.style.display !== 'none';
+      if (isCurrentlyOpen && this.editingTaskId) {
+        this.resetForm();
+      }
       this.toggleForm();
     });
     $('#header-tasks-toggle')?.addEventListener('click', () => this.toggleForm());
-    $('#btn-cancel-tasks-form')?.addEventListener('click', () => this.toggleForm(false));
+    $('#btn-cancel-tasks-form')?.addEventListener('click', () => {
+      this.resetForm();
+      this.toggleForm(false);
+    });
 
-    // Form submit for adding task
+    // Form submit for adding or updating task
     const form = $('#form-page-create-task');
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -62,6 +71,7 @@ export class TasksPageComponent {
     bus.on('tasks:updated', () => this.render());
     bus.on('state:changed', () => this.render());
     bus.on('modal:task:open', () => this.toggleForm(true));
+    bus.on('task:edit', (task) => this.startEditTask(task));
     window.addEventListener('langchanged', () => this.render());
 
     // Pull to refresh on mobile
@@ -94,6 +104,73 @@ export class TasksPageComponent {
     }
   }
 
+  startEditTask(task) {
+    if (!task) return;
+    this.editingTaskId = task.id;
+
+    const inputTitle = $('#input-page-task-title');
+    const inputDesc = $('#input-page-task-desc');
+    const selectPriority = $('#select-page-task-priority');
+    const selectCategory = $('#select-page-task-category');
+    const inputDueDate = $('#input-page-task-duedate');
+    const submitBtn = $('#btn-page-task-submit');
+    const actionHeader = $('#header-tasks-toggle .page-action-title span:last-child');
+    const toggleBtnSpan = $('#btn-toggle-tasks-form span');
+
+    if (inputTitle) inputTitle.value = task.title || '';
+    if (inputDesc) inputDesc.value = task.description || '';
+    if (selectPriority) selectPriority.value = task.priority || 'medium';
+    if (selectCategory) selectCategory.value = task.category || 'general';
+    if (inputDueDate) inputDueDate.value = task.due_date || '';
+
+    const isAr = i18n.lang === 'ar';
+    if (submitBtn) {
+      const span = submitBtn.querySelector('span');
+      if (span) span.textContent = isAr ? 'حفظ التعديلات' : 'Save Changes';
+    }
+    if (actionHeader) {
+      actionHeader.textContent = isAr ? 'تعديل المهمة الحالية ✏️' : 'Edit Current Task ✏️';
+    }
+    if (toggleBtnSpan) {
+      toggleBtnSpan.textContent = isAr ? 'تعديل المهمة' : 'Edit Task';
+    }
+
+    this.toggleForm(true);
+    $('#card-tasks-add')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    inputTitle?.focus();
+  }
+
+  resetForm() {
+    this.editingTaskId = null;
+
+    const inputTitle = $('#input-page-task-title');
+    const inputDesc = $('#input-page-task-desc');
+    const selectPriority = $('#select-page-task-priority');
+    const selectCategory = $('#select-page-task-category');
+    const inputDueDate = $('#input-page-task-duedate');
+    const submitBtn = $('#btn-page-task-submit');
+    const actionHeader = $('#header-tasks-toggle .page-action-title span:last-child');
+    const toggleBtnSpan = $('#btn-toggle-tasks-form span');
+
+    if (inputTitle) inputTitle.value = '';
+    if (inputDesc) inputDesc.value = '';
+    if (selectPriority) selectPriority.value = 'medium';
+    if (selectCategory) selectCategory.value = 'general';
+    if (inputDueDate) inputDueDate.value = '';
+
+    const isAr = i18n.lang === 'ar';
+    if (submitBtn) {
+      const span = submitBtn.querySelector('span');
+      if (span) span.textContent = isAr ? 'حفظ المهمة' : 'Save Task';
+    }
+    if (actionHeader) {
+      actionHeader.textContent = isAr ? 'إضافة مهمة جديدة' : 'Add Quick Task';
+    }
+    if (toggleBtnSpan) {
+      toggleBtnSpan.textContent = isAr ? 'إضافة مهمة جديدة' : 'Add Quick Task';
+    }
+  }
+
   async handleCreateTask() {
     const inputTitle = $('#input-page-task-title');
     const inputDesc = $('#input-page-task-desc');
@@ -108,20 +185,28 @@ export class TasksPageComponent {
     if (submitBtn) submitBtn.disabled = true;
 
     try {
-      await api.createTask({
-        title,
-        description: inputDesc?.value.trim() || null,
-        priority: selectPriority?.value || 'medium',
-        category: selectCategory?.value || 'general',
-        due_date: inputDueDate?.value || null,
-        is_completed: false,
-      });
+      if (this.editingTaskId) {
+        await api.updateTask(this.editingTaskId, {
+          title,
+          description: inputDesc?.value.trim() || null,
+          priority: selectPriority?.value || 'medium',
+          category: selectCategory?.value || 'general',
+          due_date: inputDueDate?.value || null,
+        });
+        toast.success(i18n.lang === 'ar' ? 'تم تحديث المهمة بنجاح ✏️' : 'Task updated successfully');
+      } else {
+        await api.createTask({
+          title,
+          description: inputDesc?.value.trim() || null,
+          priority: selectPriority?.value || 'medium',
+          category: selectCategory?.value || 'general',
+          due_date: inputDueDate?.value || null,
+          is_completed: false,
+        });
+        toast.success(i18n.lang === 'ar' ? 'تمت إضافة المهمة بنجاح 📋' : 'Task created successfully');
+      }
 
-      toast.success(i18n.lang === 'ar' ? 'تمت إضافة المهمة بنجاح 📋' : 'Task created successfully');
-      if (inputTitle) inputTitle.value = '';
-      if (inputDesc) inputDesc.value = '';
-      if (inputDueDate) inputDueDate.value = '';
-
+      this.resetForm();
       await store.refreshTasks();
       this.toggleForm(false);
     } catch (err) {
@@ -202,20 +287,57 @@ export class TasksPageComponent {
       wrapper.innerHTML = `
         <div class="swipe-action-reveal"></div>
         <div class="swipe-content glass-card task-card ${isCompleted ? 'is-completed' : ''}" style="margin-bottom: 0;">
-          <div style="display: flex; align-items: flex-start; gap: 12px;">
-            <input type="checkbox" class="task-page-checkbox" ${isCompleted ? 'checked' : ''} aria-label="${escapeHTML(task.title)}" style="margin-top: 4px; width: 19px; height: 19px; cursor: pointer; accent-color: var(--accent-purple);">
-            <div style="flex: 1; min-width: 0;">
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-                <span class="task-title ${isCompleted ? 'completed-text' : ''}" style="font-weight: 700; font-size: 1rem; color: var(--text-main);">${escapeHTML(task.title)}</span>
-                <span class="badge" style="background: ${pInfo.bg}; color: ${pInfo.color}; font-size: 0.72rem; padding: 2px 8px;">${pInfo.label}</span>
-                <span class="badge" style="background: rgba(255, 255, 255, 0.06); color: var(--text-muted); font-size: 0.72rem; padding: 2px 8px;">🏷️ ${catLabel}</span>
+          <div class="task-card-main">
+            <!-- Custom Modern Checkbox -->
+            <label class="task-custom-checkbox" title="${isCompleted ? (i18n.lang === 'ar' ? 'إلغاء الإنجاز' : 'Mark Incomplete') : (i18n.lang === 'ar' ? 'إتمام المهمة' : 'Mark Completed')}">
+              <input type="checkbox" class="task-page-checkbox" ${isCompleted ? 'checked' : ''} aria-label="${escapeHTML(task.title)}">
+              <span class="checkbox-visual">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+            </label>
+
+            <!-- Task Body -->
+            <div class="task-card-body">
+              <div class="task-header-line">
+                <h4 class="task-card-title ${isCompleted ? 'completed-text' : ''}">${escapeHTML(task.title)}</h4>
+                <div class="task-badges-row">
+                  <span class="badge priority-badge" style="background: ${pInfo.bg}; color: ${pInfo.color};">
+                    <span class="priority-dot" style="background: ${pInfo.color};"></span>
+                    ${pInfo.label}
+                  </span>
+                  <span class="badge category-badge">🏷️ ${catLabel}</span>
+                </div>
               </div>
-              ${task.description ? `<p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 4px; line-height: 1.4;">${escapeHTML(task.description)}</p>` : ''}
-              ${task.due_date ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 5px;">📅 ${i18n.lang === 'ar' ? 'الاستحقاق' : 'Due'}: ${escapeHTML(task.due_date)}</div>` : ''}
+
+              ${task.description ? `<p class="task-card-desc">${escapeHTML(task.description)}</p>` : ''}
+
+              ${task.due_date ? `
+                <div class="task-card-footer">
+                  <span class="task-due-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    ${i18n.lang === 'ar' ? 'الاستحقاق:' : 'Due:'} ${escapeHTML(task.due_date)}
+                  </span>
+                </div>
+              ` : ''}
             </div>
-            <button class="btn-icon btn-page-delete-task" title="${i18n.t('btn_delete')}" aria-label="Delete Task" style="color: var(--text-dim);">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            </button>
+
+            <!-- Action Buttons (Edit + Delete) -->
+            <div class="task-card-actions">
+              <button type="button" class="btn-task-action btn-task-edit" title="${i18n.lang === 'ar' ? 'تعديل المهمة' : 'Edit Task'}" aria-label="Edit Task">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button type="button" class="btn-task-action btn-task-delete" title="${i18n.lang === 'ar' ? 'حذف المهمة' : 'Delete Task'}" aria-label="Delete Task">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -230,6 +352,8 @@ export class TasksPageComponent {
           const comp = !card.classList.contains('is-completed');
           card.classList.toggle('is-completed', comp);
           cb.checked = comp;
+          const titleEl = card.querySelector('.task-card-title');
+          titleEl?.classList.toggle('completed-text', comp);
           if (comp) {
             triggerConfetti();
             toast.success(i18n.lang === 'ar' ? 'أحسنت! أتممت هذه المهمة 🎯' : 'Task completed!');
@@ -241,6 +365,12 @@ export class TasksPageComponent {
       };
 
       cb?.addEventListener('change', toggleTaskState);
+
+      // Edit task handler
+      wrapper.querySelector('.btn-task-edit')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.startEditTask(task);
+      });
 
       // Delete with Undo Toast
       const deleteTaskWithUndo = () => {
@@ -265,7 +395,10 @@ export class TasksPageComponent {
         );
       };
 
-      wrapper.querySelector('.btn-page-delete-task')?.addEventListener('click', deleteTaskWithUndo);
+      wrapper.querySelector('.btn-task-delete')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteTaskWithUndo();
+      });
 
       // Attach Touch Swipe Gestures
       attachSwipeAction(wrapper, {

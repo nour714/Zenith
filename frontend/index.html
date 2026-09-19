@@ -429,35 +429,47 @@
             </div>
           </div>
 
-          <!-- Add Playlist Card -->
-          <div class="glass-card page-feature-card">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-              <span style="color: #ef4444;">✦</span>
-              <span data-i18n="playlists_add_new_title">إضافة واستكشاف مسار تعليمي جديد</span>
-            </h3>
-            <form id="form-playlists-page-add" class="page-feature-form" style="display: flex; flex-direction: column; gap: 12px;">
-              <div class="form-grid-row-2">
-                <div>
-                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_playlist_name">اسم الكورس / المسار</label>
-                  <input id="input-page-playlist-name" type="text" style="width: 100%;" placeholder="مثال: كورس بايثون للمبتدئين" data-i18n-placeholder="ph_playlist_name">
+          <!-- Add Playlist Collapsible Card -->
+          <div class="glass-card page-action-card" id="card-playlists-add">
+            <div class="page-action-header" id="header-playlists-toggle">
+              <div class="page-action-title">
+                <span class="page-action-sparkle" style="color: #ef4444;">✦</span>
+                <span data-i18n="playlists_add_new_title">إضافة واستكشاف مسار تعليمي جديد</span>
+              </div>
+              <button id="btn-toggle-playlists-form" type="button" class="btn btn-primary btn-action-toggle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span data-i18n="btn_search_extract">بحث واستخراج المسار</span>
+              </button>
+            </div>
+
+            <div id="playlists-form-collapse" class="page-form-collapse" style="display: none;">
+              <form id="form-playlists-page-add" class="page-feature-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+                <div class="form-grid-row-2">
+                  <div>
+                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_playlist_name">اسم الكورس / المسار</label>
+                    <input id="input-page-playlist-name" type="text" style="width: 100%;" placeholder="مثال: كورس بايثون للمبتدئين" data-i18n-placeholder="ph_playlist_name">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_channel_name">اسم القناة (اختياري)</label>
+                    <input id="input-page-channel-name" type="text" style="width: 100%;" placeholder="مثال: Codezilla" data-i18n-placeholder="ph_channel_name">
+                  </div>
                 </div>
+                <div style="text-align: center; color: var(--text-dim); font-size: 0.8rem;">— <span data-i18n="lbl_or_direct_url">أو الصق رابط القائمة المباشر</span> —</div>
                 <div>
-                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_channel_name">اسم القناة (اختياري)</label>
-                  <input id="input-page-channel-name" type="text" style="width: 100%;" placeholder="مثال: Codezilla" data-i18n-placeholder="ph_channel_name">
+                  <input id="input-page-direct-url" type="url" style="width: 100%;" placeholder="https://www.youtube.com/playlist?list=..." data-i18n-placeholder="ph_direct_url">
                 </div>
-              </div>
-              <div style="text-align: center; color: var(--text-dim); font-size: 0.8rem;">— <span data-i18n="lbl_or_direct_url">أو الصق رابط القائمة المباشر</span> —</div>
-              <div>
-                <input id="input-page-direct-url" type="url" style="width: 100%;" placeholder="https://www.youtube.com/playlist?list=..." data-i18n-placeholder="ph_direct_url">
-              </div>
-              <div id="playlists-page-status-box" style="display: none; padding: 10px; border-radius: var(--radius-sm); font-size: 0.88rem; text-align: center;"></div>
-              <div class="form-submit-row" style="display: flex; justify-content: flex-end;">
-                <button id="btn-playlists-page-submit" type="submit" class="btn btn-primary" style="padding: 8px 24px;">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  <span data-i18n="btn_search_extract">بحث واستخراج المسار</span>
-                </button>
-              </div>
-            </form>
+                <div id="playlists-page-status-box" style="display: none; padding: 10px; border-radius: var(--radius-sm); font-size: 0.88rem; text-align: center;"></div>
+                <div class="form-submit-row" style="display: flex; justify-content: flex-end; gap: 10px;">
+                  <button id="btn-cancel-playlists-form" type="button" class="btn btn-secondary" style="padding: 8px 18px;">
+                    <span data-i18n="btn_cancel">إلغاء</span>
+                  </button>
+                  <button id="btn-playlists-page-submit" type="submit" class="btn btn-primary" style="padding: 8px 24px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span data-i18n="btn_search_extract">بحث واستخراج المسار</span>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
 
           <!-- Playlists Filter Bar -->
@@ -492,52 +504,66 @@
             </div>
           </div>
 
-          <!-- Create Task Card -->
-          <div class="glass-card page-feature-card">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-              <span style="color: var(--accent-purple);">✦</span>
-              <span data-i18n="modal_task_title">إضافة مهمة جديدة</span>
-            </h3>
-            <form id="form-page-create-task" class="page-feature-form" style="display: flex; flex-direction: column; gap: 12px;">
-              <div class="form-grid-row-3">
-                <div>
-                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_title">عنوان المهمة</label>
-                  <input id="input-page-task-title" type="text" required style="width: 100%;" placeholder="مثال: مراجعة الكود وحل التمارين" data-i18n-placeholder="ph_task_title">
-                </div>
-                <div>
-                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_priority">الأولوية</label>
-                  <select id="select-page-task-priority" style="width: 100%;">
-                    <option value="medium" data-i18n="priority_medium">متوسطة (Medium)</option>
-                    <option value="high" data-i18n="priority_high">عالية (High)</option>
-                    <option value="low" data-i18n="priority_low">منخفضة (Low)</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_category">التصنيف</label>
-                  <select id="select-page-task-category" style="width: 100%;">
-                    <option value="general" data-i18n="category_general">عام (General)</option>
-                    <option value="study" data-i18n="category_study">مذاكرة (Study)</option>
-                    <option value="work" data-i18n="category_work">عمل (Work)</option>
-                    <option value="personal" data-i18n="category_personal">شخصي (Personal)</option>
-                  </select>
-                </div>
+          <!-- Create Task Collapsible Card -->
+          <div class="glass-card page-action-card" id="card-tasks-add">
+            <div class="page-action-header" id="header-tasks-toggle">
+              <div class="page-action-title">
+                <span class="page-action-sparkle" style="color: var(--accent-purple);">✦</span>
+                <span data-i18n="modal_task_title">إضافة مهمة جديدة</span>
               </div>
-              <div class="form-grid-row-desc">
-                <div>
-                  <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_desc">تفاصيل المهمة (اختياري)</label>
-                  <input id="input-page-task-desc" type="text" style="width: 100%;" placeholder="تفاصيل إضافية أو مراجع..." data-i18n-placeholder="ph_task_desc">
-                </div>
-                <div class="form-submit-row">
-                  <div style="flex: 1; width: 100%;">
-                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_duedate">تاريخ الاستحقاق</label>
-                    <input id="input-page-task-duedate" type="date" style="width: 100%;">
+              <button id="btn-toggle-tasks-form" type="button" class="btn btn-primary btn-action-toggle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span data-i18n="modal_task_title">إضافة مهمة جديدة</span>
+              </button>
+            </div>
+
+            <div id="tasks-form-collapse" class="page-form-collapse" style="display: none;">
+              <form id="form-page-create-task" class="page-feature-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+                <div class="form-grid-row-3">
+                  <div>
+                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_title">عنوان المهمة</label>
+                    <input id="input-page-task-title" type="text" required style="width: 100%;" placeholder="مثال: مراجعة الكود وحل التمارين" data-i18n-placeholder="ph_task_title">
                   </div>
-                  <button id="btn-page-task-submit" type="submit" class="btn btn-primary" style="padding: 9px 20px; white-space: nowrap;">
-                    <span data-i18n="btn_save_task">حفظ المهمة</span>
-                  </button>
+                  <div>
+                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_priority">الأولوية</label>
+                    <select id="select-page-task-priority" style="width: 100%;">
+                      <option value="medium" data-i18n="priority_medium">متوسطة (Medium)</option>
+                      <option value="high" data-i18n="priority_high">عالية (High)</option>
+                      <option value="low" data-i18n="priority_low">منخفضة (Low)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_category">التصنيف</label>
+                    <select id="select-page-task-category" style="width: 100%;">
+                      <option value="general" data-i18n="category_general">عام (General)</option>
+                      <option value="study" data-i18n="category_study">مذاكرة (Study)</option>
+                      <option value="work" data-i18n="category_work">عمل (Work)</option>
+                      <option value="personal" data-i18n="category_personal">شخصي (Personal)</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-            </form>
+                <div class="form-grid-row-desc">
+                  <div>
+                    <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_desc">تفاصيل المهمة (اختياري)</label>
+                    <input id="input-page-task-desc" type="text" style="width: 100%;" placeholder="تفاصيل إضافية أو مراجع..." data-i18n-placeholder="ph_task_desc">
+                  </div>
+                  <div class="form-submit-row">
+                    <div style="flex: 1; width: 100%;">
+                      <label style="display: block; font-size: 0.84rem; font-weight: 600; margin-bottom: 5px;" data-i18n="lbl_task_duedate">تاريخ الاستحقاق</label>
+                      <input id="input-page-task-duedate" type="date" style="width: 100%;">
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: flex-end;">
+                      <button id="btn-cancel-tasks-form" type="button" class="btn btn-secondary" style="padding: 9px 16px;">
+                        <span data-i18n="btn_cancel">إلغاء</span>
+                      </button>
+                      <button id="btn-page-task-submit" type="submit" class="btn btn-primary" style="padding: 9px 20px; white-space: nowrap;">
+                        <span data-i18n="btn_save_task">حفظ المهمة</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
 
           <!-- Tasks Filter Bar -->

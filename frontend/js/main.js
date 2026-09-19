@@ -17,7 +17,6 @@ import { AIPlanModalComponent } from './components/ai-plan-modal.js?v=2';
 import { renderPlaylistCard } from './components/playlist-card.js';
 import { TaskBoardComponent } from './components/task-board.js';
 import { ContinueLearningComponent } from './components/continue-learning.js';
-import { QuickSwitcherComponent } from './components/quick-switcher.js';
 import { BottomSheetComponent } from './components/bottom-sheet.js';
 import { $ } from './utils/dom.js';
 
@@ -53,7 +52,6 @@ class App {
     new SettingsPageComponent();
     new AIPlanModalComponent();
     new ContinueLearningComponent();
-    new QuickSwitcherComponent();
     new BottomSheetComponent();
 
     // Setup Page Navigation Routing & Route Guards

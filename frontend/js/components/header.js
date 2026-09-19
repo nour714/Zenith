@@ -21,15 +21,6 @@ export class HeaderComponent {
     const savedTheme = localStorage.getItem('zenith_theme') || 'dark';
     this.applyTheme(savedTheme, false);
 
-    const themeBtn = $('#btn-toggle-theme');
-    if (themeBtn) {
-      themeBtn.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        this.applyTheme(nextTheme, true);
-      });
-    }
-
     bus.on('theme:change', (newTheme) => {
       this.applyTheme(newTheme, false);
     });
@@ -39,14 +30,6 @@ export class HeaderComponent {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('zenith_theme', theme);
 
-    const sunIcon = $('#btn-toggle-theme .theme-icon-sun');
-    const moonIcon = $('#btn-toggle-theme .theme-icon-moon');
-
-    if (sunIcon && moonIcon) {
-      sunIcon.style.display = theme === 'dark' ? 'block' : 'none';
-      moonIcon.style.display = theme === 'light' ? 'block' : 'none';
-    }
-
     if (notify) {
       bus.emit('theme:changed', theme);
       toast.info(theme === 'dark' ? (i18n.lang === 'ar' ? 'الوضع الليلي 🌙' : 'Dark Mode 🌙') : (i18n.lang === 'ar' ? 'الوضع النهاري ☀️' : 'Light Mode ☀️'));
@@ -54,16 +37,6 @@ export class HeaderComponent {
   }
 
   bindEvents() {
-    // Language Switcher
-    const langBtn = $('#btn-toggle-lang');
-    if (langBtn) {
-      langBtn.addEventListener('click', () => {
-        const nextLang = i18n.lang === 'ar' ? 'en' : 'ar';
-        i18n.setLanguage(nextLang);
-        langBtn.textContent = nextLang === 'ar' ? 'EN' : 'عربي';
-      });
-    }
-
     // Brand click returns to dashboard
     $('.header-brand')?.addEventListener('click', () => {
       if (authService.isAuthenticated()) {
@@ -78,26 +51,8 @@ export class HeaderComponent {
       $(`#mobile-nav-${page}`)?.addEventListener('click', () => bus.emit('view:switch', page));
     });
 
-    // User Profile Mini Chip click navigates to settings
+    // User Profile Mini Chip click navigates directly to Settings
     $('#header-user-chip')?.addEventListener('click', () => bus.emit('view:switch', 'settings'));
-
-    // Header Logout Button
-    $('#btn-header-logout')?.addEventListener('click', async () => {
-      const confirmed = await toast.confirm(
-        i18n.lang === 'ar' ? 'تسجيل الخروج' : 'Sign Out',
-        i18n.lang === 'ar' ? 'هل أنت متأكد من رغبتك في تسجيل الخروج من حسابك؟' : 'Are you sure you want to sign out?',
-        i18n.lang === 'ar' ? 'نعم، خروج' : 'Sign Out',
-        i18n.lang === 'ar' ? 'إلغاء' : 'Cancel'
-      );
-      if (confirmed) {
-        authService.logout();
-        toast.info(i18n.lang === 'ar' ? 'تم تسجيل الخروج بنجاح' : 'Signed out successfully');
-      }
-    });
-
-    // Search buttons (Quick Switcher)
-    $('#btn-header-search')?.addEventListener('click', () => bus.emit('quick-switcher:open'));
-    $('#mobile-nav-search')?.addEventListener('click', () => bus.emit('quick-switcher:open'));
 
     // Mobile FAB button handler
     $('#btn-mobile-fab')?.addEventListener('click', () => {
@@ -139,19 +94,16 @@ export class HeaderComponent {
 
   renderUser() {
     const userChip = $('#header-user-chip');
-    const logoutBtn = $('#btn-header-logout');
     const userAvatar = $('#header-user-avatar');
     const userName = $('#header-user-name');
 
     if (!authService.isAuthenticated()) {
       if (userChip) userChip.style.display = 'none';
-      if (logoutBtn) logoutBtn.style.display = 'none';
       return;
     }
 
     const user = authService.getUser();
     if (userChip) userChip.style.display = 'flex';
-    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
 
     if (userName) {
       userName.textContent = user?.full_name || user?.email?.split('@')[0] || 'User';

@@ -541,13 +541,12 @@ html[dir="rtl"] .toast-container {
     height: 60px;
     padding: 0 0.85rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 8px;
   }
   .header-brand {
-    justify-self: auto;
-    flex-shrink: 0;
+    justify-self: center;
   }
   .brand-icon {
     width: 34px;
@@ -559,50 +558,13 @@ html[dir="rtl"] .toast-container {
     height: 22px;
   }
   .brand-title {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     letter-spacing: 0;
   }
   .header-nav-pages,
-  .header-action-pills {
-    display: none;
-  }
-  .nav-page-btn span:not(.page-badge),
-  .action-pill-btn span {
-    display: none;
-  }
-  .nav-page-btn,
-  .action-pill-btn {
-    padding: 0;
-    width: 32px;
-    justify-content: center;
-  }
-  .nav-page-btn,
-  .action-pill-btn {
-    height: 32px;
-    padding: 0 10px;
-    font-size: 0.78rem;
-  }
+  .header-action-pills,
   .header-actions {
-    display: flex !important;
-    align-items: center;
-    gap: 6px;
-  }
-  .header-round-btn {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .user-name-mini {
     display: none !important;
-  }
-  .header-user-chip {
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
   }
   .app-main {
     padding: 4.75rem 0.75rem 6.5rem;

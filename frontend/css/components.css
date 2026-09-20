@@ -302,7 +302,7 @@
   max-height: 380px;
   overflow-y: auto;
   border-top: 1px solid var(--glass-border);
-  background: rgba(10, 13, 22, 0.9);
+  background: rgba(4, 9, 8, 0.94);
 }
 
 .videos-accordion::-webkit-scrollbar {
@@ -310,12 +310,12 @@
 }
 
 .videos-accordion::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.35);
+  background: rgba(52, 211, 153, 0.3);
   border-radius: var(--radius-full);
 }
 
 .videos-accordion::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.6);
+  background: rgba(52, 211, 153, 0.55);
 }
 
 .video-item {
@@ -465,7 +465,7 @@
 .task-item-card.completed,
 .task-card.is-completed {
   opacity: 0.65;
-  background: rgba(6, 21, 18, 0.55);
+  background: rgba(3, 7, 6, 0.6);
   border-color: rgba(52, 211, 153, 0.2);
 }
 

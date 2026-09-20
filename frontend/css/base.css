@@ -29,12 +29,12 @@ body {
 body::before {
   content: '';
   position: fixed;
-  top: -10vw;
+  top: -12vw;
   left: 15%;
   width: 55vw;
   height: 45vw;
-  background: radial-gradient(circle, rgba(15, 118, 110, 0.22) 0%, rgba(52, 211, 153, 0.1) 50%, transparent 70%);
-  filter: blur(100px);
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.16) 0%, rgba(52, 211, 153, 0.06) 45%, transparent 70%);
+  filter: blur(120px);
   pointer-events: none;
   z-index: 0;
   transition: background var(--transition-normal);
@@ -47,8 +47,8 @@ body::after {
   right: 10%;
   width: 50vw;
   height: 42vw;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.16) 0%, rgba(15, 118, 110, 0.08) 55%, transparent 70%);
-  filter: blur(110px);
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.10) 0%, rgba(15, 118, 110, 0.04) 50%, transparent 70%);
+  filter: blur(120px);
   pointer-events: none;
   z-index: 0;
   transition: background var(--transition-normal);

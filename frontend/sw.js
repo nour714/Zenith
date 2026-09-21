@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zenith-shell-v6';
+const CACHE_NAME = 'zenith-shell-v7';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,7 +9,8 @@ const APP_SHELL = [
   './css/components.css',
   './css/animations.css',
   './css/rtl.css',
-  './js/main.js'
+  './js/main.js',
+  './icons/icon.svg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -35,19 +36,41 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
 
+  // Bypass API requests to allow fresh data
   if (requestUrl.origin !== self.location.origin || requestUrl.pathname.startsWith('/api')) {
     return;
   }
 
+  // Navigation requests: Network-first with cache fallback
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Static Assets (CSS, JS, Images, Icons, Webmanifest): Stale-While-Revalidate for 0ms load
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        if (response.ok && event.request.method === 'GET') {
-          const responseCopy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseCopy));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
+    caches.match(event.request).then((cachedResponse) => {
+      const fetchPromise = fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse.ok && event.request.method === 'GET') {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return networkResponse;
+        })
+        .catch(() => cachedResponse);
+
+      return cachedResponse || fetchPromise;
+    })
   );
 });

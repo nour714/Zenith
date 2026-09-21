@@ -60,6 +60,11 @@ class APIClient {
     }
   }
 
+  // Consolidated Bootstrap (1 single request for stats, playlists, tasks, notes)
+  getBootstrap() {
+    return this.request('/stats/bootstrap');
+  }
+
   // Statistics
   getStats() {
     return this.request('/stats');

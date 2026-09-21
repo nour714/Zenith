@@ -18,6 +18,9 @@ from app.core.exceptions import AppBaseException
 from app.db.init_db import init_db
 from app.api.v1.api import api_router
 
+from fastapi.middleware.gzip import GZipMiddleware
+from app.db.session import close_pool, get_db_connection, release_db_connection
+
 # Initialize logging
 setup_logging()
 logger = get_logger("zenith.main")
@@ -25,7 +28,7 @@ logger = get_logger("zenith.main")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifecycle event handling: initialize database schema on startup."""
+    """Lifecycle event handling: initialize database schema on startup and close pool on shutdown."""
     logger.info("Initializing Zenith Application...")
     try:
         init_db()
@@ -34,6 +37,7 @@ async def lifespan(app: FastAPI):
         logger.warning(f"Database connection check warning on startup: {exc}")
     yield
     logger.info("Zenith Application shutting down gracefully.")
+    close_pool()
 
 
 app = FastAPI(
@@ -43,6 +47,9 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# GZip compression middleware (compresses responses > 1000 bytes)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # CORS configuration
 # allow_origins=["*"] combined with allow_credentials=True is invalid per CORS specifications.
@@ -94,6 +101,18 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
     )
 
 
+# Static assets caching headers middleware
+@app.middleware("http")
+async def add_cache_control_headers(request: Request, call_next):
+    response = await call_next(request)
+    path = request.url.path
+    if path.startswith(("/css/", "/js/", "/images/", "/icons/")):
+        response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
+    elif path in ("/", "/index.html", "/manifest.webmanifest"):
+        response.headers["Cache-Control"] = "no-cache, must-revalidate"
+    return response
+
+
 # Include API Routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(api_router, prefix="/api")
@@ -105,12 +124,17 @@ async def health_check():
     db_ok = False
     db_error = None
     try:
-        init_db()
-        db_ok = True
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1;")
+            db_ok = True
+        finally:
+            release_db_connection(conn)
     except Exception as exc:
         db_error = str(exc)
     return {
-        "status": "healthy",
+        "status": "healthy" if db_ok else "degraded",
         "app": settings.PROJECT_NAME,
         "version": settings.VERSION,
         "database_configured": bool(settings.DATABASE_URL),

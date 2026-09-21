@@ -28,13 +28,27 @@ def get_auth_service(user_repo: UserRepository = Depends(get_user_repo)) -> Auth
     return AuthService(user_repo)
 
 
+import time
+
+_user_cache: Dict[int, tuple[float, Dict[str, Any]]] = {}
+USER_CACHE_TTL = 60  # seconds
+
+
+def invalidate_user_cache(user_id: Optional[int] = None) -> None:
+    if user_id is None:
+        _user_cache.clear()
+    else:
+        _user_cache.pop(user_id, None)
+
+
 def get_current_user(
     authorization: Optional[str] = Header(None, alias="Authorization"),
     user_repo: UserRepository = Depends(get_user_repo)
 ) -> Dict[str, Any]:
     """
     Extracts Bearer token from Authorization header, validates JWT claims,
-    and returns current user dict. Raises 401 if missing or invalid.
+    and returns current user dict. Uses in-memory TTL caching to eliminate
+    redundant database queries on concurrent API requests.
     """
     if not authorization or not authorization.startswith("Bearer "):
         raise UnauthorizedException("يرجى تسجيل الدخول للوصول إلى هذا المحتوى.")
@@ -49,9 +63,17 @@ def get_current_user(
     except (ValueError, TypeError):
         raise UnauthorizedException("رمز الجلسة غير صالح.")
 
+    now = time.time()
+    if user_id in _user_cache:
+        cached_time, cached_user = _user_cache[user_id]
+        if now - cached_time < USER_CACHE_TTL:
+            return cached_user
+
     user = user_repo.get_by_id(user_id)
     if not user:
         raise UnauthorizedException("حساب المستخدم غير موجود.")
+
+    _user_cache[user_id] = (now, user)
     return user
 
 

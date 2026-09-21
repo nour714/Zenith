@@ -3,7 +3,7 @@ Database schema initialization and migration runner for PostgreSQL (Supabase).
 Automatically ensures all necessary Zenith tables exist on startup and applies
 user-isolation migrations.
 """
-from app.db.session import get_db_connection
+from app.db.session import get_db_connection, release_db_connection
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -190,7 +190,7 @@ def init_db() -> None:
         logger.error(f"Failed to initialize database schema: {exc}")
         raise
     finally:
-        conn.close()
+        release_db_connection(conn)
 
 
 if __name__ == "__main__":

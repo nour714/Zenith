@@ -2,7 +2,7 @@
 Repository pattern for Custom Tasks SQL operations (PostgreSQL).
 User-scoped for multi-tenancy.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from app.core.exceptions import ResourceNotFoundException
 from app.models.task import TaskCreate, TaskUpdate
@@ -74,7 +74,7 @@ class TaskRepository:
                 update_fields.append("is_completed = %s")
                 values.append(1 if val else 0)
                 update_fields.append("completed_at = %s")
-                values.append(datetime.utcnow().isoformat() if val else None)
+                values.append(datetime.now(timezone.utc).isoformat() if val else None)
             else:
                 update_fields.append(f"{field} = %s")
                 values.append(val)

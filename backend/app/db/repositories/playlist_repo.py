@@ -2,7 +2,7 @@
 Repository pattern for Playlists and Videos SQL operations (PostgreSQL).
 User-scoped for multi-tenancy.
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from app.core.exceptions import ResourceNotFoundException
 
@@ -152,7 +152,7 @@ class PlaylistRepository:
             raise ResourceNotFoundException("Video", video_id)
         playlist_db_id = row["playlist_id"]
 
-        now_str = datetime.utcnow().isoformat() if is_completed else None
+        now_str = datetime.now(timezone.utc).isoformat() if is_completed else None
         cursor.execute(
             """
             UPDATE zenith_videos

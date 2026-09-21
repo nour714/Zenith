@@ -273,7 +273,7 @@
   max-width: var(--max-content-width);
   width: 100%;
   margin: 0 auto;
-  padding: 6rem clamp(1rem, 3vw, 1.75rem) 4rem;
+  padding: 7.25rem clamp(1rem, 3vw, 1.75rem) 4rem;
 }
 
 /* Stats / Hero Banner */
@@ -531,7 +531,7 @@ html[dir="rtl"] .toast-container {
     display: none !important;
   }
   .app-main {
-    padding: 4.75rem 0.75rem 6.5rem;
+    padding: 5.5rem 0.75rem 6.5rem;
   }
   .section-header {
     display: flex;

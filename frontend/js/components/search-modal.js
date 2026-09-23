@@ -65,13 +65,18 @@ export class SearchModalComponent {
         toast.success(i18n.lang === 'ar' ? `تم استيراد قائمة "${imported.title}" بنجاح (${imported.total_videos} فيديو)` : `Imported "${imported.title}" successfully`);
         await store.refreshPlaylists();
       } catch (err) {
-        this.setLoading(false);
+        let msg = err.message || '';
+        if (i18n.lang === 'en' && (/[\u0600-\u06FF]/.test(msg) || !msg)) {
+          msg = 'Could not import course from YouTube. Please verify the URL or try again.';
+        } else if (!msg) {
+          msg = 'فشل استيراد قائمة التشغيل.';
+        }
         if (this.statusBox) {
           this.statusBox.style.display = 'block';
           this.statusBox.style.background = 'rgba(244, 63, 94, 0.12)';
           this.statusBox.style.border = '1px solid rgba(244, 63, 94, 0.4)';
           this.statusBox.style.color = 'var(--accent-rose)';
-          this.statusBox.textContent = `⚠️ ${err.message || 'فشل استيراد قائمة التشغيل.'}`;
+          this.statusBox.textContent = `⚠️ ${msg}`;
         }
       }
     });

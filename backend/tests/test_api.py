@@ -161,7 +161,33 @@ def test_system():
     assert get_b_settings.json()["data"].get("gemini_api_key_masked") is None
     print("   -> OK! Settings are strictly isolated and secrets masked per user.")
 
+    # 10. Test YouTube Video Course Track Import & Video Toggle
+    print("10. Testing YouTube Video Import & Video Progress Tracking...")
+    yt_res = client.post(
+        "/api/v1/playlists/import",
+        json={"direct_url": "https://youtu.be/u-TZKFo16M8"},
+        headers=headers_a
+    )
+    assert yt_res.status_code == 201, f"Import failed: {yt_res.text}"
+    yt_data = yt_res.json()["data"]
+    assert yt_data["total_videos"] >= 1
+    assert len(yt_data["videos"]) >= 1
+    playlist_db_id = yt_data["id"]
+    first_vid_db_id = yt_data["videos"][0]["id"]
+    print(f"   -> OK! YouTube course imported: '{yt_data['title']}' ({yt_data['total_videos']} video(s)).")
+
+    # Toggle video completion
+    toggle_vid = client.patch(
+        f"/api/v1/playlists/videos/{first_vid_db_id}/toggle",
+        json={"is_completed": True},
+        headers=headers_a
+    )
+    assert toggle_vid.status_code == 200
+    assert toggle_vid.json()["data"]["completed_count"] == 1
+    print("   -> OK! Video completed and track progress updated.")
+
     # Cleanup test items
+    client.delete(f"/api/v1/playlists/{playlist_db_id}", headers=headers_a)
     client.delete(f"/api/v1/tasks/{task_a_id}", headers=headers_a)
     client.delete(f"/api/v1/notes/{note_a_id}", headers=headers_a)
 
@@ -172,3 +198,4 @@ def test_system():
 
 if __name__ == "__main__":
     test_system()
+

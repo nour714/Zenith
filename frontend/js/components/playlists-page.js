@@ -103,7 +103,7 @@ export class PlaylistsPageComponent {
       submitBtn.innerHTML = `<span class="spinner" style="width: 14px; height: 14px; display: inline-block;"></span> ${i18n.lang === 'ar' ? 'جاري الاستخراج...' : 'Extracting...'}`;
     }
 
-    this.setStatus(statusBox, i18n.lang === 'ar' ? 'جاري الاتصال بـ YouTube واستخراج قائمة الفيديوهات...' : 'Fetching playlist and videos from YouTube...', 'info');
+    this.setStatus(statusBox, i18n.lang === 'ar' ? 'جاري الاتصال بـ YouTube واستخراج بيانات الكورس...' : 'Connecting to YouTube and importing course...', 'info');
 
     try {
       const result = await api.importPlaylist({
@@ -125,8 +125,14 @@ export class PlaylistsPageComponent {
         if (statusBox) statusBox.style.display = 'none';
       }, 4000);
     } catch (err) {
-      this.setStatus(statusBox, err.message || (i18n.lang === 'ar' ? 'تعذر استخراج المسار. تأكد من الرابط أو الكلمات المفتاحية' : 'Failed to import playlist'), 'error');
-      toast.error(err.message);
+      let msg = err.message || '';
+      if (i18n.lang === 'en' && (/[\u0600-\u06FF]/.test(msg) || !msg)) {
+        msg = 'Could not read course data from YouTube. Please check the URL or try again.';
+      } else if (!msg) {
+        msg = 'تعذر قراءة بيانات الكورس من يوتيوب. تأكد من صحة الرابط أو حاول مجدداً.';
+      }
+      this.setStatus(statusBox, msg, 'error');
+      toast.error(msg);
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -252,7 +258,11 @@ export class PlaylistsPageComponent {
         bottomSheet.close();
         await store.refreshPlaylists();
       } catch (err) {
-        toast.error(err.message);
+        let msg = err.message || '';
+        if (!isAr && (/[\u0600-\u06FF]/.test(msg) || !msg)) {
+          msg = 'Could not read course data from YouTube. Please check the URL or try again.';
+        }
+        toast.error(msg);
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<span>${isAr ? 'بحث واستخراج المسار' : 'Search & Extract Track'}</span>`;

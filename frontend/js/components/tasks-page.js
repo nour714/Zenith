@@ -303,8 +303,8 @@ export class TasksPageComponent {
               <div class="task-header-line">
                 <h4 class="task-card-title ${isCompleted ? 'completed-text' : ''}">${escapeHTML(task.title)}</h4>
                 <div class="task-badges-row">
-                  <span class="badge priority-badge" style="background: ${pInfo.bg}; color: ${pInfo.color};">
-                    <span class="priority-dot" style="background: ${pInfo.color};"></span>
+                  <span class="badge priority-badge priority-${task.priority || 'medium'}">
+                    <span class="priority-dot"></span>
                     ${pInfo.label}
                   </span>
                   <span class="badge category-badge">🏷️ ${catLabel}</span>

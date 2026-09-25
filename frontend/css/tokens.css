@@ -162,12 +162,25 @@
   --glass-blur: blur(20px);
   --glass-blur-heavy: blur(32px);
 
-  /* Typography Colors (Master Brand Text: #0B1F1B) */
+  /* Typography Colors (Master Brand Text: #0B1F1B) - High Contrast WCAG AA */
   --text-main: #0B1F1B;
-  --text-body: #193830;
-  --text-muted: #3a685c;
-  --text-dim: #6d968b;
+  --text-body: #14322a;
+  --text-muted: #244d43;
+  --text-dim: #3e685c;
   --text-inverse: #ffffff;
+
+  /* Vibrant Accents - Tuned for Crisp Contrast on Light Backgrounds */
+  --accent-primary: #0F766E;
+  --accent-primary-hover: #0d655e;
+  --accent-primary-glow: rgba(15, 118, 110, 0.25);
+  --accent-amber: #b45309;
+  --accent-amber-glow: rgba(180, 83, 9, 0.2);
+  --accent-emerald: #047857;
+  --accent-emerald-hover: #065f46;
+  --accent-emerald-glow: rgba(4, 120, 87, 0.22);
+  --accent-rose: #be123c;
+  --accent-rose-hover: #9f1239;
+  --accent-rose-glow: rgba(190, 18, 60, 0.22);
 
   /* Gradients */
   --gradient-card-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.96) 100%);
@@ -185,20 +198,20 @@
   --shadow-glow-emerald: 0 0 20px rgba(52, 211, 153, 0.22);
 
   /* Semantic UI Tokens */
-  --header-bg: rgba(255, 255, 255, 0.9);
-  --header-border: rgba(15, 118, 110, 0.15);
+  --header-bg: rgba(255, 255, 255, 0.94);
+  --header-border: rgba(15, 118, 110, 0.18);
   --input-bg: #ffffff;
   --input-border: rgba(15, 118, 110, 0.25);
   --input-bg-hover: #f4fbf7;
   --input-bg-focus: #ffffff;
   --card-bg: #ffffff;
-  --card-border: rgba(15, 118, 110, 0.12);
-  --border-color: rgba(15, 118, 110, 0.12);
-  --brand-icon-bg: #0B1F1B;
-  --brand-icon-border: rgba(52, 211, 153, 0.28);
-  --pill-bg: rgba(15, 118, 110, 0.05);
-  --pill-border: rgba(15, 118, 110, 0.12);
-  --pill-hover-bg: rgba(15, 118, 110, 0.1);
+  --card-border: rgba(15, 118, 110, 0.16);
+  --border-color: rgba(15, 118, 110, 0.16);
+  --brand-icon-bg: #0F766E;
+  --brand-icon-border: rgba(15, 118, 110, 0.4);
+  --pill-bg: rgba(15, 118, 110, 0.07);
+  --pill-border: rgba(15, 118, 110, 0.16);
+  --pill-hover-bg: rgba(15, 118, 110, 0.14);
 
   /* Light Theme UX & Mobile-First Tokens */
   --skeleton-bg: rgba(11, 31, 27, 0.07);
